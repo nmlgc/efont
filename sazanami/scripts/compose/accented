@@ -14,4 +14,4 @@ elseif (accbase - h > _10th)
 	down(accbase - h - _10th);
 endif
 
-append($1, result); Setwidth(w)
+append($1, result); SetWidth(w)
