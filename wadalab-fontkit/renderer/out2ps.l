@@ -257,7 +257,7 @@ end
 ; ファイルの生成
 ;
 (defun out-to-ps-all (outlines tag psfile 
-			       &optional (nameflag)
+			       &optional
 			       (col 9) (line (round (* 0.67 col)))
  			       (printfile t)
 			       &key (remove-overlap t) (set-code-by-kanji t)
