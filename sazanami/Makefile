@@ -27,6 +27,9 @@
 #
 # $Id$
 
+VERSION=	20040618
+DIST=		sazanami-${VERSION}
+
 LISP=	lisp -batch -quiet -load
 #LISP=	clisp -interactive-debug
 FONTFORGE=	/usr/local/bin/fontforge -script
@@ -84,6 +87,26 @@ sfd: Sznm-G-K.sfd Sznm-M-K.sfd
 
 ${BDF}:
 	(cd bdf/; make)
+
+release: README
+	rm -rf ${DIST}
+	mkdir ${DIST}
+	cp README ${DIST}
+	cp -p sazanami-*.ttf ${DIST}
+	mkdir ${DIST}/doc
+	mkdir ${DIST}/doc/oradano
+	mkdir ${DIST}/doc/misaki
+	mkdir ${DIST}/doc/mplus
+	mkdir ${DIST}/doc/shinonome
+	mkdir ${DIST}/doc/ayu
+	mkdir ${DIST}/doc/kappa
+	cp -p src/outline/oradano/README.txt ${DIST}/doc/oradano
+	cp -p src/bitmap/misaki/misakib8.txt ${DIST}/doc/misaki
+	cp -p src/bitmap/mplus/LICENSE_J ${DIST}/doc/mplus
+	cp -p src/bitmap/shinonome/LICENSE ${DIST}/doc/shinonome
+	cp -p src/bitmap/ayu/README.txt ${DIST}/doc/ayu
+	cp -p src/bitmap/kappa/README ${DIST}/doc/kappa
+	tar cvfz ${DIST}.tar.gz ${DIST}
 
 clean: 
 	rm -f *.ttf *.core *~
