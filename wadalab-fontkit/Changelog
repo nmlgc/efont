@@ -1,3 +1,8 @@
+Fri Jun  4 20:05:28 2004  KANOU Hiroki  <kanou@khdd.net>
+
+	* EM = 1024 に変更。
+	* 日本語フォント名を追加。
+	
 Fri Jun  4 12:13:04 2004  KANOU Hiroki  <kanou@khdd.net>
 
 	* IBM 漢字を全てフォントにコンパイルするように変更。
