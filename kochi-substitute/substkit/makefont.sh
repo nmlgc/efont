@@ -9,7 +9,7 @@
 #  bzcat wadalab-gothic-descent-1024.sfd.bz2 > wadalab-gothic-descent-1024.sfd
 # fetch http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
 #  bzcat wadalab-mincho-descent-1024.sfd.bz2 > wadalab-mincho-descent-1024.sfd
-# http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
+# fetch http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
 #  tar xvfz Oradano20030619.tgz oradano.ttf
 pfaedit -script Shrink.pe
 pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd G.sfd o.ttf
