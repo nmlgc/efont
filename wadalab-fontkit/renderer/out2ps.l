@@ -302,8 +302,8 @@ end
 	(format t "400 400 lineto 0 400 lineto 0 0 lineto stroke~%")
 	(setq hints (type1hints skeleton tag))
 ;;;; 一時的に重複除去をオフにしたいときは次行を変更
-;;;;	(setq type1 (out2type1 (makeoutline l) hints))
-	(setq type1 (out2type1 l hints))
+	(setq type1 (out2type1 (makeoutline l) hints))
+;;;;	(setq type1 (out2type1 l hints))
 	(setq kstr (jiscode kanji))
 ;	(princ (concatenate 'string "" type1))
 	(princ type1)
