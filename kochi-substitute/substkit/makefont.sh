@@ -1,8 +1,10 @@
 #!/bin/sh -v
 # fetch http://osdn.dl.sourceforge.jp/x-tt/5162/ayu20gothic-1.3.tar.gz
 #  tar xvfz ayu20gothic-1.3.tar.gz kg20m.bdf
-#  patch < patches/kg20m.bdf.patch
 #  mv kg20m.bdf kg20m-u.bdf
+#  patch < patches/kg20m.bdf.patch
+#  cp kg20m-u.bdf kg21m-u.bdf
+#  patch < patches/kg21m.bdf.patch
 # fetch http://www.fdiary.net/~kazuhiko/tmp/wadalab-gothic-descent-1024.sfd.bz2
 #  bzcat wadalab-gothic-descent-1024.sfd.bz2 > wadalab-gothic-descent-1024.sfd
 # fetch http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
