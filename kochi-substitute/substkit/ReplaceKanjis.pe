@@ -1,7 +1,7 @@
 #!/usr/local/bin/pfaedit -script
 
 # フラグ設定
-SetPref("AutoHint", 0); SetPref("HintForGen", 0); #SetPref("GreekFixup", 1)
+SetPref("AutoHint", 0); SetPref("HintForGen", 0);
 
 # 定数定義
 hex = Array(16)
