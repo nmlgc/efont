@@ -1,5 +1,4 @@
-$BElIw%U%)%s%HBeMQIJ:n@.%-%C%H(B Version 1.0 
-2003-06-21  $B<mLn(B $B9(<y(B <kanou@khdd.net>
+$BElIw%U%)%s%HBeMQIJ:n@.%-%C%H(B2003-06-23$BHG$K$D$$$F(B     $B<mLn(B $B9(<y(B <kanou@khdd.net>
 
 $B!|(B $B35MW(B
 $B$3$N%-%C%H$O!"ElIw%U%)%s%H$NBeMQIJ(B(substitution)$B$r:n@.$9$k$?$a$K(B
@@ -7,6 +6,13 @@
 $B4A;z$N%"%&%H%i%$%sItJ,$r<h$j=|$-!"B>$N%U%)%s%H$+$iJd$&$?$a$N(B PfaEdit 
 $B%9%/%j%W%H(B ReplaceKanji.pe $B$H!"$=$l$r8F$S=P$9$?$a$N%7%'%k%9%/%j%W%H!"(B
 $B%U%)%s%H$N9=C[$KI,MW$J=$@5%G!<%?$+$i$i$J$j$^$9!#(B
+
+$B!|A0%P!<%8%g%s$h$j$N=$@5E@(B
+$B85$N%Y!<%9%i%$%s$,(B (819, 205) $B$@$C$?$N$G!"(B61 EM$B%f%K%C%H>e$K0\F0$7!"(B
+(880, 144) $B$K9g$o$;$^$7$?!#(B
+$B;3Fb@iN$$5$s$K$h$k(B public domain $BAjEv$N(B 20 $B%I%C%H%4%7%C%/%U%)%s%H(B
+($B8=:_!"(BKappa20-Gothic $B$H2>>N(B) $B$r(B kochi-gothic-subst.ttf $B$K<h$j9~$_(B
+$B$^$7$?!#(B
 
 $B!|(B ReplaceKanji.pe $B$N;H$$J}(B
 $B$^$:!"(BPfaEdit $B$r%$%s%9%H!<%k$9$kI,MW$,$"$j$^$9!#(B
@@ -20,6 +26,25 @@ pfaedit -script ReplaceKanji.pe kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-d
 $B$I$A$i$N>l9g$b!"=PNO%U%!%$%kL>$O(B kochi-gothic-subst.ttf $B$H$J$j$^$9!#(B
 
 $BBeMQ%U%)%s%H$N:n@.:n6H$O!"F1:-$N(B makefont.sh $B$G9T$$$^$7$?!#(B
+$B%+%l%s%H%G%#%l%/%H%j$KCV$/I,MW$N$"$k%=!<%9%U%!%$%k$O0J2<$N$H$*$j$G$9!#(B
+
+kochi-mincho.ttf
+kochi-gothic.ttf
+Gothic-Fix.sfd
+Mincho-Fix.sfd
+kg20m-u.bdf
+wadalab-gothic-descent-1024.sfd
+wadalab-mincho-descent-1024.sfd
+sasage-mono.ttf
+
+kg20m-u.bdf $B$O!"(Bkg20m.bdf $B$K%Q%C%A(B patches/kg20m.bdf.aptch $B$rEv$F$F(B
+$B:n@.$7$F$/$@$5$$!#$=$N8e!"(BPfaEdit $B$,<B9T2DG=$J$3$H$r3NG'$7$?$&$($G(B
+makefont.sh $B$r<B9T$9$l$P(B Shrink.pe, ReplaceKanjis.pe $B$r<B9T$7$F!"(B
+$B%U%!%$%k$r:n@.$7$^$9!#(B
+
+makefont.sh $B$r0lEY<B9T$9$k$H!">e5-%j%9%H$N:G8e$N(B 3 $B%U%!%$%k$O(B
+$B=q$-49$($i$l$^$9$N$G!"ESCf$G<B9T$K<:GT$7$?>l9g$O!"$3$l$i$N%U%!%$%k$r(B
+$B:F$S85$NJ*$KCV$-49$($F$/$@$5$$!#(B
 
 $B!|(B $BCV$-49$($K;HMQ$7$?%U%)%s%H%U%!%$%k(B
 makefont.sh $B$r<B9T$9$k$N$KI,MW$J%U%!%$%k$O0J2<$+$iF~<j$7$F$/$@$5$$!#(B
@@ -34,8 +59,12 @@ Gothic-Fix.sfd, Mincho-Fix.sfd ($BK\%"!<%+%$%VFb$KF1:-(B) $B$rJ;MQ$7$F$/$@$5$
 
 $BFbEDL@$5$s$N:n$i$l$?%.%j%7%cJ8;z!&%-%j%kJ8;z$r%b%N%9%Z!<%92=$7$?$b$N(B
 http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/sasagemono20030620.tgz
-$B$3$N%U%)%s%HFb$KDj5A$5$l$F$$$F$b%"%&%H%i%$%s$N$J$$J8;z?t$r8:$i$9$?$a$K!"(B
-Shrink.pe $B$r;HMQ$9$k$H%9%/%j%W%H$N<B9T$,B.$/$J$j$^$9!#(B
+
+$B;3Fb@iN$$5$s$,:n@.$5$l$?!"(BKappa20 Gothic $B$N(B BDF $B%U%)%s%H(B
+http://x-tt.sourceforge.jp/kappa20gothic-snapshot/kg20m.bdf
+http://x-tt.sourceforge.jp/kappa20gothic-snapshot/10x20gm.bdf
+http://x-tt.sourceforge.jp/kappa20gothic-snapshot/10x20grkm.bdf
+($B8e$m$N(B 2 $B%U%!%$%k$O!"(Bpatches/kg20m.bdf.aptch $B$K4^$^$l$F$$$^$9(B)
 
 $B!|(B $BMxMQ>e$NCm0U(B
 $B%U%)%s%H>pJs$O!"%*%j%8%J%k$N%U%)%s%H$+$iJQ99$5$l$^$;$s!#(B
