@@ -27,14 +27,14 @@
 #
 # $Id$
 
-ttf = $1; shift
-Open($1); shift
-
 if ($1 == "sazanami-mincho.ttf")
 	style = "min"
 else
 	style = "goth"
 endif
+
+ttf = $1; shift
+Open($1); shift
 
 while ($argc > 1)
 	MergeFonts($1); shift
