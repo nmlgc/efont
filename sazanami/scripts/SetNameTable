@@ -29,6 +29,8 @@
 
 # This file is encoded in UTF-8.
 
+Build = "test build"	# enter date when you release the font
+
 en_US = 0x401; ja_JP = 0x411
 
 style= $1
@@ -45,20 +47,26 @@ FontSubfamilyName = "Regular"
 eFontName = eFontFamilyName + " " + FontSubfamilyName
 jFontName = jFontFamilyName + FontSubfamilyName
 
+eUniqueFontID = eFontName + " #" + Build
+jUniqueFontID = jFontName + " #" + Build
+
 eManufacturerName = "Electronic Font Open Laboratory (/efont/)"
 jManufacturerName = "電子書体オープンラボ(/efont/)"
 eDesigner = "Kanji autodesign by CLWFK (Non-kanji glyphs by Yasuyuki Furukawa)"
 jDesigner = "CLWFKによる漢字自動デザイン(非漢字は古川泰之氏)"
 jSampleText = "波のように広がっていくことを願って「漣」と命名されました"
 
-SetFontNames(eFontName, eFontFamilyName, eFontName)
+CopyrightNotice = "Copyright (c) 1990-2003 Wada Laboratory, the University of Tokyo. All rights reserved. Copyright (c) 2003-2004 Electronic Font Open Laboratory (/efont/). All rights reserved."
+
+SetFontNames(eFontName, eFontFamilyName, eFontName, FontSubFamilyName, CopyrightNotice)
 
 # SetTTFName(ja_JP, 0, jCopyrightNotice)
 SetTTFName(en_US, 1, eFontFamilyName)
 SetTTFName(ja_JP, 1, jFontFamilyName)
 SetTTFName(en_US, 2, FontSubfamilyName)
 SetTTFName(ja_JP, 2, FontSubfamilyName)
-# SetTTFName(ja_JP, 3, jUniqueFontIdentifier)
+SetTTFName(en_US, 3, eUniqueFontID)
+SetTTFName(ja_JP, 3, jUniqueFontID)
 SetTTFName(en_US, 4, eFontName)
 SetTTFName(ja_JP, 4, jFontName)
 # SetTTFName(ja_JP, 5, jVersionString)
