@@ -4740,7 +4740,6 @@ Fore
  257 24 l 1
  512 842 l 1
 EndSplineSet
-Substitution: 1 0 'vert' radical.vert
 EndChar
 StartChar: proportional
 Encoding: 8733 8733 1086
@@ -5527,16 +5526,6 @@ Fore
  79.6667 440.333 72.3333 440.333 65 451 c 1
 EndSplineSet
 Substitution: 1 0 'vert' uni2312.vert
-EndChar
-StartChar: integraltp
-Encoding: 8992 8992 1302
-Width: 512
-Flags: W
-EndChar
-StartChar: integralbt
-Encoding: 8993 8993 1303
-Width: 512
-Flags: W
 EndChar
 StartChar: uni2460
 Encoding: 9312 9312 1304
@@ -7010,11 +6999,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' uni2520.vert
 EndChar
-StartChar: uni2521
-Encoding: 9505 9505 1476
-Width: 512
-Flags: W
-EndChar
 StartChar: uni2523
 Encoding: 9507 9507 1478
 Width: 1024
@@ -7066,16 +7050,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' uni2525.vert
 EndChar
-StartChar: uni2526
-Encoding: 9510 9510 1481
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2527
-Encoding: 9511 9511 1482
-Width: 512
-Flags: W
-EndChar
 StartChar: uni2528
 Encoding: 9512 9512 1483
 Width: 1024
@@ -7126,16 +7100,6 @@ Fore
  0 373 l 1
 EndSplineSet
 Substitution: 1 0 'vert' SF060000.vert
-EndChar
-StartChar: uni252D
-Encoding: 9517 9517 1488
-Width: 512
-Flags: W
-EndChar
-StartChar: uni252E
-Encoding: 9518 9518 1489
-Width: 512
-Flags: W
 EndChar
 StartChar: uni252F
 Encoding: 9519 9519 1490
@@ -7238,11 +7202,6 @@ Fore
  0 373 l 1
 EndSplineSet
 Substitution: 1 0 'vert' uni2538.vert
-EndChar
-StartChar: uni2539
-Encoding: 9529 9529 1500
-Width: 512
-Flags: W
 EndChar
 StartChar: uni253B
 Encoding: 9531 9531 1502
@@ -23486,11 +23445,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' uniFF01.vert
 EndChar
-StartChar: uniFF02
-Encoding: 65282 65282 14796
-Width: 1024
-Flags: W
-EndChar
 StartChar: uniFF03
 Encoding: 65283 65283 14797
 Width: 1024
@@ -23706,11 +23660,6 @@ Fore
  201.5 289.667 189 249.333 189 196 c 0
 EndSplineSet
 Substitution: 1 0 'vert' uniFF06.vert
-EndChar
-StartChar: uniFF07
-Encoding: 65287 65287 14801
-Width: 1024
-Flags: W
 EndChar
 StartChar: uniFF08
 Encoding: 65288 65288 14802
@@ -29966,11 +29915,6 @@ Fore
  453 704 458.5 717.5 469.5 728.5 c 128
  480.5 739.5 494 745 510 745 c 0
 EndSplineSet
-EndChar
-StartChar: radical.vert
-Encoding: 65700 -1 15129
-Width: 1024
-Flags: W
 EndChar
 StartChar: uni3001.vert
 Encoding: 65810 -1 15239

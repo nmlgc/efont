@@ -2747,41 +2747,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' dieresis.vert
 EndChar
-StartChar: copyright
-Encoding: 169 169 106
-Width: 512
-Flags: W
-EndChar
-StartChar: ordfeminine
-Encoding: 170 170 107
-Width: 512
-Flags: W
-EndChar
-StartChar: guillemotleft
-Encoding: 171 171 108
-Width: 512
-Flags: W
-EndChar
-StartChar: logicalnot
-Encoding: 172 172 109
-Width: 512
-Flags: W
-EndChar
-StartChar: uni00AD
-Encoding: 173 173 110
-Width: 512
-Flags: W
-EndChar
-StartChar: registered
-Encoding: 174 174 111
-Width: 512
-Flags: W
-EndChar
-StartChar: macron
-Encoding: 175 175 112
-Width: 512
-Flags: W
-EndChar
 StartChar: degree
 Encoding: 176 176 113
 Width: 1024
@@ -2840,16 +2805,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' plusminus.vert
 EndChar
-StartChar: uni00B2
-Encoding: 178 178 115
-Width: 512
-Flags: W
-EndChar
-StartChar: uni00B3
-Encoding: 179 179 116
-Width: 512
-Flags: W
-EndChar
 StartChar: acute
 Encoding: 180 180 117
 Width: 1024
@@ -2865,11 +2820,6 @@ Fore
  668 816 l 1,0,-1
 EndSplineSet
 Substitution: 1 0 'vert' acute.vert
-EndChar
-StartChar: mu
-Encoding: 181 181 118
-Width: 512
-Flags: W
 EndChar
 StartChar: paragraph
 Encoding: 182 182 119
@@ -2945,16 +2895,6 @@ Fore
  452 112 l 1,8,-1
 EndSplineSet
 Substitution: 1 0 'vert' divide.vert
-EndChar
-StartChar: florin
-Encoding: 402 402 321
-Width: 512
-Flags: W
-EndChar
-StartChar: uni01F5
-Encoding: 501 501 338
-Width: 1024
-Flags: W
 EndChar
 StartChar: Alpha
 Encoding: 913 913 458
@@ -3613,46 +3553,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' uni03A9.vert
 EndChar
-StartChar: Wgrave
-Encoding: 7808 7808 745
-Width: 512
-Flags: W
-EndChar
-StartChar: wgrave
-Encoding: 7809 7809 746
-Width: 512
-Flags: W
-EndChar
-StartChar: Wacute
-Encoding: 7810 7810 747
-Width: 512
-Flags: W
-EndChar
-StartChar: wacute
-Encoding: 7811 7811 748
-Width: 512
-Flags: W
-EndChar
-StartChar: Wdieresis
-Encoding: 7812 7812 749
-Width: 512
-Flags: W
-EndChar
-StartChar: wdieresis
-Encoding: 7813 7813 750
-Width: 512
-Flags: W
-EndChar
-StartChar: Ygrave
-Encoding: 7922 7922 751
-Width: 512
-Flags: W
-EndChar
-StartChar: ygrave
-Encoding: 7923 7923 752
-Width: 512
-Flags: W
-EndChar
 StartChar: uni2010
 Encoding: 8208 8208 769
 Width: 1024
@@ -4068,146 +3968,6 @@ Fore
  885 312 l 1,24,-1
 EndSplineSet
 Substitution: 1 0 'vert' uni203B.vert
-EndChar
-StartChar: uni2070
-Encoding: 8304 8304 822
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2074
-Encoding: 8308 8308 823
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2075
-Encoding: 8309 8309 824
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2076
-Encoding: 8310 8310 825
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2077
-Encoding: 8311 8311 826
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2078
-Encoding: 8312 8312 827
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2079
-Encoding: 8313 8313 828
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207A
-Encoding: 8314 8314 829
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207B
-Encoding: 8315 8315 830
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207C
-Encoding: 8316 8316 831
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207D
-Encoding: 8317 8317 832
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207E
-Encoding: 8318 8318 833
-Width: 512
-Flags: W
-EndChar
-StartChar: uni207F
-Encoding: 8319 8319 834
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2080
-Encoding: 8320 8320 835
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2081
-Encoding: 8321 8321 836
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2082
-Encoding: 8322 8322 837
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2083
-Encoding: 8323 8323 838
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2084
-Encoding: 8324 8324 839
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2085
-Encoding: 8325 8325 840
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2086
-Encoding: 8326 8326 841
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2087
-Encoding: 8327 8327 842
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2088
-Encoding: 8328 8328 843
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2089
-Encoding: 8329 8329 844
-Width: 512
-Flags: W
-EndChar
-StartChar: uni208A
-Encoding: 8330 8330 845
-Width: 512
-Flags: W
-EndChar
-StartChar: uni208B
-Encoding: 8331 8331 846
-Width: 512
-Flags: W
-EndChar
-StartChar: uni208C
-Encoding: 8332 8332 847
-Width: 512
-Flags: W
-EndChar
-StartChar: uni208D
-Encoding: 8333 8333 848
-Width: 512
-Flags: W
-EndChar
-StartChar: uni208E
-Encoding: 8334 8334 849
-Width: 512
-Flags: W
 EndChar
 StartChar: uni2103
 Encoding: 8451 8451 864
@@ -5190,26 +4950,6 @@ EndSplineSet
 Substitution: 1 0 'vert' equivalence.vert
 Substitution: 1 0 'vert' equivalence.vert
 EndChar
-StartChar: uni2262
-Encoding: 8802 8802 1155
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2263
-Encoding: 8803 8803 1156
-Width: 512
-Flags: W
-EndChar
-StartChar: lessequal
-Encoding: 8804 8804 1157
-Width: 512
-Flags: W
-EndChar
-StartChar: greaterequal
-Encoding: 8805 8805 1158
-Width: 512
-Flags: W
-EndChar
 StartChar: uni2266
 Encoding: 8806 8806 1159
 Width: 1024
@@ -5268,16 +5008,6 @@ Fore
 EndSplineSet
 Substitution: 1 0 'vert' uni2267.vert
 EndChar
-StartChar: uni2268
-Encoding: 8808 8808 1161
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2269
-Encoding: 8809 8809 1162
-Width: 512
-Flags: W
-EndChar
 StartChar: uni226A
 Encoding: 8810 8810 1163
 Width: 1024
@@ -5335,91 +5065,6 @@ Fore
  96 826 l 1,9,-1
 EndSplineSet
 Substitution: 1 0 'vert' uni226B.vert
-EndChar
-StartChar: uni226C
-Encoding: 8812 8812 1165
-Width: 512
-Flags: W
-EndChar
-StartChar: uni226D
-Encoding: 8813 8813 1166
-Width: 512
-Flags: W
-EndChar
-StartChar: uni226E
-Encoding: 8814 8814 1167
-Width: 512
-Flags: W
-EndChar
-StartChar: uni226F
-Encoding: 8815 8815 1168
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2270
-Encoding: 8816 8816 1169
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2271
-Encoding: 8817 8817 1170
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2272
-Encoding: 8818 8818 1171
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2273
-Encoding: 8819 8819 1172
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2274
-Encoding: 8820 8820 1173
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2275
-Encoding: 8821 8821 1174
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2276
-Encoding: 8822 8822 1175
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2277
-Encoding: 8823 8823 1176
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2278
-Encoding: 8824 8824 1177
-Width: 512
-Flags: W
-EndChar
-StartChar: uni2279
-Encoding: 8825 8825 1178
-Width: 512
-Flags: W
-EndChar
-StartChar: uni227A
-Encoding: 8826 8826 1179
-Width: 512
-Flags: W
-EndChar
-StartChar: uni227B
-Encoding: 8827 8827 1180
-Width: 512
-Flags: W
-EndChar
-StartChar: uni227C
-Encoding: 8828 8828 1181
-Width: 512
-Flags: W
 EndChar
 StartChar: propersubset
 Encoding: 8834 8834 1187
@@ -5556,16 +5201,6 @@ EndSplineSet
 Substitution: 1 0 'vert' perpendicular.vert
 Substitution: 1 0 'vert' perpendicular.vert
 EndChar
-StartChar: house
-Encoding: 8962 8962 1299
-Width: 512
-Flags: W
-EndChar
-StartChar: revlogicalnot
-Encoding: 8976 8976 1300
-Width: 512
-Flags: W
-EndChar
 StartChar: uni2312
 Encoding: 8978 8978 1301
 Width: 1024
@@ -5587,16 +5222,6 @@ Fore
  57 449 l 1,0,1
 EndSplineSet
 Substitution: 1 0 'vert' uni2312.vert
-EndChar
-StartChar: integraltp
-Encoding: 8992 8992 1302
-Width: 512
-Flags: W
-EndChar
-StartChar: integralbt
-Encoding: 8993 8993 1303
-Width: 512
-Flags: W
 EndChar
 StartChar: uni2460
 Encoding: 9312 9312 1304
@@ -7952,7 +7577,6 @@ StartChar: uni3000
 Encoding: 12288 12288 1939
 Width: 1024
 Flags: W
-Substitution: 1 0 'vert' uni3000.vert
 EndChar
 StartChar: uni3001
 Encoding: 12289 12289 1940
@@ -13194,11 +12818,6 @@ Fore
  441 790 441 790 462 784 c 1,0,1
 EndSplineSet
 Substitution: 1 0 'vert' uni3093.vert
-EndChar
-StartChar: uni3094
-Encoding: 12436 12436 2063
-Width: 1024
-Flags: W
 EndChar
 StartChar: uni309B
 Encoding: 12443 12443 2064
@@ -26338,11 +25957,6 @@ Fore
  597 309 l 1,31,-1
  597 520 l 1,28,-1
 EndSplineSet
-EndChar
-StartChar: uni3000.vert
-Encoding: 65809 -1 15238
-Width: 1024
-Flags: W
 EndChar
 StartChar: uni3001.vert
 Encoding: 65810 -1 15239
