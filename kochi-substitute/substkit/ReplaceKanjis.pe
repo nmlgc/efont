@@ -1,9 +1,9 @@
 #!/usr/local/bin/pfaedit -script
 
-# $B%U%i%0@_Dj(B
+# ¥Õ¥é¥°ÀßÄê
 SetPref("AutoHint", 0); SetPref("HintForGen", 0); SetPref("GreekFixup", 0)
 
-# $BDj?tDj5A(B
+# Äê¿ôÄêµÁ
 hex = Array(16)
 	hex[0]="0"; hex[1]="1"; hex[2]="2"; hex[3]="3"
 	hex[4]="4"; hex[5]="5"; hex[6]="6"; hex[7]="7"
@@ -30,11 +30,11 @@ greek = Array(24)
 	greek[i++]="tau"; greek[i++]="upsilon"; greek[i++]="phi"
 	greek[i++]="chi"; greek[i++]="psi"; greek[i++]="omega"
 
-# $B:G=i$N%U%!%$%k$r3+$/(B
+# ºÇ½é¤Î¥Õ¥¡¥¤¥ë¤ò³«¤¯
 fontfile = $1
 Open(fontfile)
 
-# $BKd$a9~$_%S%C%H%^%C%W$r(B BDF $B$GJ]B8$7!"M>7W$J%i%9%?%i%$%:$r$7$J$$$h$&$K$9$k(B
+# Ëä¤á¹þ¤ß¥Ó¥Ã¥È¥Þ¥Ã¥×¤ò BDF ¤ÇÊÝÂ¸¤·¡¢Í¾·×¤Ê¥é¥¹¥¿¥é¥¤¥º¤ò¤·¤Ê¤¤¤è¤¦¤Ë¤¹¤ë
 Print("saving BDFs...")
 Generate(fontfile:r:t + "-subst.ttf", "bdf", 0)
 bitmaps = Array(SizeOf($bitmaps))
@@ -42,8 +42,8 @@ i = 0; while (i < SizeOf($bitmaps))
     bitmaps[i] = $bitmaps[i]
 i++; endloop
 
-# $B4A;z$r<h$j=|$/(B
-# $BElIw$K$O(B U+Fxxx $B$N8_494A;z$OL5$$$N$G!"(BU+4000$B!A(BU+9FFF $B$r:o$l$P$$$$(B
+# ´Á»ú¤ò¼è¤ê½ü¤¯
+# ÅìÉ÷¤Ë¤Ï U+Fxxx ¤Î¸ß´¹´Á»ú¤ÏÌµ¤¤¤Î¤Ç¡¢U+4000¡ÁU+9FFF ¤òºï¤ì¤Ð¤¤¤¤
 w = 4; while (w <= 9)
  x = 0; while (x <= 15)
   y = 0; while (y <= 15)
@@ -57,7 +57,7 @@ w = 4; while (w <= 9)
  x++; endloop
 w++; endloop
 
-# $B%.%j%7%cJ8;z!&%-%j%kJ8;z$r4^$`%V%m%C%/$r<h$j=|$/(B (U+0300$B!A(B04FF)
+# ¥®¥ê¥·¥ãÊ¸»ú¡¦¥­¥ê¥ëÊ¸»ú¤ò´Þ¤à¥Ö¥í¥Ã¥¯¤ò¼è¤ê½ü¤¯ (U+0300¡Á04FF)
  x = 3; while (x <= 4)
   y = 0; while (y <= 15)
    z = 0; while (z <= 15)
@@ -69,18 +69,18 @@ w++; endloop
   y++; endloop
  x++; endloop
 
-# $B%S%C%H%^%C%W$r<h$j=|$/$?$a$K$OJ]B8$7$F:FFI$_9~$_$9$k$7$+$J$$!#(B
+# ¥Ó¥Ã¥È¥Þ¥Ã¥×¤ò¼è¤ê½ü¤¯¤¿¤á¤Ë¤ÏÊÝÂ¸¤·¤ÆºÆÆÉ¤ß¹þ¤ß¤¹¤ë¤·¤«¤Ê¤¤¡£
 Print("Removing bitmap...")
 Generate(fontfile:r:t + "-subst.ttf", "", 0)
 Close()
 Open(fontfile:r:t + "-subst.ttf")
 
-# $B;D$j$N%U%!%$%k$r<h$j9~$`(B
+# »Ä¤ê¤Î¥Õ¥¡¥¤¥ë¤ò¼è¤ê¹þ¤à
 i = 2; while (i < $argc) 
     if (Strcasestr($argv[i], "sasage-mono.ttf") >= 0) 
-       # $BOBED8&%U%)%s%H$+$iFI$_9~$s$G$7$^$C$?ITMW$JHs4A;z$N$;$$$G(B
-       # sasage-mono.ttf $B$+$iJ8;z$,FI$_9~$a$J$$$N$G!"=|5n$9$k(B
-       # $B%.%j%7%cJ8;z>.J8;z$O>o$K!#%.%j%7%cJ8;zBgJ8;z$H%-%j%kJ8;z$OL@D+$N;~$N$_(B
+       # ÏÂÅÄ¸¦¥Õ¥©¥ó¥È¤«¤éÆÉ¤ß¹þ¤ó¤Ç¤·¤Þ¤Ã¤¿ÉÔÍ×¤ÊÈó´Á»ú¤Î¤»¤¤¤Ç
+       # sasage-mono.ttf ¤«¤éÊ¸»ú¤¬ÆÉ¤ß¹þ¤á¤Ê¤¤¤Î¤Ç¡¢½üµî¤¹¤ë
+       # ¥®¥ê¥·¥ãÊ¸»ú¾®Ê¸»ú¤Ï¾ï¤Ë¡£¥®¥ê¥·¥ãÊ¸»úÂçÊ¸»ú¤È¥­¥ê¥ëÊ¸»ú¤ÏÌÀÄ«¤Î»þ¤Î¤ß
        j = 0; while (j < 24) 
            if (InFont(Greek[j])) Select(Greek[j]); Clear(); endif
        j++; endloop
@@ -100,8 +100,8 @@ i = 2; while (i < $argc)
     MergeFonts($argv[i])
 i++; endloop
 
-# $B%.%j%7%c!&%-%j%kJ8;z$r=D=q$-$K%3%T!<(B
-Print("Copyihg...")
+# ¥®¥ê¥·¥ã¡¦¥­¥ê¥ëÊ¸»ú¤ò½Ä½ñ¤­¤Ë¥³¥Ô¡¼
+Print("Copying...")
 if ($argc > 2)
     i = 0; while (i < 24)
 	vGreek = Greek[i] + ".vert"
@@ -131,7 +131,7 @@ else
    
 endif
 
-# $B%S%C%H%^%C%W$N:FFI9~$_8e!"%U%!%$%k$r@8@.(B
+# ¥Ó¥Ã¥È¥Þ¥Ã¥×¤ÎºÆÆÉ¹þ¤ß¸å¡¢¥Õ¥¡¥¤¥ë¤òÀ¸À®
 Print("Importing BDFs...")
 i = 0; while (i < SizeOf(bitmaps))
 	bdfname = fontfile:r:t + "-subst-" + bitmaps[i] + ".bdf";
@@ -140,6 +140,11 @@ i = 0; while (i < SizeOf(bitmaps))
 i++; endloop
 if (Strcasestr(fontfile:r, "gothic") >= 0)
 	Import("kg20m-u.bdf")
+	Import("gothic-Fix-12.bdf")
+	Import("gothic-Fix-13.bdf")
+else
+	Import("mincho-Fix-12.bdf")
+	Import("mincho-Fix-13.bdf")
 endif
 
 Print("Generating font...")
