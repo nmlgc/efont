@@ -7,3 +7,8 @@ Select(0u452, 0uffff); Clear()
 Generate("sasage-mono.ttf");
 Close()
 
+# 漢字を 60 単位だけ上に動かす
+Open("wadalab-gothic-descent-1024.sfd")
+SelectAll(); Move(0, 61); Save()
+Open("wadalab-mincho-descent-1024.sfd")
+SelectAll(); Move(0, 61); Save()

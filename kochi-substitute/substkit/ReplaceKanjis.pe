@@ -102,7 +102,6 @@ i++; endloop
 
 # ギリシャ・キリル文字を縦書きにコピー
 Print("Copyihg...")
-$trace=1
 if ($argc > 2)
     i = 0; while (i < 24)
 	vGreek = Greek[i] + ".vert"
@@ -131,7 +130,6 @@ else
     y++; endloop;
    
 endif
-$trace=0
 
 # ビットマップの再読込み後、ファイルを生成
 Print("Importing BDFs...")
@@ -140,6 +138,9 @@ i = 0; while (i < SizeOf(bitmaps))
 	Import(bdfname);
 	Print(bdfname);
 i++; endloop
+if (Strcasestr(fontfile:r, "gothic") >= 0)
+	Import("kg20m-u.bdf")
+endif
 
 Print("Generating font...")
 Generate(fontfile:r:t + "-subst.ttf", "ttf", 0)
