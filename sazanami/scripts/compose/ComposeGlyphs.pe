@@ -49,8 +49,8 @@ setVariables()
 	yscaletogheight(getgheight("bar")); alignycenter("brokenbar", "bar")
 // endif
 # section, dieresis ¢º JIS X 0208
-// if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF43"))
-	circle("copyright", "uniFF23"); Scale(50, 0,_TOP); centerinhankaku()
+// if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF23"))
+	circle("copyright", "uniFF23"); Scale(70, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("ordfeminine"))
 	copy("underscore", "ordfeminine"); down(_40th)
@@ -59,7 +59,7 @@ setVariables()
 // endif
 // if (!defined("guillemotleft"))
 	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
-	hankaku()
+	Scale(60); centerinhankaku()
 // endif
 // if (!defined("logicalnot") && defined("uniFFE2"))
 	copy("uniFFE2", "logicalnot"); xscaletogwidth(_HW-_10th);
@@ -69,7 +69,7 @@ setVariables()
 	copy("hyphen", "softhyphen")
 // endif
 // if (!defined("registered") && defined(_CIRCLE) && defined("uniFF32")
-	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
+	circle("registered", "uniFF32"); Scale(70, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("macron"))
 	copy("underscore", "macron"); settop("underscore", _FW)
@@ -84,13 +84,12 @@ setVariables()
 # acute ¢º JIS X 0208
 # mu ·ç
 # paragraph ¢º JIS X 0208
-// if (!defined("periodcentered") && defined("uni0065"))
-	copy("uni0065", "periodcentered")
+// if (!defined("periodcentered") && defined("uniFF65"))
+	copy("uniFF65", "periodcentered")
 // endif
 # cedilla ·ç
 // if (!defined("uni00B9"))
-	copy("three", "uni00B9"); super("uni00B9")
-	super("ordmasculine")
+	copy("one", "uni00B9"); super("uni00B9")
 // endif
 // if (!defined("ordmasculine"))
 	copy("underscore", "ordmasculine"); down(_40th)
@@ -100,16 +99,16 @@ setVariables()
 // if (!defined("guillemotright"))
 	copy("greater", "guillemotright")
 	right(_5th); PasteInto(); left(_10th,0)
-	hankaku()
+	Scale(60); centerinhankaku()
 // endif
 // if (!defined "onequarter")
-	hdfrac("onequarter", "one", "four")
+	hdfrac("onequarter", "one", "four"); up(_5th)
 // endif
 // if (!defined "onehalf")
-	hdfrac("onehalf", "one", "two")
+	hdfrac("onehalf", "one", "two"); up(_5th)
 // endif
 // if (!defined "threequarters")
-	hdfrac("threequarters", "three", "four")
+	hdfrac("threequarters", "three", "four"); up(_5th)
 // endif
 // if (!defined "questiondown")
 	copy("question", "questiondown"); hcrotate(180)
