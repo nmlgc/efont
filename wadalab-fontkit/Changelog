@@ -1,3 +1,7 @@
+Fri Jun  4 12:13:04 2004  KANOU Hiroki  <kanou@khdd.net>
+
+	* IBM 漢字を全てフォントにコンパイルするように変更。
+
 Mon May 31 20:23:39 2004  KANOU Hiroki  <kanou@khdd.net>
 
 	* Adobe-Japan1-2 までの漢字の組合せ定義を追加。
