@@ -2106,6 +2106,7 @@ Fore
  372 500 361 508 344 514 c 1
  340 519 341 523 348 525 c 1
 EndSplineSet
+Substitution: 1 0 'vrt2' uni3095.vert
 EndChar
 StartChar: uni3096
 Encoding: 12438 12438 65535
@@ -2188,6 +2189,7 @@ Fore
  538 567 536 569 537 572 c 128
  538 575 540 576 544 576 c 1
 EndSplineSet
+Substitution: 1 0 'vrt2' uni3096.vert
 EndChar
 StartChar: uni309F
 Encoding: 12447 12447 65535
