@@ -6,9 +6,9 @@
 #  tar xvfy Kappa20-0.396.tar.bz2
 #  cd Kappa20-0.396 ; sh makebdf.sh ; cd ..
 #
-# fetch http://downloads.sourceforge.jp/mplus-fonts/5030/mplus-bitmap/mplus_bitmap_fonts-2.0.8.tar.gz
-#  tar xvfz mplus_bitmap_fonts-2.0.8.tar.gz
-#  cd mplus_bitmap_fonts-2.0.8.tar.gz ; DESTDIR=pcf ./install_mplus_fonts ; cd ..
+# fetch http://downloads.sourceforge.jp/mplus-fonts/5030/mplus_bitmap_fonts-2.1.0.tar.gz
+#  tar xvfz mplus_bitmap_fonts-2.1.0.tar.gz
+#  cd mplus_bitmap_fonts-2.1.0.tar.gz ; DESTDIR=pcf ./install_mplus_fonts ; cd ..
 # cvs -d :pserver:guest:guest@openlab.ring.gr.jp:/circus/cvsroot login
 # cvs -d :pserver:guest@openlab.ring.gr.jp:/circus/cvsroot co efont-devel/shinonome
 #  cd efont/shinonome ; sh autogen.sh ; gmake ; cd ../..

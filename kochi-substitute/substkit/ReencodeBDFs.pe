@@ -1,6 +1,6 @@
 #!/usr/local/bin/pfaedit -script
 
-Merge3Bitmaps.pe("10", "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-iso.bdf",  "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r.bdf", "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-jisx0201.bdf", "mplus.bdf")
+Merge3Bitmaps.pe("10", "mplus_bitmap_fonts-2.1.0/fonts_j/mplus_j10r-iso.bdf",  "mplus_bitmap_fonts-2.1.0/fonts_j/mplus_j10r.bdf", "mplus_bitmap_fonts-2.1.0/fonts_j/mplus_j10r-jisx0201.bdf", "mplus.bdf")
 
 Merge3Bitmaps.pe("12", "efont-devel/shinonome/12/latin1/shnm6x12a.bdf", "efont-devel/shinonome/12/mincho/shnmk12min.bdf", "efont-devel/shinonome/12/hankaku/shnm6x12r.bdf", "shinonome-min.bdf")
 Merge3Bitmaps.pe("12", "efont-devel/shinonome/12/latin1/shnm6x12a.bdf", "efont-devel/shinonome/12/kanjic/shnmk12.bdf", "efont-devel/shinonome/12/hankaku/shnm6x12r.bdf", "shinonome-goth.bdf")
