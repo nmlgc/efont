@@ -45,8 +45,8 @@ w = 4; while (w <= 9)
 	  Select(charname); Clear()
       endif
    z++; endloop
-  y++; endloop;  Print(hex[w], hex[x]);
- x++; endloop
+  y++; endloop
+ x++; endloop;   Print("U+", hex[w], "xxx")
 w++; endloop
 
 # ギリシャ文字・キリル文字を含むブロックを取り除く (U+0300〜04FF)
@@ -63,34 +63,42 @@ w++; endloop
 
 # ビットマップを取り除く。保存して再読み込みするしかない。
 Print("Removing bitmap...")
-Generate(fontfile:r:t + "-subst.ttf", "", 0)
+Generate(fontfile:r:t + "-subst.ttf", "", 4)
 Close()
 Open(fontfile:r:t + "-subst.ttf")
 
 # 残りのファイルを取り込む
 i = 2; while (i < $argc) 
+
     if (Strcasestr($argv[i], "sasage-mono.ttf") >= 0) 
        # 和田研フォントから読み込んでしまった不要な非漢字のせいで
        # sasage-mono.ttf から文字が読み込めないので、除去する
        # ギリシャ文字小文字は常に。ギリシャ文字大文字とキリル文字は明朝の時のみ
        j = 0; while (j < 24) 
-           if (InFont(greek[j])) Select(greek[j]); Clear(); endif
+           if (InFont(greek[j])) 
+              Select(greek[j]); Clear()
+	      Select(greek[j] + ".vert"); Clear()
+           endif
        j++; endloop
        if (Strcasestr(fontfile:r, "mincho") >= 0) 
            j = 0; while (j < 24) 
-               if (InFont(Greek[j])) Select(Greek[j]); Clear(); endif
+               if (InFont(Greek[j]))
+                   Select(Greek[j]); Clear()
+                   Select(Greek[j] + ".vert"); Clear()
+               endif
            j++; endloop
            y = 1; while (y <= 9)
                z = 0; while (z <= 9)
 		   cyrillic = "afii100" + hex[y] + hex[z]
 		   vcyrillic = cyrillic + ".vert"
 		   if (InFont(cyrillic) && InFont(vcyrillic))
-			Select(cyrillic); Clear()
+			Select("space"); Copy(); Select(cyrillic); Paste()
 		   endif
                z++; endloop
            y++; endloop;
        endif
     endif
+
     Print("Merging " + $argv[i] + "...")
     MergeFonts($argv[i])
 i++; endloop
@@ -136,6 +144,8 @@ elseif (WorthOutputting("uni301C"))
 endif
 
 # ビットマップの読込み後、ファイルを生成
+#Generate(fontfile:r:t + "-subst-nobitmaps.ttf", "ttf", 4)
+
 Import("mplus-10.bdf")
 Import("mplus-11.bdf")
 if (Strcasestr(fontfile:r, "gothic") >= 0)
@@ -159,4 +169,4 @@ else
 endif
 
 Print("Generating font...")
-Generate(fontfile:r:t + "-subst.ttf", "ttf", 0)
+Generate(fontfile:r:t + "-subst.ttf", "ttf", 4)

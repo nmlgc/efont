@@ -23,9 +23,6 @@
 #
 pfaedit -script Shrink.pe
 pfaedit -script ReencodeBDFs.pe
-for bdf in mplus-10.bdf shinonome-min-12.bdf shinonome-goth-12.bdf shinonome-min-14.bdf shinonome-goth-14.bdf shinonome-min-16.bdf shinonome-goth-16.bdf kappa-20.bdf ayu-20.bdf
-do   perl -i.bak UniName.pl $bdf
-done
 perl IncrSize.pl mplus-10.bdf > mplus-11.bdf
 perl IncrSize.pl shinonome-min-12.bdf > shinonome-min-13.bdf
 perl IncrSize.pl shinonome-goth-12.bdf > shinonome-goth-13.bdf
@@ -36,9 +33,8 @@ perl IncrSize.pl shinonome-goth-16.bdf > shinonome-goth-17.bdf
 perl IncrSize.pl kappa-20.bdf > kappa-21.bdf
 perl IncrSize.pl ayu-20.bdf > ayu-21.bdf
 pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd G.sfd o.ttf
-rm kochi-gothic-subst-*.bdf gothic-Fix-*.bdf
 pfaedit -script ReplaceKanjis.pe  kochi-mincho.ttf Mincho-Fix.sfd M.sfd o.ttf
 rm G.sfd M.sfd o.ttf kochi-mincho-subst-*.bdf
-rm *.bdf.bak mplus-*.bdf mplus_*-10.bdf shnm*.bdf shinonome-*-??.bdf 
+rm *.bdf.bak mplus-*.bdf mplus_*-10.bdf shnm*.bdf shinonome-*-??.bdf
 rm kappa-2?.bdf ayu-2?.bdf 10x20*-20.bdf
 # rm wadalab-*.sfd wadalab-*.sfd~ sasage-mono.ttf k2{0,1}gm-u.bdf *.orig *.rej
