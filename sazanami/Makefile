@@ -106,12 +106,12 @@ release: README
 	cp -p src/bitmap/shinonome/LICENSE ${DIST}/doc/shinonome
 	cp -p src/bitmap/ayu/README.txt ${DIST}/doc/ayu
 	cp -p src/bitmap/kappa/README ${DIST}/doc/kappa
-	tar cvfz ${DIST}.tar.gz ${DIST}
+	tar cvfy ${DIST}.tar.bz2 ${DIST}
 
 clean: 
 	rm -f *.ttf *.core *~
 	(cd bdf/; make clean)
 
 allclean:
-	rm -f *.ps *.sfd *.ttf *.core *~
+	rm -f *.ps *.sfd *.ttf *.core *.bz2 *~
 	(cd bdf/; make clean)
