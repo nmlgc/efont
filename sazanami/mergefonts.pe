@@ -41,6 +41,7 @@ while ($argc > 1)
 endloop
 
 SetNameTable(style)
+SetFontHasVerticalMetrics(1)
 
 Generate(ttf, "ttf", 0x80084)
 
