@@ -145,6 +145,8 @@ if (Strcasestr(fontfile:r, "gothic") >= 0)
 else
 	Import("mincho-Fix-12.bdf")
 	Import("mincho-Fix-13.bdf")
+	Import("Mincho-Fix-20.bdf")
+	Import("Mincho-Fix-21.bdf")
 endif
 
 Print("Generating font...")
