@@ -33,6 +33,7 @@
      (setq *top-level-auto-declare* t))
 
 (defvar base-directory)
+; コンパイラが通らない時は次の行をコメントアウト
 (defparameter source-load nil)
 (defun load-directory (dir)
   (let* ((base-directory dir))
