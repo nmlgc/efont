@@ -48,8 +48,8 @@ wadalab-gothic-descent-1024.sfd
 wadalab-mincho-descent-1024.sfd
 oradano.ttf
 
-kg20m-u.bdf は、kg20m.bdf にパッチ patches/kg20m.bdf.patch を当てて
-作成してください。それを kg21m-u.bdf にコピーし、patches/kg21m.bdf.patch
+k20gm-u.bdf は、k20gm.bdf にパッチ patches/kg20m.bdf.patch を当てて
+作成してください。それを k21gm-u.bdf にコピーし、patches/kg21m.bdf.patch
 を当ててください。その後、PfaEdit が実行可能なことを確認したうえで
 makefont.sh を実行すれば Shrink.pe, ReplaceKanjis.pe を実行して、
 ファイルを作成します。
@@ -71,9 +71,9 @@ Gothic-Fix.sfd, Mincho-Fix.sfd (本アーカイブ内に同梱) を併用してください。
 内田明さんの作られた、JIS X 0213:2000 の非漢字を含むフォント
 http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
 
-山内千里さんが作成された、Ayu20 Gothic 1.3
+山内千里さんが作成された、Ayu20 Gothic 1.4
 http://x-tt.sourceforge.jp/ayu.html
-(kg20m.bdf が必要です)
+(k20gm.bdf が必要です)
 
 ● 利用上の注意
 name テーブルに含まれたフォント情報は、オリジナルのフォントから変更

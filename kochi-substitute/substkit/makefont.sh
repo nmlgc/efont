@@ -1,7 +1,7 @@
 #!/bin/sh -v
-# fetch http://osdn.dl.sourceforge.jp/x-tt/5162/ayu20gothic-1.3.tar.gz
-#  tar xvfz ayu20gothic-1.3.tar.gz kg20m.bdf
-#  mv kg20m.bdf kg20m-u.bdf
+# fetch http://osdn.dl.sourceforge.jp/x-tt/5194/ayu20gothic-1.4.tar.gz
+#  tar xvfz ayu20gothic-1.4.tar.gz k20gm.bdf
+#  mv k20gm.bdf kg20m-u.bdf
 #  patch < patches/kg20m.bdf.patch
 #  cp kg20m-u.bdf kg21m-u.bdf
 #  patch < patches/kg21m.bdf.patch
@@ -16,4 +16,4 @@ pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd G.sfd o.ttf
 rm kochi-gothic-subst-*.bdf gothic-Fix-*.bdf
 pfaedit -script ReplaceKanjis.pe  kochi-mincho.ttf Mincho-Fix.sfd M.sfd o.ttf
 rm G.sfd M.sfd o.ttf kochi-mincho-subst-*.bdf mincho-Fix-*.bdf
-# rm wadalab-*.sfd wadalab-*.sfd~ sasage-mono.ttf kg20m-u.bdf *.orig *.rej
+# rm wadalab-*.sfd wadalab-*.sfd~ sasage-mono.ttf k2{0,1}gm-u.bdf *.orig *.rej

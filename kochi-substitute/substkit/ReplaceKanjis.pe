@@ -139,8 +139,8 @@ i = 0; while (i < SizeOf(bitmaps))
 	Print(bdfname);
 i++; endloop
 if (Strcasestr(fontfile:r, "gothic") >= 0)
-	Import("kg20m-u.bdf")
-	Import("kg21m-u.bdf")
+	Import("k20gm-u.bdf")
+	Import("k21gm-u.bdf")
 else
 	Import("Mincho-Fix-20.bdf")
 	Import("Mincho-Fix-21.bdf")
