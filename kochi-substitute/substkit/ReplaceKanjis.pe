@@ -128,7 +128,11 @@ else
             Select("afii100" + hex[y] + hex[z] + ".vert"); Clear()
         z++; endloop
     y++; endloop;
-   
+endif
+
+# その他の文字のコピー
+if (WorthOutputting("uniFF0D")) ### && !WorthOutputting("U+2212"))
+	Select("uniFF0D"); Copy(); Select("uni2212"); Paste()
 endif
 
 # ビットマップの再読込み後、ファイルを生成
