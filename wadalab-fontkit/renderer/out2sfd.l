@@ -69,7 +69,7 @@ FitToEm: 1
   (format t "BeginChars: 65536 ~A~%" (+ num-chars 1))
   (princ
 "StartChar: .notdef
-Encoding: 0 -1 0
+Encoding: 0 0 65535
 Width: 1024
 Flags: W
 Fore
@@ -79,6 +79,7 @@ Fore
  624 400 l 1
  400 400 l 1
 EndSplineSet
+EndChar
 ")
 )
 
