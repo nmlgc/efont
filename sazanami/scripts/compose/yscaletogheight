@@ -1,0 +1,5 @@
+h = getgheight();
+
+factor = $1 * 100 / h;
+
+yscale(factor);

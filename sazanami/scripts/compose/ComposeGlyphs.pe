@@ -30,7 +30,7 @@
 setVariables()
 
 // if (!defined("exclamdown")) 
-	copy("!", "exclamdown"); hcrotate(180)
+	copy("exclam", "exclamdown"); hcrotate(180)
 // endif
 // if (!defined("cent") && defined("uniFFE0"))
 	copy("uniFFE0", "cent")
@@ -44,22 +44,25 @@ setVariables()
 // if (!defined("yen"))
 	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
 // endif
-# brokenbar 风
+// if (!defined("brokenbar"))
+	copy("bar", "brokenbar"); ymove(_ZW+_QW); Paste()
+	yscaletogheight(gheight("bar")); alignycenter("brokenbar", "bar")
+// endif
 # section, dieresis ⒑ JIS X 0208
 // if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF43"))
-	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
+	circle("copyright", "uniFF23"); Scale(50, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("ordfeminine"))
 	copy("underscore", "ordfeminine"); down(_40th)
-	append("a", "ordfeminine");
-	super("ordfeminine");
+	append("a", "ordfeminine")
+	super("ordfeminine")
 // endif
 // if (!defined("guillemotleft"))
 	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
 	hankaku()
 // endif
 // if (!defined("logicalnot") && defined("uniFFE2"))
-	copy("uniFFE2", "logicalnot"); xsccaletogwidth(_HW-_10th);
+	copy("uniFFE2", "logicalnot"); xscaletogwidth(_HW-_10th);
 	centerinhankaku(); left(_100th)
 // endif
 // if (!defined("softhyphen"))
@@ -68,7 +71,37 @@ setVariables()
 // if (!defined("registered") && defined(_CIRCLE) && defined("uniFF32")
 	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
 // endif
-
+// if (!defined("macron"))
+	copy("underscore", "macron"); settop(_ZW)
+// endif
+# degree plusminus ⒑ JIS X 0208
+// if (!defined("uni00B2"))
+	copy("two", "uni00B2"); super("uni00B2")
+// endif
+// if (!defined("uni00B3"))
+	copy("three", "uni00B3"); super("uni00B3")
+// endif
+# acute ⒑ JIS X 0208
+# mu 风
+# paragraph ⒑ JIS X 0208
+// if (!defined("periodcentered") && defined("uni0065"))
+	copy("uni0065", "periodcentered")
+// endif
+# cedilla 风
+// if (!defined("uni00B9"))
+	copy("three", "uni00B9"); super("uni00B9")
+	super("ordmasculine")
+// endif
+// if (!defined("ordmasculine"))
+	copy("underscore", "ordmasculine"); down(_40th)
+	append("o", "ordmasculine")
+	super("ordmasculine")
+// endif
+// if (!defined("guillemotright"))
+	copy("greater", "guillemotright")
+	right(_5th); PasteInto(); left(_10th,0)
+	hankaku()
+// endif
 // if (!defined "onequarter")
 	hdfrac("onequarter", "one", "four")
 // endif
@@ -77,6 +110,9 @@ setVariables()
 // endif
 // if (!defined "threequarters")
 	hdfrac("threequarters", "three", "four")
+// endif
+// if (!defined "questiondown")
+	copy("question", "questiondown"); hcrotate(180)
 // endif
 
 #------------------------------------------------------------------------------
@@ -149,14 +185,14 @@ accented("atilde",      "a", tilde); hankaku()
 accented("adieresis",   "a", uml);   hankaku()
 accented("aring",       "a", ring);  hankaku()
 # ae, ccedil 风
-accented("egrave",      "e", grave); hankaku()
-accented("eacute",      "e", acute); hankaku()
-accented("ecircumflex", "e", circ);  hankaku()
-accented("edieresis",   "e", uml);   hankaku()
-accented("igrave",      "i", grave); hankaku()
-accented("iacute",      "i", acute); hankaku()
-accented("icircumflex", "i", circ);  hankaku()
-accented("idieresis",   "i", uml);   hankaku()
+accented("egrave",      "e",        grave); hankaku()
+accented("eacute",      "e",        acute); hankaku()
+accented("ecircumflex", "e",        circ);  hankaku()
+accented("edieresis",   "e",        uml);   hankaku()
+accented("igrave",      "dotlessi", grave); hankaku()
+accented("iacute",      "dotlessi", acute); hankaku()
+accented("icircumflex", "dotlessi", circ);  hankaku()
+accented("idieresis",   "dotlessi", uml);   hankaku()
 # eth 风
 accented("ntilde",      "n", tilde); hankaku()
 accented("ograve",      "o", grave); hankaku()
@@ -176,5 +212,3 @@ accented("udieresis",   "u", uml);   hankaku()
 accented("yacute",      "y", acute); hankaku()
 # thorn 风
 accented("ydieresis",   "y", uml);   hankaku()
-
-#Save($2)
