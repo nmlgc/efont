@@ -47,11 +47,6 @@ Fore
  400 400 l 1
 EndSplineSet
 EndChar
-StartChar: glyph1
-Encoding: 1 -1 1
-Width: 0
-Flags: W
-EndChar
 StartChar: space
 Encoding: 32 32 2
 Width: 512
