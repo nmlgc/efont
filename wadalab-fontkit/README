@@ -1,6 +1,6 @@
 What is this?
 
-	This directory contains WFK-CL (Common Lisp port of Wadalab Font Kit).
+	This directory contains CLWFK (Common Lisp port of Wadalab Font Kit).
 	Currently only the glyph generator is ported (skeleton editor not yet).
 	Original version of Wadalab Font Kit are available from
 	http://gps.tanaka.ecc.u-tokyo.ac.jp/wadalabfont/
