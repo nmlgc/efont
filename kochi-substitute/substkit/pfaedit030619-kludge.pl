@@ -21,7 +21,7 @@ $bbx_uni6E1F = "BBX 12 12 0 -2\n";
 $uni8CA2 = "STARTCHAR uni8CA2\n" .
            "ENCODING 36002\n" .
            "SWIDTH 1000 0\n" .
-           "DWIDTH 140 0\n" .		# PfaEdit のこの定義おかしくないか?
+           "DWIDTH 12 0\n" .
            "BBX 12 12 0 -2\n" .
            "BITMAP\n" .
            "0000\n" .
