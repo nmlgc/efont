@@ -66,7 +66,20 @@ DisplaySize: -24
 AntiAlias: 1
 FitToEm: 1
 ")
-  (format t "BeginChars: 65536 ~A~%" num-chars)
+  (format t "BeginChars: 65536 ~A~%" (+ num-chars 1))
+  (princ
+"StartChar: .notdef
+Encoding: 0 -1 0
+Width: 1024
+Flags: W
+Fore
+400 400 m 1
+ 400 624 l 1
+ 624 624 l 1
+ 624 400 l 1
+ 400 400 l 1
+EndSplineSet
+"
 )
 
 ;
