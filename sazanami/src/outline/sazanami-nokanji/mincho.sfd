@@ -2777,8 +2777,8 @@ EndSplineSet
 Ligature: 0 0 'liga' ff l
 Ligature: 0 0 'liga' f f l
 EndChar
-StartChar: uniFF01
-Encoding: 65281 65281 65535
+StartChar: uniFF02
+Encoding: 65282 65282 65535
 Width: 1024
 Flags: HW
 Fore
