@@ -42,6 +42,6 @@ endloop
 
 SetNameTable(style)
 
-Generate(ttf, "ttf", 12)
+Generate(ttf, "ttf", 0x80084)
 
 Quit()

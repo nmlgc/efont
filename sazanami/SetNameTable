@@ -29,33 +29,44 @@
 
 # This file is encoded in UTF-8.
 
-ja_JP = 0x411
+en_US = 0x401; ja_JP = 0x411
 
 style= $1
 
 if (style == "min")
     jFontFamilyName = "さざなみ明朝"
-    jFontSubfamilyName = "Medium"
-    jFontName = jFontFamilyName + jFontSubfamilyName
+    eFontFamilyName = "Sazanami Mincho"
 else
     jFontFamilyName = "さざなみゴシック"
-    jFontSubfamilyName = "Medium"
-    jFontName = jFontFamilyName + jFontSubfamilyName
+    eFontFamilyName = "Sazanami Gothic"
 endif
 
+FontSubfamilyName = "Regular"
+eFontName = eFontFamilyName + " " + FontSubfamilyName
+jFontName = jFontFamilyName + FontSubfamilyName
+
+eManufacturerName = "Electronic Font Open Laboratory (/efont/)"
 jManufacturerName = "電子書体オープンラボ(/efont/)"
+eDesigner = "Kanji autodesign by CLWFK (Non-kanji glyphs by Yasuyuki Furukawa)"
 jDesigner = "CLWFKによる漢字自動デザイン(非漢字は古川泰之氏)"
 jSampleText = "波のように広がっていくことを願って「漣」と命名されました"
 
+SetFontNames(eFontName, eFontFamilyName, eFontName)
+
 # SetTTFName(ja_JP, 0, jCopyrightNotice)
+SetTTFName(en_US, 1, eFontFamilyName)
 SetTTFName(ja_JP, 1, jFontFamilyName)
-SetTTFName(ja_JP, 2, jFontSubfamilyName)
+SetTTFName(en_US, 2, FontSubfamilyName)
+SetTTFName(ja_JP, 2, FontSubfamilyName)
 # SetTTFName(ja_JP, 3, jUniqueFontIdentifier)
-SetTTFName(ja_JP, 4, jFontName);
+SetTTFName(en_US, 4, eFontName)
+SetTTFName(ja_JP, 4, jFontName)
 # SetTTFName(ja_JP, 5, jVersionString)
 # SetTTFName(ja_JP, 6, jPostScriptName)
 # SetTTFName(ja_JP, 7, jTradeMark)
+SetTTFName(en_US, 8, eManufacturerName)
 SetTTFName(ja_JP, 8, jManufacturerName)
+SetTTFName(en_US, 9, eDesigner)
 SetTTFName(ja_JP, 9, jDesigner)
 # SetTTFName(ja_JP, 10, jDescription)
 # SetTTFName(ja_JP, 11, jUrlVerdor)
