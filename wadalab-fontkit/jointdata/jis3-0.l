@@ -1,4 +1,4 @@
-; Copyright (c) 1990-2003
+; Copyright (c) 1990-2004
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -996,7 +996,7 @@
 (setq 1-25-81 '(yoko おんなへん 是))
 (setq 1-25-82 '(yoko おんなへん 世木)) ;1-35-22
 (setq 1-25-83 '(yoko おんなへん (tate 左 たて月)))
-(setq 1-25-84 '(yoko おんなへん 冐))
+(setq 1-25-84 '(yoko おんなへん 冒))
 (setq 1-25-85 '(yoko おんなへん 咼))
 (setq 1-25-86 '(yoko おんなへん 保))
 (setq 1-25-87 '(yoko おんなへん 徭の右))

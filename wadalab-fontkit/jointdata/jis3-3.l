@@ -1,4 +1,4 @@
-; Copyright (c) 1990-2003
+; Copyright (c) 1990-2004
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -581,8 +581,8 @@
 (setq 1-69-58 '(yoko かねへん 焦))
 (setq 1-69-59 '(yoko かねへん 旧尊))
 (setq 1-69-60 '(yoko かねへん (tate (yoko 旧旡へん 旧旡) 日)))
-(setq 1-69-61 '(yoko かねへん 旧幾))
-(setq 旧幾 '(tate (yoko いとがしら いとがしら) (kamae ほこ 人)))
+(setq 1-69-61 '(yoko かねへん 旧幾もどき))
+(setq 旧幾もどき '(tate (yoko いとがしら いとがしら) 戍))
 (setq 1-69-62 '(yoko かねへん (kamae もんがまえ 月)))
 (setq 1-69-63 '(yoko かねへん 替))
 (setq 1-69-64 '(yoko かねへん (tare まだれ 旧兼)))

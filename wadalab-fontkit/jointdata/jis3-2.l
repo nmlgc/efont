@@ -1,4 +1,4 @@
-; Copyright (c) 1990-2003
+; Copyright (c) 1990-2004
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -844,7 +844,7 @@
 (setq 1-56-23 '(tate くさかんむり 姑))
 (setq 1-56-24 '(tate くさかんむり 碌の右))
 (setq 1-56-25 '(tate くさかんむり 河))
-(setq 1-56-26 '(tate くさかんむり 僕の右))
+(setq 1-56-26 '僕の右)
 (setq 1-56-27 '(tate くさかんむり まがりがわ田))
 (setq 1-56-28 '(tate くさかんむり 旧服))
 (setq 旧服 '(yoko 旧月 服の右))
