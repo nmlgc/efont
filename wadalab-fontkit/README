@@ -1,0 +1,74 @@
+What is this?
+
+	This directory contains WFK-CL (Common Lisp port of Wadalab Font Kit).
+	Currently only the glyph generator is ported (skeleton editor not yet).
+	Original version of Wadalab Font Kit are available from
+	http://gps.tanaka.ecc.u-tokyo.ac.jp/wadalabfont/
+
+	This port is developed for a totally free font (it will be called as
+	`Sazanami' font family).
+
+Tested compilers:
+
+	CMU Common Lisp Snapshot-2004-05 (FreeBSD/x86)
+	(CMUCL 18e's compiler is not supported due to loss of precision)
+
+	GNU GNU CLISP 2.33 (compiled binary is not supported yet.)
+	(CLISP 2.30 is not supported - it causes stack overflow)
+
+How to build glyphs:
+
+	Install CMUCL and Type `make' in this directory.
+	Output font files are embedded in build/outline/wadalab-*/*.ps.
+	You can extract them by wftopfa (ftp://ftp.ipl.t.u-tokyo.ac.jp/
+	Font/tools/wftopfa.c).
+
+	If you want to build 'Sazanami' fonts, you must install FontForge
+	(http://fontforge.sf.net). You can build TTFs by typing `make'
+	at ../sazanami/ directory.
+
+Differences from original
+
+	This port is based on wadalab font kit 20030826 and a renderer patch
+	(http://khdd.net/kanou/fonts/wadalab/patch.skeleton-editor.tar.gz)
+	is applied to it.
+
+	Added files: renderer/compat.l, renderer/compile.l, renderer/out2sfd.l.
+	Removed file: primdata/prim-pack.l (a binary file).
+	Renamed file: All substrings in files and their names 'naal' are 
+		      substitute to 'maru', a name of generic category.
+
+	Currently glyph editor and experimental codes are not ported.
+
+Copyright:
+
+ Copyright (c) 1990-2003
+ 	Wada Laboratory, the University of Tokyo. All rights reserved.
+ Copyright (c) 2003-2004
+ 	Electronic Font Open Laboratory (/efont/). All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+ 3. Neither the name of the Wada Laboratory, the University of Tokyo nor
+    the names of its contributors may be used to endorse or promote products
+    derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY WADA LABORATORY, THE UNIVERSITY OF TOKYO AND
+ CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE LABORATORY OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+ $Id$
