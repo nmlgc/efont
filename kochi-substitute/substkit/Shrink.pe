@@ -4,7 +4,7 @@
 Open("oradano.ttf");
 Select(0u000, 0u390); Clear()
 Select(0u452, 0uffff); Clear()
-Generate("o.ttf");
+Generate("o.ttf", "", 0xa0000);
 Close()
 
 # 漢字を 61 単位だけ上に動かす
