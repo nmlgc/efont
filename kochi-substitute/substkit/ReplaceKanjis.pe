@@ -145,8 +145,6 @@ else
 	Import("Mincho-Fix-20.bdf")
 	Import("Mincho-Fix-21.bdf")
 endif
-Import("Common-Fix-16.bdf")
-Import("Common-Fix-17.bdf")
 
 Print("Generating font...")
 Generate(fontfile:r:t + "-subst.ttf", "ttf", 0)
