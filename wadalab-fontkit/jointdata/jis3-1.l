@@ -1530,7 +1530,7 @@
 (setq 1-47-10 '(yoko 目 癸つくり))
 (setq 1-47-11 '(tate (yoko 矛 のぶん) 目))
 (setq 1-47-12 '(yoko 目 苗))
-(setq 1-47-13 '(yoko 目 蓋))
+(setq 1-47-13 '(yoko 目 盍))
 (setq 1-47-14 '(yoko 目 叟))
 (setq 1-47-15 '(yoko 目 責))
 (setq 1-47-16 '(yoko 目 章))
