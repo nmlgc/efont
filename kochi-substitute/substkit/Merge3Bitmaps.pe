@@ -11,23 +11,22 @@ endif
 size = $1; ISO8859_1 = $2; JISX0208 = $3; JISX0201 = $4; result = $5
 
 Open(ISO8859_1)
+Select(0u0,0u1F, 0u7F,0u9F); Clear()
 Reencode("iso10646-1")
 Generate(ISO8859_1:t:r + ".bdf", "bdf", 0)
 SetCharCnt(65536)
 Close()
 
 Open(JISX0201)
+Select(0u0,0u1F, 0u7F,0uA0, 0uE0,0uFF); Clear()
 Reencode("iso10646-1")
 Generate(JISX0201:t:r + ".bdf", "bdf", 0)
 SetCharCnt(65536)
 Close()
 
-$trace=1
-
 Open(JISX0208)
 
 if (result == "mplus.bdf")
-#	Select("uni0000", "uni001F"); Clear()
 	Select("0x2474"); SetCharName("uni3094")
 	Select("0x2D21"); SetCharName("uni2460")
 	Select("0x2D22"); SetCharName("uni2461")
@@ -83,7 +82,7 @@ if (result == "mplus.bdf")
 	Select("0x2D53"); SetCharName("uni338E")	# mg
 	Select("0x2D54"); SetCharName("uni33C4")	# cc
 	Select("0x2D55"); SetCharName("uni33A1")	# m^2
-	Select("0x2D56"); SetCharName("uni337B")	# 平成
+	Select("0x2D5F"); SetCharName("uni337B")	# 平成
 	Select("0x2D62"); SetCharName("uni2116")	# No
 	Select("0x2D63"); SetCharName("uni33CD")	# KK
 	Select("0x2D64"); SetCharName("uni2121")	# Tel
