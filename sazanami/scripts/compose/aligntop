@@ -1,7 +1,7 @@
-# set top of bbtox to the top of target.
+# set top of bbox to the top of target.
 #
 # settop(target)
-# settop(cid, target)
+# settop(gid, target)
 
 if ($argc >= 3)
 	c = $1;
