@@ -47,6 +47,13 @@ endloop
 "scripts/compose/fixupOutline"()
 "scripts/compose/ComposeGlyphs.pe"()
 
+SelectAll();
+foreach;  RemoveATT("Ligature", "*", "*"); endloop
+
+#Select("onequarter"); RemoveATT("Ligature","*","*")
+#Select("onehalf"); RemoveATT("Ligature","*","*")
+#Select("threequarters"); RemoveATT("Ligature","*","*")
+
 SetNameTable(style)
 SetPanose(3, 9)	 // monospaced
 
