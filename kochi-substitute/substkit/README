@@ -1,0 +1,43 @@
+東風フォント代用品作成キット Version 1.0 
+2003-06-21  狩野 宏樹 <kanou@khdd.net>
+
+● 概要
+このキットは、東風フォントの代用品(substitution)を作成するために
+作成されました。
+漢字のアウトライン部分を取り除き、他のフォントから補うための PfaEdit 
+スクリプト ReplaceKanji.pe と、それを呼び出すためのシェルスクリプト、
+フォントの構築に必要な修正データかららなります。
+
+● ReplaceKanji.pe の使い方
+まず、PfaEdit をインストールする必要があります。
+030619 版に同梱の SizeOf.diff を当てた物か、オリジナルの配布元に
+このパッチが取り込まれた後のバージョンを使用してください。
+
+・東風ゴシックから漢字を抜き取る場合:
+pfaedit -script ReplaceKanji.pe kochi-gothic.ttf
+・東風ゴシックから漢字を抜き取り、他のソースで置き換える場合:
+pfaedit -script ReplaceKanji.pe kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd  sasage-mono.ttf
+どちらの場合も、出力ファイル名は kochi-gothic-subst.ttf となります。
+
+代用フォントの作成作業は、同梱の makefont.sh で行いました。
+
+● 置き換えに使用したフォントファイル
+makefont.sh を実行するのに必要なファイルは以下から入手してください。
+
+和田研フォントを em=1000 から 1024 へとリサイズ変換し、1 ファイルにまとめた物
+(赤垣さんによる)
+http://www.fdiary.net/~kazuhiko/tmp/wadalab-gothic-descent-1024.sfd.bz2
+http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
+
+この中にはアウトラインパスが乱れているものがあるので、それを正しく作り直した
+Gothic-Fix.sfd, Mincho-Fix.sfd (本アーカイブ内に同梱) を併用してください。
+
+内田明さんの作られたギリシャ文字・キリル文字をモノスペース化したもの
+http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/sasagemono20030620.tgz
+このフォント内に定義されていてもアウトラインのない文字数を減らすために、
+Shrink.pe を使用するとスクリプトの実行が速くなります。
+
+● 利用上の注意
+フォント情報は、オリジナルのフォントから変更されません。
+オリジナルと共存できない、情報が不正確であるなどの問題を認識して
+ご利用ください。

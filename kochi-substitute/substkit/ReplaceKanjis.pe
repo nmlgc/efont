@@ -1,0 +1,145 @@
+#!/usr/local/bin/pfaedit -script
+
+# フラグ設定
+SetPref("AutoHint", 0); SetPref("HintForGen", 0); SetPref("GreekFixup", 0)
+
+# 定数定義
+hex = Array(16)
+	hex[0]="0"; hex[1]="1"; hex[2]="2"; hex[3]="3"
+	hex[4]="4"; hex[5]="5"; hex[6]="6"; hex[7]="7"
+	hex[8]="8"; hex[9]="9"; hex[10]="a"; hex[11]="b"
+	hex[12]="c"; hex[13]="d"; hex[14]="e"; hex[15]="f"
+Greek = Array(24)
+	i = 0
+	Greek[i++]="Alpha"; Greek[i++]="Beta";	Greek[i++]="Gamma"
+	Greek[i++]="Delta"; Greek[i++]="Epsilon"; Greek[i++]="Zeta"
+	Greek[i++]="Eta"; Greek[i++]="Theta"; Greek[i++]="Iota"
+	Greek[i++]="Kappa"; Greek[i++]="Lambda"; Greek[i++]="Mu"
+	Greek[i++]="Nu"; Greek[i++]="Xi"; Greek[i++]="Omicron"
+	Greek[i++]="Pi"; Greek[i++]="Rho"; Greek[i++]="Sigma"
+	Greek[i++]="Tau"; Greek[i++]="Upsilon"; Greek[i++]="Phi"
+	Greek[i++]="Chi"; Greek[i++]="Psi"; Greek[i++]="Omega"
+greek = Array(24)
+	i = 0
+	greek[i++]="alpha"; greek[i++]="beta";	greek[i++]="gamma"
+	greek[i++]="delta"; greek[i++]="epsilon"; greek[i++]="zeta"
+	greek[i++]="eta"; greek[i++]="theta"; greek[i++]="iota"
+	greek[i++]="kappa"; greek[i++]="lambda"; greek[i++]="uni03BC"
+	greek[i++]="nu"; greek[i++]="xi"; greek[i++]="omicron"
+	greek[i++]="pi"; greek[i++]="rho"; greek[i++]="sigma"
+	greek[i++]="tau"; greek[i++]="upsilon"; greek[i++]="phi"
+	greek[i++]="chi"; greek[i++]="psi"; greek[i++]="omega"
+
+# 最初のファイルを開く
+fontfile = $1
+Open(fontfile)
+
+# 埋め込みビットマップを BDF で保存し、余計なラスタライズをしないようにする
+Print("saving BDFs...")
+Generate(fontfile:r:t + "-subst.ttf", "bdf", 0)
+bitmaps = Array(SizeOf($bitmaps))
+i = 0; while (i < SizeOf($bitmaps)) 
+    bitmaps[i] = $bitmaps[i]
+i++; endloop
+
+# 漢字を取り除く
+# 東風には U+Fxxx の互換漢字は無いので、U+4000〜U+9FFF を削ればいい
+w = 4; while (w <= 9)
+ x = 0; while (x <= 15)
+  y = 0; while (y <= 15)
+   z = 0; while (z <= 15)
+      charname = "uni" + hex[w] + hex[x] + hex[y] + hex[z]
+      if (InFont(charname))
+	  Select(charname); Clear()
+      endif
+   z++; endloop
+  y++; endloop;  Print(hex[w], hex[x]);
+ x++; endloop
+w++; endloop
+
+# ギリシャ文字・キリル文字を含むブロックを取り除く (U+0300〜04FF)
+ x = 3; while (x <= 4)
+  y = 0; while (y <= 15)
+   z = 0; while (z <= 15)
+      charname = "uni" + "0" + hex[x] + hex[y] + hex[z]
+      if (InFont(charname))
+	  Select(charname); Clear()
+      endif
+   z++; endloop
+  y++; endloop
+ x++; endloop
+
+# ビットマップを取り除くためには保存して再読み込みするしかない。
+Print("Removing bitmap...")
+Generate(fontfile:r:t + "-subst.ttf", "", 0)
+Close()
+Open(fontfile:r:t + "-subst.ttf")
+
+# 残りのファイルを取り込む
+i = 2; while (i < $argc) 
+    if (Strcasestr($argv[i], "sasage-mono.ttf") >= 0) 
+       # 和田研フォントから読み込んでしまった不要な非漢字のせいで
+       # sasage-mono.ttf から文字が読み込めないので、除去する
+       # ギリシャ文字小文字は常に。ギリシャ文字大文字とキリル文字は明朝の時のみ
+       j = 0; while (j < 24) 
+           if (InFont(Greek[j])) Select(Greek[j]); Clear(); endif
+       j++; endloop
+       if (Strcasestr(fontfile:r, "mincho") >= 0) 
+           j = 0; while (j < 24) 
+               if (InFont(greek[j])) Select(greek[j]); Clear(); endif
+           j++; endloop
+           y = 1; while (y <= 9)
+               z = 0; while (z <= 9)
+                   cyrillic = "afii100" + hex[y] + hex[z]
+                   if (InFont(cyrillic)) Select(cyrillic); Clear(); endif
+               z++; endloop
+           y++; endloop;
+       endif
+    endif
+    Print("Merging " + $argv[i] + "...")
+    MergeFonts($argv[i])
+i++; endloop
+
+# ギリシャ・キリル文字を縦書きにコピー
+Print("Copyihg...")
+$trace=1
+if ($argc > 2)
+    i = 0; while (i < 24)
+	vGreek = Greek[i] + ".vert"
+	Select(Greek[i]); Copy(); Select(vGreek); Paste()
+	vgreek = greek[i] + ".vert"
+	Select(greek[i]); Copy(); Select(vgreek); Paste()
+
+    i++; endloop
+    y = 1; while (y <= 9)
+        z = 0; while (z <= 15)
+            cyrillic = "afii100" + hex[y] + hex[z]
+            if (InFont(cyrillic))
+    	        vcyrillic = cyrillic + ".vert"
+  	        Select(cyrillic); Copy(); Select(vcyrillic); Paste()
+            endif
+        z++; endloop
+    y++; endloop;
+else
+    i = 0; while (i < 24)
+	Select(Greek[i] + ".vert"); SelectMore(greek[i] + ".vert"); Clear()
+    i++; endloop
+    y = 1; while (y <= 9)
+        z = 0; while (z <= 15)
+            Select("afii100" + hex[y] + hex[z] + ".vert"); Clear()
+        z++; endloop
+    y++; endloop;
+   
+endif
+$trace=0
+
+# ビットマップの再読込み後、ファイルを生成
+Print("Importing BDFs...")
+i = 0; while (i < SizeOf(bitmaps))
+	bdfname = fontfile:r:t + "-subst-" + bitmaps[i] + ".bdf";
+	Import(bdfname);
+	Print(bdfname);
+i++; endloop
+
+Print("Generating font...")
+Generate(fontfile:r:t + "-subst.ttf", "ttf", 0)

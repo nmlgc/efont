@@ -1,0 +1,24 @@
+! 東風フォント代用品
+
+!! 概要
+このフォントは、以下のものから構成されています。
+
+* 明朝体
+** 仮名、英数字：従来の東風明朝
+** ギリシャ文字、キリル文字：内田さん製作の拡張フォント
+** それ以外：和田研明朝
+
+* ゴチック体
+** 仮名、英数字：従来の東風ゴチック
+** ギリシャ文字、キリル文字：内田さん製作の拡張フォント
+** それ以外：和田研ゴチック (JISX0208 分)、和田研丸ゴチック (JISX0212 分)
+
+!! 一時配布元
+http://sourceforge.jp/projects/efont/files/
+
+!! お問い合わせ
+efont-devel メイリングリスト (参加者のみ投稿可)
+http://lists.sourceforge.jp/mailman/listinfo/efont-devel
+もしくは、以下のメンテナまでどうぞ。
+* Kazuhiko <kazuhiko@fdiary.net>
+* KANOU Hiroki <kanou@khdd.net>

@@ -1,0 +1,9 @@
+#!/usr/local/bin/pfaedit -script
+
+# sasage-mono.ttf の未定義のグリフを取り除く
+Open("sasage-mono.ttf");
+Select(0u000, 0u390); Clear()
+Select(0u452, 0uffff); Clear()
+Generate("sasage-mono.ttf");
+Close()
+
