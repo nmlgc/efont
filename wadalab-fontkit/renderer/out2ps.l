@@ -32,9 +32,9 @@
 ;
 ; ファイルのヘッダの出力
 ;
-(defun outputFileHeader (scale line col)
+(defun outputFileHeader (scale row col)
     (format t "%!~%%%BoundingBox: 45 45 ~A ~A~%" 
-	    (+ 55 (round (* 0.001 scale (- (* line 500) 100))))
+	    (+ 55 (round (* 0.001 scale (- (* row 500) 100))))
 	    (+ 55 (round (* 0.001 scale (- (* col 500) 100)))))
     (princ 
 "%!
@@ -257,16 +257,16 @@ end
 ; ファイルの生成
 ;
 (defun out-to-ps-all (outlines tag psfile 
-		      &key (col 9) (line (round (* 0.67 col)))
+		      &key (col 9) (row (round (* 0.67 col)))
 		           (printfile t) (remove-overlap t) 
 			   (set-code-by-kanji t)
 	             )
  (with-open-stream (*standard-output* (open psfile :direction :output))
-   (let* ((scale (floor (* 160.0 (min (/ 9.0 col) (/ 6.0 line)))))
+   (let* ((scale (floor (* 160.0 (min (/ 9.0 col) (/ 6.0 row)))))
 	  (ii nil)(jj nil)(page nil)(last #x2120)
 	  (skeleton)(hints)(type1)(kstr)
 	  (next nil)(nextnext nil)(x1 nil)(y1 nil)(x2 nil)(y2 nil))
-    (outputFileHeader scale line col)
+    (outputFileHeader scale row col)
     (setq ii 0 jj 0 page 1)
     (outputPageHeader page psfile printfile scale)
     (do 
@@ -315,7 +315,7 @@ end
 	     (format t "500 ~A translate~%" (* -500 (1- col)))
 	     (setq ii 0)
 	     (setq jj (1+ jj))
-	     (cond ((and (eq jj line) (consp (cdr ol)))
+	     (cond ((and (eq jj row) (consp (cdr ol)))
 		    (format t "showpage~%")
 		    (setq page (1+ page))
 		    (outputPageHeader page psfile printfile scale)
