@@ -29,27 +29,60 @@
 
 LISP=	lisp -batch -quiet -load
 #LISP=	clisp -interactive-debug
+FONTFORGE=	/usr/local/bin/fontforge -script
+
+BUILDTTF=	${FONTFORGE} scripts/BuildTTF.pe
 
 SRC=	makeall.l ../wadalab-fontkit/kanjidata/alljis.l \
-	../wadalab-fontkit/jointdata/alljoint.l \
-	../wadalab-fontkit/primdata/prim-all.l
+		../wadalab-fontkit/jointdata/alljoint.l \
+		../wadalab-fontkit/primdata/prim-all.l
 
-all: sazanami-mincho.ttf sazanami-gothic.ttf
+GOTHIC_BDF=	bdf/misaki-gothic-8.bdf bdf/misaki-gothic-9.bdf \
+		bdf/mplus-10.bdf bdf/mplus-11.bdf \
+		bdf/shinonome-gothic-12.bdf bdf/shinonome-gothic-13.bdf \
+		bdf/shinonome-gothic-14.bdf bdf/shinonome-gothic-15.bdf \
+		bdf/shinonome-gothic-16.bdf bdf/shinonome-gothic-17.bdf \
+		bdf/ayu-gothic-18.bdf bdf/ayu-gothic-19.bdf \
+		bdf/ayu-gothic-20.bdf bdf/ayu-gothic-21.bdf
+MINCHO_BDF=	bdf/misaki-mincho-8.bdf bdf/misaki-mincho-9.bdf \
+		bdf/mplus-10.bdf bdf/mplus-11.bdf \
+		bdf/shinonome-mincho-12.bdf bdf/shinonome-mincho-13.bdf \
+		bdf/shinonome-mincho-14.bdf bdf/shinonome-mincho-15.bdf \
+		bdf/shinonome-mincho-16.bdf bdf/shinonome-mincho-17.bdf \
+		bdf/ayu-mincho-18.bdf bdf/ayu-mincho-19.bdf \
+		bdf/kappa-20.bdf bdf/kappa-21.bdf
+BDF=		${GOTHIC_BDF} ${MINCHO_BDF}
+GOTHIC_SRC=	Sznm-G-K.sfd src/outline/sazanami-nokanji/gothic.sfd \
+		src/outline/kochi-nokanji/kochi-gothic-nokanji.sfd \
+		${GOTHIC_BDF}
+MINCHO_SRC=	Sznm-M-K.sfd src/outline/sazanami-nokanji/mincho.sfd \
+		src/outline/kochi-nokanji/kochi-mincho-nokanji.sfd \
+		src/outline/oradano/oradano.ttf \
+		${MINCHO_BDF}
 
-sazanami-mincho.ttf: Sznm-M-K.sfd ../kochi-nokanji/kochi-mincho-nokanji.sfd
-	fontforge -script mergefonts.pe sazanami-mincho.ttf Sznm-M-K.sfd ../kochi-nokanji/kochi-mincho-nokanji.sfd
+all: sazanami-gothic.ttf sazanami-mincho.ttf 
 
-sazanami-gothic.ttf: Sznm-G-K.sfd ../kochi-nokanji/kochi-gothic-nokanji.sfd
-	fontforge -script mergefonts.pe sazanami-gothic.ttf Sznm-G-K.sfd ../kochi-nokanji/kochi-gothic-nokanji.sfd
+sazanami-gothic.ttf: ${GOTHIC_SRC}
+	${BUILDTTF} sazanami-gothic.ttf $(.ALLSRC)
 
-Sznm-G-K.sfd: ${SRC}
-	${LISP} ./makeall.l
+sazanami-mincho.ttf: ${MINCHO_SRC}
+	${BUILDTTF} sazanami-mincho.ttf $(.ALLSRC)
 
 Sznm-M-K.sfd: ${SRC}
 	${LISP} ./makeall.l
 
-sfd: ${SRC}
+Sznm-G-K.sfd: ${SRC}
 	${LISP} ./makeall.l
 
-clean:
+sfd: Sznm-G-K.sfd Sznm-M-K.sfd
+
+${BDF}:
+	(cd bdf/; make)
+
+clean: 
+	rm -f *.ttf *.core *~
+	(cd bdf/; make clean)
+
+allclean:
 	rm -f *.ps *.sfd *.ttf *.core *~
+	(cd bdf/; make clean)

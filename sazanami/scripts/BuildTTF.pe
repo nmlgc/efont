@@ -37,7 +37,12 @@ ttf = $1; shift
 Open($1); shift
 
 while ($argc > 1)
-	MergeFonts($1); shift
+	if ($1:e == "bdf")
+		Import($1); shift
+	else
+		MergeFonts($1); shift
+	endif
+	
 endloop
 
 SetNameTable(style)
