@@ -31,7 +31,7 @@
 
 ;; load.l
 (or (boundp 'base-directory)(defvar base-directory "."))
-(or (boundp 'source-load)(defvar source-load nil))
+(or (boundp 'source-load)(defvar source-load t))
 
 ;(load "../../../renderer/lib.l")
 (let*
