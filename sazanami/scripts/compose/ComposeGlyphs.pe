@@ -45,7 +45,7 @@ setVariables()
 	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
 // endif
 // if (!defined("brokenbar"))
-	copy("bar", "brokenbar"); ymove(_ZW+_QW); Paste()
+	copy("bar", "brokenbar"); ymove(_FW+_QW); Paste()
 	yscaletogheight(gheight("bar")); alignycenter("brokenbar", "bar")
 // endif
 # section, dieresis ¢º JIS X 0208
@@ -72,7 +72,7 @@ setVariables()
 	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("macron"))
-	copy("underscore", "macron"); settop(_ZW)
+	copy("underscore", "macron"); settop(_FW)
 // endif
 # degree plusminus ¢º JIS X 0208
 // if (!defined("uni00B2"))
