@@ -24,7 +24,7 @@ OS2WinDescent: 144
 ScriptLang: 1
  1 kana 2 JAN  dflt 
 TableOrder: GSUB 1
-	'vrt2'
+	'vert'
 LangName: 65535 "Public Domain(except NAGA10)" "Kochi Mincho" "Regular" "Kochi Mincho" "Kochi Mincho" "Version 0.01" "Kochi-Mincho" "Kochi" 
 LangName: 1033 "" "" "Regular" "Kochi Mincho" "" "Version 0.01" "" "Kochi" 
 LangName: 1041 "+MNEw1jDqMMMwrzDJMOEwpDDz(NAGA10+MJKWZDBP)" "+Z3GYqGYOZx0A" "+ahlulgAA" "+Z3GYqGYOZx0A" "+Z3GYqGYOZx0A" "Version 0.01" "Kochi-Mincho" "+Z3GYqAAA" 
@@ -3153,7 +3153,7 @@ Fore
  576.667 261 598.5 274.167 613.5 290.5 c 128
  628.5 306.833 636 327 636 351 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' section.vert
+Substitution: 1 0 'vert' section.vert
 EndChar
 StartChar: dieresis
 Encoding: 168 168 105
@@ -3179,7 +3179,7 @@ Fore
  588 695 574.5 700.5 563.5 711.5 c 128
  552.5 722.5 547 736 547 752 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' dieresis.vert
+Substitution: 1 0 'vert' dieresis.vert
 EndChar
 StartChar: degree
 Encoding: 176 176 113
@@ -3205,7 +3205,7 @@ Fore
  110.667 786 90.6667 777.5 74 760.5 c 128
  57.3333 743.5 49 723.667 49 701 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' degree.vert
+Substitution: 1 0 'vert' degree.vert
 EndChar
 StartChar: plusminus
 Encoding: 177 177 114
@@ -3231,7 +3231,7 @@ Fore
  159 16 l 1
  159 65 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' plusminus.vert
+Substitution: 1 0 'vert' plusminus.vert
 EndChar
 StartChar: acute
 Encoding: 180 180 117
@@ -3248,7 +3248,7 @@ Fore
  489 796 l 1
  499 811.333 511.667 826.667 527 842 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' acute.vert
+Substitution: 1 0 'vert' acute.vert
 EndChar
 StartChar: paragraph
 Encoding: 182 182 119
@@ -3270,7 +3270,7 @@ Fore
  324 407 282.5 425 245.5 461 c 128
  208.5 497 190 540.667 190 592 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' paragraph.vert
+Substitution: 1 0 'vert' paragraph.vert
 EndChar
 StartChar: multiply
 Encoding: 215 215 152
@@ -3291,7 +3291,7 @@ Fore
  225 38 l 1
  190 73 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' multiply.vert
+Substitution: 1 0 'vert' multiply.vert
 EndChar
 StartChar: divide
 Encoding: 247 247 184
@@ -3322,7 +3322,7 @@ Fore
  491 109 477.5 114.667 466.5 126 c 128
  455.5 137.333 450 151 450 167 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' divide.vert
+Substitution: 1 0 'vert' divide.vert
 EndChar
 StartChar: uni2010
 Encoding: 8208 8208 769
@@ -3335,7 +3335,7 @@ Fore
  322 339 l 1
  322 388 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2010.vert
+Substitution: 1 0 'vert' uni2010.vert
 EndChar
 StartChar: afii00208
 Encoding: 8213 8213 774
@@ -3348,7 +3348,7 @@ Fore
  94 339 l 1
  94 388 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' afii00208.vert
+Substitution: 1 0 'vert' afii00208.vert
 EndChar
 StartChar: quoteleft
 Encoding: 8216 8216 776
@@ -3370,7 +3370,7 @@ Fore
  832.5 758.5 845 779 861 797 c 128
  877 815 895 831 915 845 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' quoteleft.vert
+Substitution: 1 0 'vert' quoteleft.vert
 EndChar
 StartChar: quoteright
 Encoding: 8217 8217 777
@@ -3392,7 +3392,7 @@ Fore
  178.5 681.5 166 661 150 643 c 128
  134 625 116 609 96 595 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' quoteright.vert
+Substitution: 1 0 'vert' quoteright.vert
 EndChar
 StartChar: quotedblleft
 Encoding: 8220 8220 780
@@ -3428,7 +3428,7 @@ Fore
  818.5 758.5 831 779 847 797 c 128
  863 815 881 831 901 845 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' quotedblleft.vert
+Substitution: 1 0 'vert' quotedblleft.vert
 EndChar
 StartChar: quotedblright
 Encoding: 8221 8221 781
@@ -3464,7 +3464,7 @@ Fore
  385.5 693.5 373 673 357 655 c 128
  341 637 323 621 303 607 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' quotedblright.vert
+Substitution: 1 0 'vert' quotedblright.vert
 EndChar
 StartChar: dagger
 Encoding: 8224 8224 784
@@ -3517,7 +3517,7 @@ Fore
  426 756 433 771.333 447 786 c 128
  461 800.667 475.333 808 490 808 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' dagger.vert
+Substitution: 1 0 'vert' dagger.vert
 EndChar
 StartChar: daggerdbl
 Encoding: 8225 8225 785
@@ -3606,7 +3606,7 @@ Fore
  313 557 299 562 287 572 c 128
  275 582 269 594 269 608 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' daggerdbl.vert
+Substitution: 1 0 'vert' daggerdbl.vert
 EndChar
 StartChar: twodotenleader
 Encoding: 8229 8229 789
@@ -3632,7 +3632,7 @@ Fore
  751 305 737.5 310.5 726.5 321.5 c 128
  715.5 332.5 710 346 710 362 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' twodotenleader.vert
+Substitution: 1 0 'vert' twodotenleader.vert
 EndChar
 StartChar: ellipsis
 Encoding: 8230 8230 790
@@ -3667,7 +3667,7 @@ Fore
  165 305 151.5 310.5 140.5 321.5 c 128
  129.5 332.5 124 346 124 362 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' ellipsis.vert
+Substitution: 1 0 'vert' ellipsis.vert
 EndChar
 StartChar: perthousand
 Encoding: 8240 8240 799
@@ -3736,7 +3736,7 @@ Fore
  140.667 742 124.5 725.833 111.5 693.5 c 128
  98.5 661.167 92 622.667 92 578 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' perthousand.vert
+Substitution: 1 0 'vert' perthousand.vert
 EndChar
 StartChar: minute
 Encoding: 8242 8242 801
@@ -3756,7 +3756,7 @@ Fore
  207.167 823.833 212.667 830.333 220 835 c 128
  227.333 839.667 237 841.333 249 840 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' minute.vert
+Substitution: 1 0 'vert' minute.vert
 EndChar
 StartChar: second
 Encoding: 8243 8243 802
@@ -3788,7 +3788,7 @@ Fore
  337.167 823.833 342.667 830.333 350 835 c 128
  357.333 839.667 367 841.333 379 840 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' second.vert
+Substitution: 1 0 'vert' second.vert
 EndChar
 StartChar: uni203B
 Encoding: 8251 8251 810
@@ -3845,7 +3845,7 @@ Fore
  119 -26 l 1
  84 9 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni203B.vert
+Substitution: 1 0 'vert' uni203B.vert
 EndChar
 StartChar: uni2103
 Encoding: 8451 8451 864
@@ -3895,7 +3895,7 @@ Fore
  131.667 757 115.167 750 101.5 736 c 128
  87.8333 722 81 705.667 81 687 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2103.vert
+Substitution: 1 0 'vert' uni2103.vert
 EndChar
 StartChar: afii61352
 Encoding: 8470 8470 883
@@ -3951,7 +3951,7 @@ Fore
  930 2 918 7 908 17 c 128
  898 27 893 39.3333 893 54 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' afii61352.vert
+Substitution: 1 0 'vert' afii61352.vert
 EndChar
 StartChar: uni2121
 Encoding: 8481 8481 894
@@ -4026,7 +4026,7 @@ Fore
  962.333 105.667 957.667 60 957 20 c 1
  869.667 22 780 22 688 20 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2121.vert
+Substitution: 1 0 'vert' uni2121.vert
 EndChar
 StartChar: uni212B
 Encoding: 8491 8491 904
@@ -4074,7 +4074,7 @@ Fore
  352 265 l 1
  270 96 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni212B.vert
+Substitution: 1 0 'vert' uni212B.vert
 EndChar
 StartChar: uni2160
 Encoding: 8544 8544 931
@@ -4095,7 +4095,7 @@ Fore
  552 88 l 2
  552 62 589 45.3333 663 38 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2160.vert
+Substitution: 1 0 'vert' uni2160.vert
 EndChar
 StartChar: uni2161
 Encoding: 8545 8545 932
@@ -4123,7 +4123,7 @@ Fore
  618 707.333 582.667 723.333 512 728 c 1
  440 723.333 404 707.333 404 680 c 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2161.vert
+Substitution: 1 0 'vert' uni2161.vert
 EndChar
 StartChar: uni2162
 Encoding: 8546 8546 933
@@ -4158,7 +4158,7 @@ Fore
  552 88 l 2
  552 60.6667 582 44.6667 642 40 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2162.vert
+Substitution: 1 0 'vert' uni2162.vert
 EndChar
 StartChar: uni2163
 Encoding: 8547 8547 934
@@ -4192,7 +4192,7 @@ Fore
  569.667 722.667 550.667 706 558 680 c 1
  711 188 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2163.vert
+Substitution: 1 0 'vert' uni2163.vert
 EndChar
 StartChar: uni2164
 Encoding: 8548 8548 935
@@ -4217,7 +4217,7 @@ Fore
  322.333 722.667 303.667 706 313 680 c 1
  547 146 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2164.vert
+Substitution: 1 0 'vert' uni2164.vert
 EndChar
 StartChar: uni2165
 Encoding: 8549 8549 936
@@ -4251,7 +4251,7 @@ Fore
  246.667 722.667 227.667 706 235 680 c 1
  386 186 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2165.vert
+Substitution: 1 0 'vert' uni2165.vert
 EndChar
 StartChar: uni2169
 Encoding: 8553 8553 940
@@ -4288,7 +4288,7 @@ Fore
  533 463 l 1
  700 680 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2169.vert
+Substitution: 1 0 'vert' uni2169.vert
 EndChar
 StartChar: uni2170
 Encoding: 8560 8560 947
@@ -4442,7 +4442,7 @@ Fore
  204.667 318 237.333 266 274 214 c 1
  276 205.333 272.333 202.667 263 206 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowleft.vert
+Substitution: 1 0 'vert' arrowleft.vert
 EndChar
 StartChar: arrowup
 Encoding: 8593 8593 967
@@ -4461,7 +4461,7 @@ Fore
  505.667 824.333 510.667 824.333 516 819 c 1
  576.667 745.667 637 677 697 613 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowup.vert
+Substitution: 1 0 'vert' arrowup.vert
 EndChar
 StartChar: arrowright
 Encoding: 8594 8594 968
@@ -4480,7 +4480,7 @@ Fore
  963.333 396.333 963.333 391.667 958 387 c 0
  884 326.333 815 266 751 206 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowright.vert
+Substitution: 1 0 'vert' arrowright.vert
 EndChar
 StartChar: arrowdown
 Encoding: 8595 8595 969
@@ -4499,7 +4499,7 @@ Fore
  585 58.6667 637 91.3333 689 128 c 1
  697.667 130 700.333 126.333 697 117 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowdown.vert
+Substitution: 1 0 'vert' arrowdown.vert
 EndChar
 StartChar: arrowdblright
 Encoding: 8658 8658 1032
@@ -4524,7 +4524,7 @@ Fore
  881 436 l 1
  34 436 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowdblright.vert
+Substitution: 1 0 'vert' arrowdblright.vert
 EndChar
 StartChar: arrowdblboth
 Encoding: 8660 8660 1034
@@ -4558,7 +4558,7 @@ Fore
  880 291 l 1
  946 357 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' arrowdblboth.vert
+Substitution: 1 0 'vert' arrowdblboth.vert
 EndChar
 StartChar: universal
 Encoding: 8704 8704 1057
@@ -4583,7 +4583,7 @@ Fore
  241 502 l 1
  496 -6 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' universal.vert
+Substitution: 1 0 'vert' universal.vert
 EndChar
 StartChar: partialdiff
 Encoding: 8706 8706 1059
@@ -4627,7 +4627,7 @@ Fore
  633.333 329.667 609 370 583 386 c 128
  557 402 528.667 410 498 410 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' partialdiff.vert
+Substitution: 1 0 'vert' partialdiff.vert
 EndChar
 StartChar: existential
 Encoding: 8707 8707 1060
@@ -4648,7 +4648,7 @@ Fore
  192 696 l 1
  192 745 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' existential.vert
+Substitution: 1 0 'vert' existential.vert
 EndChar
 StartChar: gradient
 Encoding: 8711 8711 1064
@@ -4667,7 +4667,7 @@ Fore
  522 25 l 1
  881 729 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' gradient.vert
+Substitution: 1 0 'vert' gradient.vert
 EndChar
 StartChar: element
 Encoding: 8712 8712 1065
@@ -4693,7 +4693,7 @@ Fore
  953 34 l 1
  953 -15 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' element.vert
+Substitution: 1 0 'vert' element.vert
 EndChar
 StartChar: suchthat
 Encoding: 8715 8715 1068
@@ -4719,7 +4719,7 @@ Fore
  791.5 24.1667 704.333 -15 595 -15 c 2
  63 -15 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' suchthat.vert
+Substitution: 1 0 'vert' suchthat.vert
 EndChar
 StartChar: radical
 Encoding: 8730 8730 1083
@@ -4781,7 +4781,7 @@ Fore
  605.667 448.333 645 485.167 679 511.5 c 128
  713 537.833 752.333 551 797 551 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' proportional.vert
+Substitution: 1 0 'vert' proportional.vert
 EndChar
 StartChar: infinity
 Encoding: 8734 8734 1087
@@ -4824,7 +4824,7 @@ Fore
  116 320.667 129.667 286.833 157 262.5 c 128
  184.333 238.167 219.333 226 262 226 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' infinity.vert
+Substitution: 1 0 'vert' infinity.vert
 EndChar
 StartChar: angle
 Encoding: 8736 8736 1089
@@ -4841,8 +4841,8 @@ Fore
  54.3333 -49 51.6667 -42 65 -28 c 1
  883 777 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' angle.vert
-Substitution: 1 0 'vrt2' angle.vert
+Substitution: 1 0 'vert' angle.vert
+Substitution: 1 0 'vert' angle.vert
 EndChar
 StartChar: uni2225
 Encoding: 8741 8741 1094
@@ -4860,7 +4860,7 @@ Fore
  581 -136 l 1
  581 875 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2225.vert
+Substitution: 1 0 'vert' uni2225.vert
 EndChar
 StartChar: logicaland
 Encoding: 8743 8743 1096
@@ -4880,7 +4880,7 @@ Fore
  89 -58.6667 80 -60.6667 70 -56 c 128
  60 -51.3333 56.3333 -42.3333 59 -29 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' logicaland.vert
+Substitution: 1 0 'vert' logicaland.vert
 EndChar
 StartChar: logicalor
 Encoding: 8744 8744 1097
@@ -4900,7 +4900,7 @@ Fore
  495.333 -92 485.333 -82.6667 476 -64 c 2
  59 769 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' logicalor.vert
+Substitution: 1 0 'vert' logicalor.vert
 EndChar
 StartChar: intersection
 Encoding: 8745 8745 1098
@@ -4923,7 +4923,7 @@ Fore
  211 -80 l 1
  161 -80 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' intersection.vert
+Substitution: 1 0 'vert' intersection.vert
 EndChar
 StartChar: union
 Encoding: 8746 8746 1099
@@ -4946,7 +4946,7 @@ Fore
  195 69.1667 161 156.333 161 271 c 2
  161 810 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' union.vert
+Substitution: 1 0 'vert' union.vert
 EndChar
 StartChar: integral
 Encoding: 8747 8747 1100
@@ -4987,7 +4987,7 @@ Fore
  489.833 657.667 512.333 712.5 543 751.5 c 128
  573.667 790.5 604 810 634 810 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' integral.vert
+Substitution: 1 0 'vert' integral.vert
 EndChar
 StartChar: uni222C
 Encoding: 8748 8748 1101
@@ -5061,7 +5061,7 @@ Fore
  325.833 657.667 348.333 712.5 379 751.5 c 128
  409.667 790.5 440 810 470 810 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni222C.vert
+Substitution: 1 0 'vert' uni222C.vert
 EndChar
 StartChar: therefore
 Encoding: 8756 8756 1109
@@ -5105,7 +5105,7 @@ Fore
  220.333 106 197.833 115.167 179.5 133.5 c 128
  161.167 151.833 152 174.333 152 201 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' therefore.vert
+Substitution: 1 0 'vert' therefore.vert
 EndChar
 StartChar: uni2235
 Encoding: 8757 8757 1110
@@ -5140,7 +5140,7 @@ Fore
  242.667 499 224.5 506.5 209.5 521.5 c 128
  194.5 536.5 187 554.667 187 576 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2235.vert
+Substitution: 1 0 'vert' uni2235.vert
 EndChar
 StartChar: uni223D
 Encoding: 8765 8765 1118
@@ -5181,7 +5181,7 @@ Fore
  61 418 79.8333 462.667 117.5 498 c 128
  155.167 533.333 203.333 551 262 551 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni223D.vert
+Substitution: 1 0 'vert' uni223D.vert
 EndChar
 StartChar: uni2252
 Encoding: 8786 8786 1139
@@ -5217,7 +5217,7 @@ Fore
  687 15 673.5 20.5 662.5 31.5 c 128
  651.5 42.5 646 56 646 72 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2252.vert
+Substitution: 1 0 'vert' uni2252.vert
 EndChar
 StartChar: notequal
 Encoding: 8800 8800 1153
@@ -5246,7 +5246,7 @@ Fore
  587 485 l 1
  857 485 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' notequal.vert
+Substitution: 1 0 'vert' notequal.vert
 EndChar
 StartChar: equivalence
 Encoding: 8801 8801 1154
@@ -5269,7 +5269,7 @@ Fore
  126 112 l 1
  126 161 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' equivalence.vert
+Substitution: 1 0 'vert' equivalence.vert
 EndChar
 StartChar: uni2266
 Encoding: 8806 8806 1159
@@ -5298,7 +5298,7 @@ Fore
  119.667 532.333 119.667 547.667 145 563 c 1
  867 812 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2266.vert
+Substitution: 1 0 'vert' uni2266.vert
 EndChar
 StartChar: uni2267
 Encoding: 8807 8807 1160
@@ -5327,7 +5327,7 @@ Fore
  126 -16 l 1
  126 33 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2267.vert
+Substitution: 1 0 'vert' uni2267.vert
 EndChar
 StartChar: uni226A
 Encoding: 8810 8810 1163
@@ -5357,7 +5357,7 @@ Fore
  246 369.167 250.667 375.333 260 382 c 2
  925 816 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni226A.vert
+Substitution: 1 0 'vert' uni226A.vert
 EndChar
 StartChar: uni226B
 Encoding: 8811 8811 1164
@@ -5387,7 +5387,7 @@ Fore
  52 800 53 807.833 59 813.5 c 128
  65 819.167 74.3333 820 87 816 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni226B.vert
+Substitution: 1 0 'vert' uni226B.vert
 EndChar
 StartChar: propersubset
 Encoding: 8834 8834 1187
@@ -5410,7 +5410,7 @@ Fore
  955 66 l 1
  955 17 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' propersubset.vert
+Substitution: 1 0 'vert' propersubset.vert
 EndChar
 StartChar: propersuperset
 Encoding: 8835 8835 1188
@@ -5433,7 +5433,7 @@ Fore
  802.833 50.8333 713 17 593 17 c 2
  61 17 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' propersuperset.vert
+Substitution: 1 0 'vert' propersuperset.vert
 EndChar
 StartChar: reflexsubset
 Encoding: 8838 8838 1191
@@ -5461,7 +5461,7 @@ Fore
  954 226 l 1
  954 177 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' reflexsubset.vert
+Substitution: 1 0 'vert' reflexsubset.vert
 EndChar
 StartChar: reflexsuperset
 Encoding: 8839 8839 1192
@@ -5489,7 +5489,7 @@ Fore
  60 730 l 1
  60 779 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' reflexsuperset.vert
+Substitution: 1 0 'vert' reflexsuperset.vert
 EndChar
 StartChar: perpendicular
 Encoding: 8869 8869 1222
@@ -5506,7 +5506,7 @@ Fore
  483 0 l 1
  483 810 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' perpendicular.vert
+Substitution: 1 0 'vert' perpendicular.vert
 EndChar
 StartChar: uni2312
 Encoding: 8978 8978 1301
@@ -5525,7 +5525,7 @@ Fore
  142 577.5 97.6667 515 87 451 c 1
  79.6667 440.333 72.3333 440.333 65 451 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2312.vert
+Substitution: 1 0 'vert' uni2312.vert
 EndChar
 StartChar: uni2460
 Encoding: 9312 9312 1304
@@ -5565,7 +5565,7 @@ Fore
  548 130 l 2
  548 107.333 585.667 92.6667 661 86 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2460.vert
+Substitution: 1 0 'vert' uni2460.vert
 EndChar
 StartChar: uni2461
 Encoding: 9313 9313 1305
@@ -5623,7 +5623,7 @@ Fore
  376.833 648 397.833 663.5 425.5 676.5 c 128
  453.167 689.5 487 696 527 696 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2461.vert
+Substitution: 1 0 'vert' uni2461.vert
 EndChar
 StartChar: uni2462
 Encoding: 9314 9314 1306
@@ -5692,7 +5692,7 @@ Fore
  377.667 659.667 395.667 671.833 417 681.5 c 128
  438.333 691.167 466.667 696 502 696 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2462.vert
+Substitution: 1 0 'vert' uni2462.vert
 EndChar
 StartChar: uni2463
 Encoding: 9315 9315 1307
@@ -5738,7 +5738,7 @@ Fore
  531 255 l 1
  531 621 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2463.vert
+Substitution: 1 0 'vert' uni2463.vert
 EndChar
 StartChar: uni2464
 Encoding: 9316 9316 1308
@@ -5796,7 +5796,7 @@ Fore
  350 357 l 1
  363.333 475 370.333 587.333 371 694 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2464.vert
+Substitution: 1 0 'vert' uni2464.vert
 EndChar
 StartChar: uni2465
 Encoding: 9317 9317 1309
@@ -5860,7 +5860,7 @@ Fore
  365.333 242 380.833 190.833 406.5 150.5 c 128
  432.167 110.167 467.333 90 512 90 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2465.vert
+Substitution: 1 0 'vert' uni2465.vert
 EndChar
 StartChar: uni2466
 Encoding: 9318 9318 1310
@@ -5903,7 +5903,7 @@ Fore
  556.833 181 554.167 142 552.5 108 c 128
  550.833 74 539.333 57 518 57 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2466.vert
+Substitution: 1 0 'vert' uni2466.vert
 EndChar
 StartChar: uni2467
 Encoding: 9319 9319 1311
@@ -5964,7 +5964,7 @@ Fore
  558.667 441.667 583.5 457.333 602.5 476 c 128
  621.5 494.667 631 522 631 558 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2467.vert
+Substitution: 1 0 'vert' uni2467.vert
 EndChar
 StartChar: uni2468
 Encoding: 9320 9320 1312
@@ -6028,7 +6028,7 @@ Fore
  659 509 643.333 560.167 618 600.5 c 128
  592.667 640.833 557.667 661 513 661 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2468.vert
+Substitution: 1 0 'vert' uni2468.vert
 EndChar
 StartChar: uni2469
 Encoding: 9321 9321 1313
@@ -6086,7 +6086,7 @@ Fore
  629 663 601 636.333 579 583 c 128
  557 529.667 546 461 546 377 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2469.vert
+Substitution: 1 0 'vert' uni2469.vert
 EndChar
 StartChar: uni246A
 Encoding: 9322 9322 1314
@@ -6140,7 +6140,7 @@ Fore
  729 130 l 2
  729 107.333 754.667 92.6667 806 86 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246A.vert
+Substitution: 1 0 'vert' uni246A.vert
 EndChar
 StartChar: uni246B
 Encoding: 9323 9323 1315
@@ -6211,7 +6211,7 @@ Fore
  365 130 l 2
  365 107.333 390.667 92.6667 442 86 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246B.vert
+Substitution: 1 0 'vert' uni246B.vert
 EndChar
 StartChar: uni246C
 Encoding: 9324 9324 1316
@@ -6294,7 +6294,7 @@ Fore
  530.667 659.667 548.667 671.833 570 681.5 c 128
  591.333 691.167 617.333 696 648 696 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246C.vert
+Substitution: 1 0 'vert' uni246C.vert
 EndChar
 StartChar: uni246D
 Encoding: 9325 9325 1317
@@ -6354,7 +6354,7 @@ Fore
  677 255 l 1
  677 609 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246D.vert
+Substitution: 1 0 'vert' uni246D.vert
 EndChar
 StartChar: uni246E
 Encoding: 9326 9326 1318
@@ -6427,7 +6427,7 @@ Fore
  487 359 l 1
  499.667 475.667 506.333 587.333 507 694 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246E.vert
+Substitution: 1 0 'vert' uni246E.vert
 EndChar
 StartChar: uni246F
 Encoding: 9327 9327 1319
@@ -6504,7 +6504,7 @@ Fore
  523.333 243 535.833 196.667 557.5 154 c 128
  579.167 111.333 610 90 650 90 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni246F.vert
+Substitution: 1 0 'vert' uni246F.vert
 EndChar
 StartChar: uni2470
 Encoding: 9328 9328 1320
@@ -6561,7 +6561,7 @@ Fore
  658 181 655.333 142 654 108 c 128
  652.667 74 641 57 619 57 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2470.vert
+Substitution: 1 0 'vert' uni2470.vert
 EndChar
 StartChar: uni2471
 Encoding: 9329 9329 1321
@@ -6636,7 +6636,7 @@ Fore
  696 437 718.333 453.167 735 473.5 c 128
  751.667 493.833 760 522 760 558 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2471.vert
+Substitution: 1 0 'vert' uni2471.vert
 EndChar
 StartChar: uni2472
 Encoding: 9330 9330 1322
@@ -6713,7 +6713,7 @@ Fore
  856 279.667 835.167 204.667 793.5 146 c 128
  751.833 87.3333 705.667 58 655 58 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2472.vert
+Substitution: 1 0 'vert' uni2472.vert
 EndChar
 StartChar: uni2473
 Encoding: 9331 9331 1323
@@ -6774,7 +6774,7 @@ Fore
  670 629 648.167 608.5 628.5 567.5 c 128
  608.833 526.5 599 463 599 377 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2473.vert
+Substitution: 1 0 'vert' uni2473.vert
 EndChar
 StartChar: SF100000
 Encoding: 9472 9472 1443
@@ -6787,7 +6787,7 @@ Fore
  1024 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF100000.vert
+Substitution: 1 0 'vert' SF100000.vert
 EndChar
 StartChar: uni2501
 Encoding: 9473 9473 1444
@@ -6800,7 +6800,7 @@ Fore
  1024 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2501.vert
+Substitution: 1 0 'vert' uni2501.vert
 EndChar
 StartChar: SF110000
 Encoding: 9474 9474 1445
@@ -6813,7 +6813,7 @@ Fore
  529 880 l 1
  529 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF110000.vert
+Substitution: 1 0 'vert' SF110000.vert
 EndChar
 StartChar: uni2503
 Encoding: 9475 9475 1446
@@ -6826,7 +6826,7 @@ Fore
  546 880 l 1
  546 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2503.vert
+Substitution: 1 0 'vert' uni2503.vert
 EndChar
 StartChar: SF010000
 Encoding: 9484 9484 1455
@@ -6841,7 +6841,7 @@ Fore
  529 373 l 1
  529 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF010000.vert
+Substitution: 1 0 'vert' SF010000.vert
 EndChar
 StartChar: uni250F
 Encoding: 9487 9487 1458
@@ -6856,7 +6856,7 @@ Fore
  546 356 l 1
  546 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni250F.vert
+Substitution: 1 0 'vert' uni250F.vert
 EndChar
 StartChar: SF030000
 Encoding: 9488 9488 1459
@@ -6871,7 +6871,7 @@ Fore
  493 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF030000.vert
+Substitution: 1 0 'vert' SF030000.vert
 EndChar
 StartChar: uni2513
 Encoding: 9491 9491 1462
@@ -6886,7 +6886,7 @@ Fore
  476 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2513.vert
+Substitution: 1 0 'vert' uni2513.vert
 EndChar
 StartChar: SF020000
 Encoding: 9492 9492 1463
@@ -6901,7 +6901,7 @@ Fore
  529 408 l 1
  1024 408 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF020000.vert
+Substitution: 1 0 'vert' SF020000.vert
 EndChar
 StartChar: uni2517
 Encoding: 9495 9495 1466
@@ -6916,7 +6916,7 @@ Fore
  1024 356 l 1
  476 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2517.vert
+Substitution: 1 0 'vert' uni2517.vert
 EndChar
 StartChar: SF040000
 Encoding: 9496 9496 1467
@@ -6931,7 +6931,7 @@ Fore
  529 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF040000.vert
+Substitution: 1 0 'vert' SF040000.vert
 EndChar
 StartChar: uni251B
 Encoding: 9499 9499 1470
@@ -6946,7 +6946,7 @@ Fore
  546 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni251B.vert
+Substitution: 1 0 'vert' uni251B.vert
 EndChar
 StartChar: SF080000
 Encoding: 9500 9500 1471
@@ -6963,7 +6963,7 @@ Fore
  1024 408 l 1
  1024 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF080000.vert
+Substitution: 1 0 'vert' SF080000.vert
 EndChar
 StartChar: uni251D
 Encoding: 9501 9501 1472
@@ -6980,7 +6980,7 @@ Fore
  529 356 l 1
  529 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni251D.vert
+Substitution: 1 0 'vert' uni251D.vert
 EndChar
 StartChar: uni2520
 Encoding: 9504 9504 1475
@@ -6997,7 +6997,7 @@ Fore
  546 373 l 1
  546 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2520.vert
+Substitution: 1 0 'vert' uni2520.vert
 EndChar
 StartChar: uni2523
 Encoding: 9507 9507 1478
@@ -7014,7 +7014,7 @@ Fore
  546 356 l 1
  546 -144 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2523.vert
+Substitution: 1 0 'vert' uni2523.vert
 EndChar
 StartChar: SF090000
 Encoding: 9508 9508 1479
@@ -7031,7 +7031,7 @@ Fore
  493 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF090000.vert
+Substitution: 1 0 'vert' SF090000.vert
 EndChar
 StartChar: uni2525
 Encoding: 9509 9509 1480
@@ -7048,7 +7048,7 @@ Fore
  493 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2525.vert
+Substitution: 1 0 'vert' uni2525.vert
 EndChar
 StartChar: uni2528
 Encoding: 9512 9512 1483
@@ -7065,7 +7065,7 @@ Fore
  476 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2528.vert
+Substitution: 1 0 'vert' uni2528.vert
 EndChar
 StartChar: uni252B
 Encoding: 9515 9515 1486
@@ -7082,7 +7082,7 @@ Fore
  476 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni252B.vert
+Substitution: 1 0 'vert' uni252B.vert
 EndChar
 StartChar: SF060000
 Encoding: 9516 9516 1487
@@ -7099,7 +7099,7 @@ Fore
  493 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF060000.vert
+Substitution: 1 0 'vert' SF060000.vert
 EndChar
 StartChar: uni252F
 Encoding: 9519 9519 1490
@@ -7116,7 +7116,7 @@ Fore
  493 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni252F.vert
+Substitution: 1 0 'vert' uni252F.vert
 EndChar
 StartChar: uni2530
 Encoding: 9520 9520 1491
@@ -7133,7 +7133,7 @@ Fore
  476 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2530.vert
+Substitution: 1 0 'vert' uni2530.vert
 EndChar
 StartChar: uni2533
 Encoding: 9523 9523 1494
@@ -7150,7 +7150,7 @@ Fore
  476 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2533.vert
+Substitution: 1 0 'vert' uni2533.vert
 EndChar
 StartChar: SF070000
 Encoding: 9524 9524 1495
@@ -7167,7 +7167,7 @@ Fore
  1024 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF070000.vert
+Substitution: 1 0 'vert' SF070000.vert
 EndChar
 StartChar: uni2537
 Encoding: 9527 9527 1498
@@ -7184,7 +7184,7 @@ Fore
  1024 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2537.vert
+Substitution: 1 0 'vert' uni2537.vert
 EndChar
 StartChar: uni2538
 Encoding: 9528 9528 1499
@@ -7201,7 +7201,7 @@ Fore
  1024 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2538.vert
+Substitution: 1 0 'vert' uni2538.vert
 EndChar
 StartChar: uni253B
 Encoding: 9531 9531 1502
@@ -7218,7 +7218,7 @@ Fore
  1024 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni253B.vert
+Substitution: 1 0 'vert' uni253B.vert
 EndChar
 StartChar: SF050000
 Encoding: 9532 9532 1503
@@ -7239,7 +7239,7 @@ Fore
  493 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' SF050000.vert
+Substitution: 1 0 'vert' SF050000.vert
 EndChar
 StartChar: uni253F
 Encoding: 9535 9535 1506
@@ -7260,7 +7260,7 @@ Fore
  493 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni253F.vert
+Substitution: 1 0 'vert' uni253F.vert
 EndChar
 StartChar: uni2542
 Encoding: 9538 9538 1509
@@ -7281,7 +7281,7 @@ Fore
  476 373 l 1
  0 373 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2542.vert
+Substitution: 1 0 'vert' uni2542.vert
 EndChar
 StartChar: uni254B
 Encoding: 9547 9547 1518
@@ -7302,7 +7302,7 @@ Fore
  476 356 l 1
  0 356 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni254B.vert
+Substitution: 1 0 'vert' uni254B.vert
 EndChar
 StartChar: filledbox
 Encoding: 9632 9632 1593
@@ -7319,7 +7319,7 @@ Fore
  157 706.667 162.667 712 174 712 c 2
  838 712 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' filledbox.vert
+Substitution: 1 0 'vert' filledbox.vert
 EndChar
 StartChar: H22073
 Encoding: 9633 9633 1594
@@ -7355,7 +7355,7 @@ Fore
  811 670 l 1
  201 670 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' H22073.vert
+Substitution: 1 0 'vert' H22073.vert
 EndChar
 StartChar: triagup
 Encoding: 9650 9650 1611
@@ -7370,7 +7370,7 @@ Fore
  933.333 25.3333 927.667 17 909 17 c 2
  105 17 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' triagup.vert
+Substitution: 1 0 'vert' triagup.vert
 EndChar
 StartChar: uni25B3
 Encoding: 9651 9651 1612
@@ -7392,7 +7392,7 @@ Fore
  933.333 25.3333 927.667 17 909 17 c 2
  105 17 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25B3.vert
+Substitution: 1 0 'vert' uni25B3.vert
 EndChar
 StartChar: triagdn
 Encoding: 9660 9660 1621
@@ -7407,7 +7407,7 @@ Fore
  91 723 l 1
  84.3333 737.667 89 745 105 745 c 2
 EndSplineSet
-Substitution: 1 0 'vrt2' triagdn.vert
+Substitution: 1 0 'vert' triagdn.vert
 EndChar
 StartChar: uni25BD
 Encoding: 9661 9661 1622
@@ -7429,7 +7429,7 @@ Fore
  166 701 l 2
  158 701 155.667 697 159 689 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25BD.vert
+Substitution: 1 0 'vert' uni25BD.vert
 EndChar
 StartChar: uni25C6
 Encoding: 9670 9670 1631
@@ -7446,7 +7446,7 @@ Fore
  48.6667 356.333 48.6667 363.667 56 371 c 2
  494 809 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25C6.vert
+Substitution: 1 0 'vert' uni25C6.vert
 EndChar
 StartChar: uni25C7
 Encoding: 9671 9671 1632
@@ -7468,7 +7468,7 @@ Fore
  505 754 l 1
  111 360 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25C7.vert
+Substitution: 1 0 'vert' uni25C7.vert
 EndChar
 StartChar: circle
 Encoding: 9675 9675 1636
@@ -7494,7 +7494,7 @@ Fore
  409.333 728 323 691.833 251 619.5 c 128
  179 547.167 143 460.667 143 360 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' circle.vert
+Substitution: 1 0 'vert' circle.vert
 EndChar
 StartChar: uni25CE
 Encoding: 9678 9678 1639
@@ -7538,7 +7538,7 @@ Fore
  453.667 564 406.167 544 366.5 504 c 128
  326.833 464 307 416.333 307 361 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25CE.vert
+Substitution: 1 0 'vert' uni25CE.vert
 EndChar
 StartChar: H18533
 Encoding: 9679 9679 1640
@@ -7555,7 +7555,7 @@ Fore
  396 -55 298.333 -14.3333 217 67 c 128
  135.667 148.333 95 246 95 360 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' H18533.vert
+Substitution: 1 0 'vert' H18533.vert
 EndChar
 StartChar: uni25EF
 Encoding: 9711 9711 1672
@@ -7581,7 +7581,7 @@ Fore
  388.667 812 283.833 767.5 195.5 678.5 c 128
  107.167 589.5 63 484.667 63 364 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni25EF.vert
+Substitution: 1 0 'vert' uni25EF.vert
 EndChar
 StartChar: uni2605
 Encoding: 9733 9733 1678
@@ -7631,7 +7631,7 @@ Fore
  501 810 l 1
  511.667 826 522.333 826 533 810 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2605.vert
+Substitution: 1 0 'vert' uni2605.vert
 EndChar
 StartChar: uni2606
 Encoding: 9734 9734 1679
@@ -7676,7 +7676,7 @@ Fore
  612.667 445.333 606.333 450.333 605 461 c 1
  517 724 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni2606.vert
+Substitution: 1 0 'vert' uni2606.vert
 EndChar
 StartChar: female
 Encoding: 9792 9792 1731
@@ -7713,7 +7713,7 @@ Fore
  461.333 760 421.333 743.167 388 709.5 c 128
  354.667 675.833 338 636 338 590 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' female.vert
+Substitution: 1 0 'vert' female.vert
 EndChar
 StartChar: male
 Encoding: 9794 9794 1733
@@ -7750,7 +7750,7 @@ Fore
  285.333 298 245.333 281.167 212 247.5 c 128
  178.667 213.833 162 174 162 128 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' male.vert
+Substitution: 1 0 'vert' male.vert
 EndChar
 StartChar: musicalnote
 Encoding: 9834 9834 1773
@@ -7781,7 +7781,7 @@ Fore
  472 809 l 1
  481 809 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' musicalnote.vert
+Substitution: 1 0 'vert' musicalnote.vert
 EndChar
 StartChar: uni266D
 Encoding: 9837 9837 1776
@@ -7808,7 +7808,7 @@ Fore
  469.333 28.6667 545.167 78.5 583.5 125.5 c 128
  621.833 172.5 641 222.667 641 276 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni266D.vert
+Substitution: 1 0 'vert' uni266D.vert
 EndChar
 StartChar: uni266F
 Encoding: 9839 9839 1778
@@ -7850,13 +7850,13 @@ Fore
  605 304 l 1
  605 531 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni266F.vert
+Substitution: 1 0 'vert' uni266F.vert
 EndChar
 StartChar: uni3000
 Encoding: 12288 12288 1939
 Width: 1024
 Flags: W
-Substitution: 1 0 'vrt2' uni3000.vert
+Substitution: 1 0 'vert' uni3000.vert
 EndChar
 StartChar: uni3001
 Encoding: 12289 12289 1940
@@ -7874,7 +7874,7 @@ Fore
  90.1667 79 69.3333 97.3333 46 114 c 1
  39.3333 122.667 41.3333 127.333 52 128 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3001.vert
+Substitution: 1 0 'vert' uni3001.vert
 EndChar
 StartChar: uni3002
 Encoding: 12290 12290 1941
@@ -7900,7 +7900,7 @@ Fore
  146 111 126 103 110 87 c 128
  94 71 86 50.3333 86 25 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3002.vert
+Substitution: 1 0 'vert' uni3002.vert
 EndChar
 StartChar: uni3003
 Encoding: 12291 12291 1942
@@ -7932,7 +7932,7 @@ Fore
  612.333 488 613.667 505 613 525 c 1
  613 583 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3003.vert
+Substitution: 1 0 'vert' uni3003.vert
 EndChar
 StartChar: uni3006
 Encoding: 12294 12294 1945
@@ -7980,7 +7980,7 @@ Fore
  267.667 281.667 265.667 244.667 265 214 c 128
  264.333 183.333 271.667 170.667 287 176 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3006.vert
+Substitution: 1 0 'vert' uni3006.vert
 EndChar
 StartChar: uni3007
 Encoding: 12295 12295 1946
@@ -8006,7 +8006,7 @@ Fore
  390.333 783 292.167 742 210.5 660 c 128
  128.833 578 88 479.667 88 365 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3007.vert
+Substitution: 1 0 'vert' uni3007.vert
 EndChar
 StartChar: uni3008
 Encoding: 12296 12296 1947
@@ -8023,7 +8023,7 @@ Fore
  494.667 358.667 494.667 367.333 502 376 c 1
  655.333 526 800.333 682.667 937 846 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3008.vert
+Substitution: 1 0 'vert' uni3008.vert
 EndChar
 StartChar: uni3009
 Encoding: 12297 12297 1948
@@ -8040,7 +8040,7 @@ Fore
  307 514.333 170.667 662.333 42 817 c 1
  74 846 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3009.vert
+Substitution: 1 0 'vert' uni3009.vert
 EndChar
 StartChar: uni300A
 Encoding: 12298 12298 1949
@@ -8066,7 +8066,7 @@ Fore
  495.667 358.667 495.667 367.333 503 376 c 1
  656.333 526 801.333 682.667 938 846 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300A.vert
+Substitution: 1 0 'vert' uni300A.vert
 EndChar
 StartChar: uni300B
 Encoding: 12299 12299 1950
@@ -8092,7 +8092,7 @@ Fore
  319 514.333 182.667 662.333 54 817 c 1
  86 846 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300B.vert
+Substitution: 1 0 'vert' uni300B.vert
 EndChar
 StartChar: uni300C
 Encoding: 12300 12300 1951
@@ -8107,7 +8107,7 @@ Fore
  761 797 l 1
  761 147 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300C.vert
+Substitution: 1 0 'vert' uni300C.vert
 EndChar
 StartChar: uni300D
 Encoding: 12301 12301 1952
@@ -8122,7 +8122,7 @@ Fore
  257 -67 l 1
  257 583 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300D.vert
+Substitution: 1 0 'vert' uni300D.vert
 EndChar
 StartChar: uni300E
 Encoding: 12302 12302 1953
@@ -8144,7 +8144,7 @@ Fore
  930 819 l 1
  607 819 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300E.vert
+Substitution: 1 0 'vert' uni300E.vert
 EndChar
 StartChar: uni300F
 Encoding: 12303 12303 1954
@@ -8166,7 +8166,7 @@ Fore
  88 -89 l 1
  411 -89 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni300F.vert
+Substitution: 1 0 'vert' uni300F.vert
 EndChar
 StartChar: uni3010
 Encoding: 12304 12304 1955
@@ -8184,7 +8184,7 @@ Fore
  710 -121 l 1
  710 834 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3010.vert
+Substitution: 1 0 'vert' uni3010.vert
 EndChar
 StartChar: uni3011
 Encoding: 12305 12305 1956
@@ -8202,7 +8202,7 @@ Fore
  63 834 l 1
  307 834 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3011.vert
+Substitution: 1 0 'vert' uni3011.vert
 EndChar
 StartChar: uni3012
 Encoding: 12306 12306 1957
@@ -8224,7 +8224,7 @@ Fore
  151 437 l 1
  151 517 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3012.vert
+Substitution: 1 0 'vert' uni3012.vert
 EndChar
 StartChar: uni3013
 Encoding: 12307 12307 1958
@@ -8242,7 +8242,7 @@ Fore
  159 177 l 1
  159 283 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3013.vert
+Substitution: 1 0 'vert' uni3013.vert
 EndChar
 StartChar: uni3014
 Encoding: 12308 12308 1959
@@ -8263,7 +8263,7 @@ Fore
  844.667 -10.6667 892.667 -35.6667 958 -71 c 1
  929 -116 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3014.vert
+Substitution: 1 0 'vert' uni3014.vert
 EndChar
 StartChar: uni3015
 Encoding: 12309 12309 1960
@@ -8284,7 +8284,7 @@ Fore
  305.667 -5 283.833 -12.8333 245.5 -28.5 c 128
  207.167 -44.1667 154.333 -73.3333 87 -116 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3015.vert
+Substitution: 1 0 'vert' uni3015.vert
 EndChar
 StartChar: uni301C
 Encoding: 12316 12316 1967
@@ -8407,7 +8407,7 @@ Fore
  395 234.333 398.333 214.833 403 192.5 c 128
  407.667 170.167 417.333 143.667 432 113 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3041.vert
+Substitution: 1 0 'vert' uni3041.vert
 EndChar
 StartChar: uni3042
 Encoding: 12354 12354 1981
@@ -8501,7 +8501,7 @@ Fore
  199.167 53 225.5 51.5 262.5 60.5 c 128
  299.5 69.5 340.333 92.3333 385 129 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3042.vert
+Substitution: 1 0 'vert' uni3042.vert
 EndChar
 StartChar: uni3043
 Encoding: 12355 12355 1982
@@ -8553,7 +8553,7 @@ Fore
  698.167 347.833 671 372.667 631 406 c 1
  627 411.333 628 414.667 634 416 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3043.vert
+Substitution: 1 0 'vert' uni3043.vert
 EndChar
 StartChar: uni3044
 Encoding: 12356 12356 1983
@@ -8612,7 +8612,7 @@ Fore
  731.167 574.333 708 593.667 678 613 c 1
  674 622.333 676 626.333 684 625 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3044.vert
+Substitution: 1 0 'vert' uni3044.vert
 EndChar
 StartChar: uni3045
 Encoding: 12357 12357 1984
@@ -8665,7 +8665,7 @@ Fore
  284.167 364.333 284 379.333 290 394 c 1
  297.333 400.667 302 399.667 304 391 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3045.vert
+Substitution: 1 0 'vert' uni3045.vert
 EndChar
 StartChar: uni3046
 Encoding: 12358 12358 1985
@@ -8724,7 +8724,7 @@ Fore
  236 467 240 492.333 256 527 c 1
  263.333 532.333 267.667 531.333 269 524 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3046.vert
+Substitution: 1 0 'vert' uni3046.vert
 EndChar
 StartChar: uni3047
 Encoding: 12359 12359 1986
@@ -8790,7 +8790,7 @@ Fore
  425.5 524.833 401.667 543 365 573 c 1
  359.667 582.333 363 585.333 375 582 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3047.vert
+Substitution: 1 0 'vert' uni3047.vert
 EndChar
 StartChar: uni3048
 Encoding: 12360 12360 1987
@@ -8869,7 +8869,7 @@ Fore
  442 548 442 548 497 560.5 c 128
  533.667 568.833 570.333 578 607 588 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3048.vert
+Substitution: 1 0 'vert' uni3048.vert
 EndChar
 StartChar: uni3049
 Encoding: 12361 12361 1988
@@ -8963,7 +8963,7 @@ Fore
  385.667 2.83333 385.167 19.8333 383.5 49.5 c 128
  381 94 381 94 379 130 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3049.vert
+Substitution: 1 0 'vert' uni3049.vert
 EndChar
 StartChar: uni304A
 Encoding: 12362 12362 1989
@@ -9065,7 +9065,7 @@ Fore
  303.333 191 273.5 169.667 260.5 159 c 128
  247.5 148.333 233.333 135 218 119 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304A.vert
+Substitution: 1 0 'vert' uni304A.vert
 EndChar
 StartChar: uni304B
 Encoding: 12363 12363 1990
@@ -9147,7 +9147,7 @@ Fore
  336.333 766.333 320.667 777.667 298 785 c 1
  292 792.333 293.667 797.333 303 800 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304B.vert
+Substitution: 1 0 'vert' uni304B.vert
 EndChar
 StartChar: uni304C
 Encoding: 12364 12364 1991
@@ -9251,7 +9251,7 @@ Fore
  336.333 766.333 320.667 777.667 298 785 c 1
  292 792.333 293.667 797.333 303 800 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304C.vert
+Substitution: 1 0 'vert' uni304C.vert
 EndChar
 StartChar: uni304D
 Encoding: 12365 12365 1992
@@ -9349,7 +9349,7 @@ Fore
  344.667 780.667 341.5 783.333 340.5 788 c 128
  339.5 792.667 341.333 796.333 346 799 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304D.vert
+Substitution: 1 0 'vert' uni304D.vert
 EndChar
 StartChar: uni304E
 Encoding: 12366 12366 1993
@@ -9469,7 +9469,7 @@ Fore
  344.667 780.667 341.5 783.333 340.5 788 c 128
  339.5 792.667 341.333 796.333 346 799 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304E.vert
+Substitution: 1 0 'vert' uni304E.vert
 EndChar
 StartChar: uni304F
 Encoding: 12367 12367 1994
@@ -9514,7 +9514,7 @@ Fore
  608.167 744.833 604.167 758.5 594.5 771.5 c 128
  584.833 784.5 574.333 794 563 800 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni304F.vert
+Substitution: 1 0 'vert' uni304F.vert
 EndChar
 StartChar: uni3050
 Encoding: 12368 12368 1995
@@ -9577,7 +9577,7 @@ Fore
  608.167 744.833 604.167 758.5 594.5 771.5 c 128
  584.833 784.5 574.333 794 563 800 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3050.vert
+Substitution: 1 0 'vert' uni3050.vert
 EndChar
 StartChar: uni3051
 Encoding: 12369 12369 1996
@@ -9660,7 +9660,7 @@ Fore
  613.667 794.667 611.5 798 612.5 802 c 128
  613.5 806 617 808 623 808 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3051.vert
+Substitution: 1 0 'vert' uni3051.vert
 EndChar
 StartChar: uni3052
 Encoding: 12370 12370 1997
@@ -9765,7 +9765,7 @@ Fore
  613.667 794.667 611.5 798 612.5 802 c 128
  613.5 806 617 808 623 808 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3052.vert
+Substitution: 1 0 'vert' uni3052.vert
 EndChar
 StartChar: uni3053
 Encoding: 12371 12371 1998
@@ -9816,7 +9816,7 @@ Fore
  210.333 125.667 197.167 152.667 191.5 182 c 128
  185.833 211.333 189.333 246.333 202 287 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3053.vert
+Substitution: 1 0 'vert' uni3053.vert
 EndChar
 StartChar: uni3054
 Encoding: 12372 12372 1999
@@ -9889,7 +9889,7 @@ Fore
  387.667 665.333 415.167 657.167 447.5 653.5 c 128
  479.833 649.833 545 648.667 643 650 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3054.vert
+Substitution: 1 0 'vert' uni3054.vert
 EndChar
 StartChar: uni3055
 Encoding: 12373 12373 2000
@@ -9972,7 +9972,7 @@ Fore
  520.333 729.167 525.667 711.833 535 687.5 c 128
  544.333 663.167 561.667 627.667 587 581 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3055.vert
+Substitution: 1 0 'vert' uni3055.vert
 EndChar
 StartChar: uni3056
 Encoding: 12374 12374 2001
@@ -10077,7 +10077,7 @@ Fore
  520.333 729.167 525.667 711.833 535 687.5 c 128
  544.333 663.167 561.667 627.667 587 581 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3056.vert
+Substitution: 1 0 'vert' uni3056.vert
 EndChar
 StartChar: uni3057
 Encoding: 12375 12375 2002
@@ -10117,7 +10117,7 @@ Fore
  261.833 747 242.667 754.667 216 758 c 1
  211.333 762.667 211.667 767.667 217 773 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3057.vert
+Substitution: 1 0 'vert' uni3057.vert
 EndChar
 StartChar: uni3058
 Encoding: 12376 12376 2003
@@ -10175,7 +10175,7 @@ Fore
  261.833 747 242.667 754.667 216 758 c 1
  211.333 762.667 211.667 767.667 217 773 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3058.vert
+Substitution: 1 0 'vert' uni3058.vert
 EndChar
 StartChar: uni3059
 Encoding: 12377 12377 2004
@@ -10252,7 +10252,7 @@ Fore
  521.167 785.333 503 798 473 810 c 1
  466.333 818 468 823.333 478 826 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3059.vert
+Substitution: 1 0 'vert' uni3059.vert
 EndChar
 StartChar: uni305A
 Encoding: 12378 12378 2005
@@ -10351,7 +10351,7 @@ Fore
  521.167 785.333 503 798 473 810 c 1
  466.333 818 468 823.333 478 826 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305A.vert
+Substitution: 1 0 'vert' uni305A.vert
 EndChar
 StartChar: uni305B
 Encoding: 12379 12379 2006
@@ -10442,7 +10442,7 @@ Fore
  598 750 589.333 757 578 765 c 1
  576 771 579 774.667 587 776 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305B.vert
+Substitution: 1 0 'vert' uni305B.vert
 EndChar
 StartChar: uni305C
 Encoding: 12380 12380 2007
@@ -10555,7 +10555,7 @@ Fore
  598 750 589.333 757 578 765 c 1
  576 771 579 774.667 587 776 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305C.vert
+Substitution: 1 0 'vert' uni305C.vert
 EndChar
 StartChar: uni305D
 Encoding: 12381 12381 2008
@@ -10635,7 +10635,7 @@ Fore
  403.5 718.167 445.333 722.333 500 733 c 128
  554.667 743.667 593.333 752.333 616 759 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305D.vert
+Substitution: 1 0 'vert' uni305D.vert
 EndChar
 StartChar: uni305E
 Encoding: 12382 12382 2009
@@ -10737,7 +10737,7 @@ Fore
  403.5 718.167 445.333 722.333 500 733 c 128
  554.667 743.667 593.333 752.333 616 759 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305E.vert
+Substitution: 1 0 'vert' uni305E.vert
 EndChar
 StartChar: uni305F
 Encoding: 12383 12383 2010
@@ -10819,7 +10819,7 @@ Fore
  362.667 770.333 349.333 777.667 328 783 c 1
  323.333 787.667 324.333 792.667 331 798 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni305F.vert
+Substitution: 1 0 'vert' uni305F.vert
 EndChar
 StartChar: uni3060
 Encoding: 12384 12384 2011
@@ -10923,7 +10923,7 @@ Fore
  482 90.3333 465.5 112.5 456.5 137.5 c 128
  447.5 162.5 448 194.333 458 233 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3060.vert
+Substitution: 1 0 'vert' uni3060.vert
 EndChar
 StartChar: uni3061
 Encoding: 12385 12385 2012
@@ -10991,7 +10991,7 @@ Fore
  353 770.167 339.667 787 315 799 c 1
  310.333 802.333 311.333 807.333 318 814 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3061.vert
+Substitution: 1 0 'vert' uni3061.vert
 EndChar
 StartChar: uni3062
 Encoding: 12386 12386 2013
@@ -11081,7 +11081,7 @@ Fore
  353 770.167 339.667 787 315 799 c 1
  310.333 802.333 311.333 807.333 318 814 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3062.vert
+Substitution: 1 0 'vert' uni3062.vert
 EndChar
 StartChar: uni3063
 Encoding: 12387 12387 2014
@@ -11117,7 +11117,7 @@ Fore
  282.5 295.5 321.5 304.333 388.5 321 c 128
  455.5 337.667 513.667 349.333 563 356 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3063.vert
+Substitution: 1 0 'vert' uni3063.vert
 EndChar
 StartChar: uni3064
 Encoding: 12388 12388 2015
@@ -11157,7 +11157,7 @@ Fore
  149.667 489.667 196.167 500.833 272.5 528.5 c 128
  348.833 556.167 428.667 577.667 512 593 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3064.vert
+Substitution: 1 0 'vert' uni3064.vert
 EndChar
 StartChar: uni3065
 Encoding: 12389 12389 2016
@@ -11219,7 +11219,7 @@ Fore
  149.667 489.667 196.167 500.833 272.5 528.5 c 128
  348.833 556.167 428.667 577.667 512 593 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3065.vert
+Substitution: 1 0 'vert' uni3065.vert
 EndChar
 StartChar: uni3066
 Encoding: 12390 12390 2017
@@ -11272,7 +11272,7 @@ Fore
  218 630.833 269.167 636.333 353.5 647 c 128
  437.833 657.667 571 685.667 753 731 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3066.vert
+Substitution: 1 0 'vert' uni3066.vert
 EndChar
 StartChar: uni3067
 Encoding: 12391 12391 2018
@@ -11347,7 +11347,7 @@ Fore
  218 630.833 269.167 636.333 353.5 647 c 128
  437.833 657.667 571 685.667 753 731 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3067.vert
+Substitution: 1 0 'vert' uni3067.vert
 EndChar
 StartChar: uni3068
 Encoding: 12392 12392 2019
@@ -11404,7 +11404,7 @@ Fore
  336.167 729.5 324.333 737.667 307 741 c 1
  303 747.667 303.333 753.333 308 758 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3068.vert
+Substitution: 1 0 'vert' uni3068.vert
 EndChar
 StartChar: uni3069
 Encoding: 12393 12393 2020
@@ -11483,7 +11483,7 @@ Fore
  336.167 729.5 324.333 737.667 307 741 c 1
  303 747.667 303.333 753.333 308 758 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3069.vert
+Substitution: 1 0 'vert' uni3069.vert
 EndChar
 StartChar: uni306A
 Encoding: 12394 12394 2021
@@ -11587,7 +11587,7 @@ Fore
  542.833 13.6667 564.167 24.8333 580.5 46.5 c 128
  596.833 68.1667 604 101.333 602 146 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306A.vert
+Substitution: 1 0 'vert' uni306A.vert
 EndChar
 StartChar: uni306B
 Encoding: 12395 12395 2022
@@ -11655,7 +11655,7 @@ Fore
  472.667 133.833 455.167 161.333 445.5 194 c 128
  435.833 226.667 437 269.333 449 322 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306B.vert
+Substitution: 1 0 'vert' uni306B.vert
 EndChar
 StartChar: uni306C
 Encoding: 12396 12396 2023
@@ -11759,7 +11759,7 @@ Fore
  673 63.8333 694.333 74.8333 719 90.5 c 128
  743.667 106.167 764.333 125 781 147 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306C.vert
+Substitution: 1 0 'vert' uni306C.vert
 EndChar
 StartChar: uni306D
 Encoding: 12397 12397 2024
@@ -11872,7 +11872,7 @@ Fore
  657 62.3333 675.5 67.1667 694.5 75.5 c 128
  713.5 83.8333 738.667 107.667 770 147 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306D.vert
+Substitution: 1 0 'vert' uni306D.vert
 EndChar
 StartChar: uni306E
 Encoding: 12398 12398 2025
@@ -11937,7 +11937,7 @@ Fore
  509.833 568.833 511 590.667 507 602 c 128
  503 613.333 490.667 623.667 470 633 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306E.vert
+Substitution: 1 0 'vert' uni306E.vert
 EndChar
 StartChar: uni306F
 Encoding: 12399 12399 2026
@@ -12041,7 +12041,7 @@ Fore
  689.333 104 693.5 118 694.5 128 c 128
  695.5 138 696.333 146.667 697 154 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni306F.vert
+Substitution: 1 0 'vert' uni306F.vert
 EndChar
 StartChar: uni3070
 Encoding: 12400 12400 2027
@@ -12163,7 +12163,7 @@ Fore
  689.333 104 693.5 118 694.5 128 c 128
  695.5 138 696.333 146.667 697 154 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3070.vert
+Substitution: 1 0 'vert' uni3070.vert
 EndChar
 StartChar: uni3071
 Encoding: 12401 12401 2028
@@ -12285,7 +12285,7 @@ Fore
  689.333 104 693.5 118 694.5 128 c 128
  695.5 138 696.333 146.667 697 154 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3071.vert
+Substitution: 1 0 'vert' uni3071.vert
 EndChar
 StartChar: uni3072
 Encoding: 12402 12402 2029
@@ -12364,7 +12364,7 @@ Fore
  613.667 717.667 614.833 729.167 622.5 739.5 c 128
  630.167 749.833 639 752.333 649 747 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3072.vert
+Substitution: 1 0 'vert' uni3072.vert
 EndChar
 StartChar: uni3073
 Encoding: 12403 12403 2030
@@ -12465,7 +12465,7 @@ Fore
  613.667 717.667 614.833 729.167 622.5 739.5 c 128
  630.167 749.833 639 752.333 649 747 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3073.vert
+Substitution: 1 0 'vert' uni3073.vert
 EndChar
 StartChar: uni3074
 Encoding: 12404 12404 2031
@@ -12562,7 +12562,7 @@ Fore
  613.667 717.667 614.833 729.167 622.5 739.5 c 128
  630.167 749.833 639 752.333 649 747 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3074.vert
+Substitution: 1 0 'vert' uni3074.vert
 EndChar
 StartChar: uni3075
 Encoding: 12405 12405 2032
@@ -12649,7 +12649,7 @@ Fore
  403 722.167 385 747.667 373 775 c 1
  371.667 786.333 376 789 386 783 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3075.vert
+Substitution: 1 0 'vert' uni3075.vert
 EndChar
 StartChar: uni3076
 Encoding: 12406 12406 2033
@@ -12758,7 +12758,7 @@ Fore
  704.167 686.833 690.333 700.333 671 717 c 1
  665.667 724.333 667.333 728 676 728 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3076.vert
+Substitution: 1 0 'vert' uni3076.vert
 EndChar
 StartChar: uni3077
 Encoding: 12407 12407 2034
@@ -12863,7 +12863,7 @@ Fore
  403 722.167 385 747.667 373 775 c 1
  371.667 786.333 376 789 386 783 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3077.vert
+Substitution: 1 0 'vert' uni3077.vert
 EndChar
 StartChar: uni3078
 Encoding: 12408 12408 2035
@@ -12903,7 +12903,7 @@ Fore
  342 530.5 362.667 556.667 378 578 c 128
  393.333 599.333 413.333 610 438 610 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3078.vert
+Substitution: 1 0 'vert' uni3078.vert
 EndChar
 StartChar: uni3079
 Encoding: 12409 12409 2036
@@ -12961,7 +12961,7 @@ Fore
  342 530.5 362.667 556.667 378 578 c 128
  393.333 599.333 413.333 610 438 610 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3079.vert
+Substitution: 1 0 'vert' uni3079.vert
 EndChar
 StartChar: uni307A
 Encoding: 12410 12410 2037
@@ -13019,7 +13019,7 @@ Fore
  342 530.5 362.667 556.667 378 578 c 128
  393.333 599.333 413.333 610 438 610 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307A.vert
+Substitution: 1 0 'vert' uni307A.vert
 EndChar
 StartChar: uni307B
 Encoding: 12411 12411 2038
@@ -13134,7 +13134,7 @@ Fore
  174.167 672.833 171.167 693 165.5 705 c 128
  159.833 717 146.667 728.333 126 739 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307B.vert
+Substitution: 1 0 'vert' uni307B.vert
 EndChar
 StartChar: uni307C
 Encoding: 12412 12412 2039
@@ -13262,7 +13262,7 @@ Fore
  174.167 672.833 171.167 693 165.5 705 c 128
  159.833 717 146.667 728.333 126 739 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307C.vert
+Substitution: 1 0 'vert' uni307C.vert
 EndChar
 StartChar: uni307D
 Encoding: 12413 12413 2040
@@ -13393,7 +13393,7 @@ Fore
  174.167 672.833 171.167 693 165.5 705 c 128
  159.833 717 146.667 728.333 126 739 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307D.vert
+Substitution: 1 0 'vert' uni307D.vert
 EndChar
 StartChar: uni307E
 Encoding: 12414 12414 2041
@@ -13493,7 +13493,7 @@ Fore
  463 39 472.333 57.1667 475 77.5 c 128
  477.667 97.8333 479.333 112.667 480 122 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307E.vert
+Substitution: 1 0 'vert' uni307E.vert
 EndChar
 StartChar: uni307F
 Encoding: 12415 12415 2042
@@ -13582,7 +13582,7 @@ Fore
  267 189.333 287.667 214 307 244 c 128
  326.333 274 344.667 308.333 362 347 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni307F.vert
+Substitution: 1 0 'vert' uni307F.vert
 EndChar
 StartChar: uni3080
 Encoding: 12416 12416 2043
@@ -13685,7 +13685,7 @@ Fore
  262.667 221.333 278.667 237 292 257 c 128
  305.333 277 311.333 311 310 359 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3080.vert
+Substitution: 1 0 'vert' uni3080.vert
 EndChar
 StartChar: uni3081
 Encoding: 12417 12417 2044
@@ -13767,7 +13767,7 @@ Fore
  338.667 256.333 318.667 289.167 302 319.5 c 128
  285.333 349.833 268 389.667 250 439 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3081.vert
+Substitution: 1 0 'vert' uni3081.vert
 EndChar
 StartChar: uni3082
 Encoding: 12418 12418 2045
@@ -13843,7 +13843,7 @@ Fore
  273.5 473 271.5 453.667 282.5 431 c 128
  293.5 408.333 319.333 384.333 360 359 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3082.vert
+Substitution: 1 0 'vert' uni3082.vert
 EndChar
 StartChar: uni3083
 Encoding: 12419 12419 2046
@@ -13921,7 +13921,7 @@ Fore
  504.333 349.667 465 330.667 429 312 c 1
  429 311 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3083.vert
+Substitution: 1 0 'vert' uni3083.vert
 EndChar
 StartChar: uni3084
 Encoding: 12420 12420 2047
@@ -13998,7 +13998,7 @@ Fore
  420.333 508.667 473.667 533.167 531 557.5 c 128
  588.333 581.833 637 594 677 594 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3084.vert
+Substitution: 1 0 'vert' uni3084.vert
 EndChar
 StartChar: uni3085
 Encoding: 12421 12421 2048
@@ -14075,7 +14075,7 @@ Fore
  692.167 135 712 154.833 724 178.5 c 128
  736 202.167 742 226.333 742 251 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3085.vert
+Substitution: 1 0 'vert' uni3085.vert
 EndChar
 StartChar: uni3086
 Encoding: 12422 12422 2049
@@ -14155,7 +14155,7 @@ Fore
  769.667 228.667 797.333 255.5 820 288.5 c 128
  842.667 321.5 854 356 854 392 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3086.vert
+Substitution: 1 0 'vert' uni3086.vert
 EndChar
 StartChar: uni3087
 Encoding: 12423 12423 2050
@@ -14215,7 +14215,7 @@ Fore
  473.667 4.66667 479.167 19.1667 481.5 35.5 c 128
  483.833 51.8333 485.333 65.6667 486 77 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3087.vert
+Substitution: 1 0 'vert' uni3087.vert
 EndChar
 StartChar: uni3088
 Encoding: 12424 12424 2051
@@ -14275,7 +14275,7 @@ Fore
  471.333 60.3333 478.667 79.6667 480 101 c 128
  481.333 122.333 482.333 140.667 483 156 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3088.vert
+Substitution: 1 0 'vert' uni3088.vert
 EndChar
 StartChar: uni3089
 Encoding: 12425 12425 2052
@@ -14348,7 +14348,7 @@ Fore
  409 752.667 388.333 778.333 367 811 c 1
  365.667 819 369 821.333 377 818 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3089.vert
+Substitution: 1 0 'vert' uni3089.vert
 EndChar
 StartChar: uni308A
 Encoding: 12426 12426 2053
@@ -14404,7 +14404,7 @@ Fore
  365.333 401.5 376.167 433.167 388.5 467.5 c 128
  400.833 501.833 420.333 541.333 447 586 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308A.vert
+Substitution: 1 0 'vert' uni308A.vert
 EndChar
 StartChar: uni308B
 Encoding: 12427 12427 2054
@@ -14484,7 +14484,7 @@ Fore
  467.167 -9.5 498.167 -8.83333 524.5 -2.5 c 128
  550.833 3.83333 570.333 9 583 13 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308B.vert
+Substitution: 1 0 'vert' uni308B.vert
 EndChar
 StartChar: uni308C
 Encoding: 12428 12428 2055
@@ -14575,7 +14575,7 @@ Fore
  216 211 216 211 203 195 c 128
  194.333 184.333 188 176 184 170 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308C.vert
+Substitution: 1 0 'vert' uni308C.vert
 EndChar
 StartChar: uni308D
 Encoding: 12429 12429 2056
@@ -14639,7 +14639,7 @@ Fore
  615.667 -23.3333 574.5 -33.3333 533.5 -38 c 128
  492.5 -42.6667 444.333 -46 389 -48 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308D.vert
+Substitution: 1 0 'vert' uni308D.vert
 EndChar
 StartChar: uni308E
 Encoding: 12430 12430 2057
@@ -14725,7 +14725,7 @@ Fore
  391 241 391 241 393.5 174.5 c 128
  395.167 130.167 396 102.667 396 92 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308E.vert
+Substitution: 1 0 'vert' uni308E.vert
 EndChar
 StartChar: uni308F
 Encoding: 12431 12431 2058
@@ -14816,7 +14816,7 @@ Fore
  373.333 547.333 375.333 555.167 374 555.5 c 128
  372.667 555.833 371 555.333 369 554 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni308F.vert
+Substitution: 1 0 'vert' uni308F.vert
 EndChar
 StartChar: uni3090
 Encoding: 12432 12432 2059
@@ -14905,7 +14905,7 @@ Fore
  681.333 38.8333 701.5 46.5 716.5 57.5 c 128
  731.5 68.5 743.333 78 752 86 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3090.vert
+Substitution: 1 0 'vert' uni3090.vert
 EndChar
 StartChar: uni3091
 Encoding: 12433 12433 2060
@@ -15028,7 +15028,7 @@ Fore
  413.5 288.333 424 281.5 438 278.5 c 128
  452 275.5 474.667 276 506 280 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3091.vert
+Substitution: 1 0 'vert' uni3091.vert
 EndChar
 StartChar: uni3092
 Encoding: 12434 12434 2061
@@ -15125,7 +15125,7 @@ Fore
  416.333 771 399.333 789 366 799 c 1
  361.333 805.667 362.333 811.333 369 816 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3092.vert
+Substitution: 1 0 'vert' uni3092.vert
 EndChar
 StartChar: uni3093
 Encoding: 12435 12435 2062
@@ -15188,7 +15188,7 @@ Fore
  408.333 767 406.333 770.5 407 775.5 c 128
  407.667 780.5 412.333 783.333 421 784 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3093.vert
+Substitution: 1 0 'vert' uni3093.vert
 EndChar
 StartChar: uni309B
 Encoding: 12443 12443 2064
@@ -15213,7 +15213,7 @@ Fore
  29 708 l 1
  29 713 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni309B.vert
+Substitution: 1 0 'vert' uni309B.vert
 EndChar
 StartChar: uni309C
 Encoding: 12444 12444 2065
@@ -15239,7 +15239,7 @@ Fore
  98 794 81 786.833 67 772.5 c 128
  53 758.167 46 741 46 721 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni309C.vert
+Substitution: 1 0 'vert' uni309C.vert
 EndChar
 StartChar: uni309D
 Encoding: 12445 12445 2066
@@ -15268,7 +15268,7 @@ Fore
  351.5 548.5 318.333 566.333 289 577 c 1
  282.333 583.667 283.667 587.667 293 589 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni309D.vert
+Substitution: 1 0 'vert' uni309D.vert
 EndChar
 StartChar: uni309E
 Encoding: 12446 12446 2067
@@ -15312,7 +15312,7 @@ Fore
  343.5 548.5 310.333 566.333 281 577 c 1
  274.333 583.667 275.667 587.667 285 589 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni309E.vert
+Substitution: 1 0 'vert' uni309E.vert
 EndChar
 StartChar: uni30A1
 Encoding: 12449 12449 2068
@@ -15369,7 +15369,7 @@ Fore
  473.333 331.5 462 342.333 444 353 c 1
  440 360.333 442.333 365.667 451 369 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A1.vert
+Substitution: 1 0 'vert' uni30A1.vert
 EndChar
 StartChar: uni30A2
 Encoding: 12450 12450 2069
@@ -15426,7 +15426,7 @@ Fore
  473.5 489.667 458 499.667 434 505 c 1
  426 511.667 427.333 517 438 521 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A2.vert
+Substitution: 1 0 'vert' uni30A2.vert
 EndChar
 StartChar: uni30A3
 Encoding: 12451 12451 2070
@@ -15471,7 +15471,7 @@ Fore
  591.833 527.5 592.5 537.167 589.5 547.5 c 128
  586.5 557.833 578.333 563.667 565 565 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A3.vert
+Substitution: 1 0 'vert' uni30A3.vert
 EndChar
 StartChar: uni30A4
 Encoding: 12452 12452 2071
@@ -15517,7 +15517,7 @@ Fore
  703.333 730.667 704 744.167 700 756.5 c 128
  696 768.833 685.667 775 669 775 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A4.vert
+Substitution: 1 0 'vert' uni30A4.vert
 EndChar
 StartChar: uni30A5
 Encoding: 12453 12453 2072
@@ -15573,7 +15573,7 @@ Fore
  466.333 547.5 454.667 557.667 438 561 c 1
  432.667 565.667 433.667 570.667 441 576 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A5.vert
+Substitution: 1 0 'vert' uni30A5.vert
 EndChar
 StartChar: uni30A6
 Encoding: 12454 12454 2073
@@ -15629,7 +15629,7 @@ Fore
  460.333 751.167 445.333 764 424 768 c 1
  417.333 774 418.667 780 428 786 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A6.vert
+Substitution: 1 0 'vert' uni30A6.vert
 EndChar
 StartChar: uni30A7
 Encoding: 12455 12455 2074
@@ -15673,7 +15673,7 @@ Fore
  436 369.833 489.167 377 549.5 387 c 128
  609.833 397 650.333 406 671 414 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A7.vert
+Substitution: 1 0 'vert' uni30A7.vert
 EndChar
 StartChar: uni30A8
 Encoding: 12456 12456 2075
@@ -15732,7 +15732,7 @@ Fore
  647.333 627 686.667 632.333 694 635 c 128
  701.333 637.667 712.333 643 727 651 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A8.vert
+Substitution: 1 0 'vert' uni30A8.vert
 EndChar
 StartChar: uni30A9
 Encoding: 12457 12457 2076
@@ -15797,7 +15797,7 @@ Fore
  550.333 565.5 538.667 572.333 524 575 c 1
  517.333 582.333 518.333 587.333 527 590 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30A9.vert
+Substitution: 1 0 'vert' uni30A9.vert
 EndChar
 StartChar: uni30AA
 Encoding: 12458 12458 2077
@@ -15862,7 +15862,7 @@ Fore
  650.667 583 683 586.167 729 590.5 c 128
  775 594.833 808.667 601.333 830 610 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AA.vert
+Substitution: 1 0 'vert' uni30AA.vert
 EndChar
 StartChar: uni30AB
 Encoding: 12459 12459 2078
@@ -15929,7 +15929,7 @@ Fore
  452.833 755.333 436.333 768 411 772 c 1
  399 778.667 399.333 785.667 412 793 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AB.vert
+Substitution: 1 0 'vert' uni30AB.vert
 EndChar
 StartChar: uni30AC
 Encoding: 12460 12460 2079
@@ -16018,7 +16018,7 @@ Fore
  786.167 656.833 772.333 670.333 753 687 c 1
  747.667 694.333 749.333 698 758 698 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AC.vert
+Substitution: 1 0 'vert' uni30AC.vert
 EndChar
 StartChar: uni30AD
 Encoding: 12461 12461 2080
@@ -16089,7 +16089,7 @@ Fore
  360.667 760.667 345.333 765 328 761 c 1
  320 767.667 320 774.333 328 781 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AD.vert
+Substitution: 1 0 'vert' uni30AD.vert
 EndChar
 StartChar: uni30AE
 Encoding: 12462 12462 2081
@@ -16182,7 +16182,7 @@ Fore
  764.167 702.833 750.333 716.333 731 733 c 1
  725.667 740.333 727.333 744 736 744 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AE.vert
+Substitution: 1 0 'vert' uni30AE.vert
 EndChar
 StartChar: uni30AF
 Encoding: 12463 12463 2082
@@ -16230,7 +16230,7 @@ Fore
  410 725.5 398.333 735 381 741 c 1
  369.667 747 369.333 753 380 759 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30AF.vert
+Substitution: 1 0 'vert' uni30AF.vert
 EndChar
 StartChar: uni30B0
 Encoding: 12464 12464 2083
@@ -16300,7 +16300,7 @@ Fore
  782.167 694.833 768.333 708.333 749 725 c 1
  743.667 732.333 745.333 736 754 736 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B0.vert
+Substitution: 1 0 'vert' uni30B0.vert
 EndChar
 StartChar: uni30B1
 Encoding: 12465 12465 2084
@@ -16359,7 +16359,7 @@ Fore
  337.167 742.167 324.333 750 305 752 c 1
  295.667 759.333 298.333 765 313 769 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B1.vert
+Substitution: 1 0 'vert' uni30B1.vert
 EndChar
 StartChar: uni30B2
 Encoding: 12466 12466 2085
@@ -16432,7 +16432,7 @@ Fore
  337.167 742.167 324.333 750 305 752 c 1
  295.667 759.333 298.333 765 313 769 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B2.vert
+Substitution: 1 0 'vert' uni30B2.vert
 EndChar
 StartChar: uni30B3
 Encoding: 12467 12467 2086
@@ -16482,7 +16482,7 @@ Fore
  182.167 178.833 174.333 197 167 221 c 1
  171 235.667 176.333 238.667 183 230 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B3.vert
+Substitution: 1 0 'vert' uni30B3.vert
 EndChar
 StartChar: uni30B4
 Encoding: 12468 12468 2087
@@ -16554,7 +16554,7 @@ Fore
  796.167 702.833 782.333 716.333 763 733 c 1
  757.667 740.333 759.333 744 768 744 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B4.vert
+Substitution: 1 0 'vert' uni30B4.vert
 EndChar
 StartChar: uni30B5
 Encoding: 12469 12469 2088
@@ -16628,7 +16628,7 @@ Fore
  63 459.333 56 474 54 492 c 1
  61.3333 510.667 68.3333 513.333 75 500 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B5.vert
+Substitution: 1 0 'vert' uni30B5.vert
 EndChar
 StartChar: uni30B6
 Encoding: 12470 12470 2089
@@ -16724,7 +16724,7 @@ Fore
  822.167 708.833 808.333 722.333 789 739 c 1
  783.667 746.333 785.333 750 794 750 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B6.vert
+Substitution: 1 0 'vert' uni30B6.vert
 EndChar
 StartChar: uni30B7
 Encoding: 12471 12471 2090
@@ -16778,7 +16778,7 @@ Fore
  262.667 423.333 247 438.333 225 457 c 128
  203 475.667 174 493.667 138 511 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B7.vert
+Substitution: 1 0 'vert' uni30B7.vert
 EndChar
 StartChar: uni30B8
 Encoding: 12472 12472 2091
@@ -16854,7 +16854,7 @@ Fore
  691.333 324.333 736.833 365.167 776.5 405.5 c 128
  816.167 445.833 862 495.333 914 554 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B8.vert
+Substitution: 1 0 'vert' uni30B8.vert
 EndChar
 StartChar: uni30B9
 Encoding: 12473 12473 2092
@@ -16903,7 +16903,7 @@ Fore
  244.333 546.167 223.333 572.667 200 616 c 1
  202 627.333 207.333 630.333 216 625 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30B9.vert
+Substitution: 1 0 'vert' uni30B9.vert
 EndChar
 StartChar: uni30BA
 Encoding: 12474 12474 2093
@@ -16974,7 +16974,7 @@ Fore
  244.333 546.167 223.333 572.667 200 616 c 1
  202 627.333 207.333 630.333 216 625 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BA.vert
+Substitution: 1 0 'vert' uni30BA.vert
 EndChar
 StartChar: uni30BB
 Encoding: 12475 12475 2094
@@ -17043,7 +17043,7 @@ Fore
  109 437.667 98.6667 453.333 88 474 c 1
  88 486.667 92.3333 490 101 484 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BB.vert
+Substitution: 1 0 'vert' uni30BB.vert
 EndChar
 StartChar: uni30BC
 Encoding: 12476 12476 2095
@@ -17134,7 +17134,7 @@ Fore
  109 437.667 98.6667 453.333 88 474 c 1
  88 486.667 92.3333 490 101 484 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BC.vert
+Substitution: 1 0 'vert' uni30BC.vert
 EndChar
 StartChar: uni30BD
 Encoding: 12477 12477 2096
@@ -17172,7 +17172,7 @@ Fore
  742.667 678.833 731 689.667 713 699 c 1
  702.333 707.667 703.667 713.667 717 717 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BD.vert
+Substitution: 1 0 'vert' uni30BD.vert
 EndChar
 StartChar: uni30BE
 Encoding: 12478 12478 2097
@@ -17232,7 +17232,7 @@ Fore
  791.167 730.833 777.333 744.333 758 761 c 1
  752.667 768.333 754.333 772 763 772 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BE.vert
+Substitution: 1 0 'vert' uni30BE.vert
 EndChar
 StartChar: uni30BF
 Encoding: 12479 12479 2098
@@ -17294,7 +17294,7 @@ Fore
  416 733.5 404.333 743 387 749 c 1
  375.667 755 375.333 761 386 767 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30BF.vert
+Substitution: 1 0 'vert' uni30BF.vert
 EndChar
 StartChar: uni30C0
 Encoding: 12480 12480 2099
@@ -17378,7 +17378,7 @@ Fore
  791.167 734.833 777.333 748.333 758 765 c 1
  752.667 772.333 754.333 776 763 776 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C0.vert
+Substitution: 1 0 'vert' uni30C0.vert
 EndChar
 StartChar: uni30C1
 Encoding: 12481 12481 2100
@@ -17441,7 +17441,7 @@ Fore
  645.5 742.667 641.333 752.667 620 760 c 1
  610.667 767.333 612 772.333 624 775 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C1.vert
+Substitution: 1 0 'vert' uni30C1.vert
 EndChar
 StartChar: uni30C2
 Encoding: 12482 12482 2101
@@ -17526,7 +17526,7 @@ Fore
  645.5 742.667 641.333 752.667 620 760 c 1
  610.667 767.333 612 772.333 624 775 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C2.vert
+Substitution: 1 0 'vert' uni30C2.vert
 EndChar
 StartChar: uni30C3
 Encoding: 12483 12483 2102
@@ -17576,7 +17576,7 @@ Fore
  255 324.333 239.667 348.333 217 381 c 1
  215.667 389 219.667 392.333 229 391 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C3.vert
+Substitution: 1 0 'vert' uni30C3.vert
 EndChar
 StartChar: uni30C4
 Encoding: 12484 12484 2103
@@ -17624,7 +17624,7 @@ Fore
  742.333 682.167 732.333 693.667 717 703 c 1
  706.333 711.667 707.667 717.667 721 721 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C4.vert
+Substitution: 1 0 'vert' uni30C4.vert
 EndChar
 StartChar: uni30C5
 Encoding: 12485 12485 2104
@@ -17694,7 +17694,7 @@ Fore
  215.167 465.167 202.5 485.667 187.5 507 c 128
  172.5 528.333 147 554 111 584 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C5.vert
+Substitution: 1 0 'vert' uni30C5.vert
 EndChar
 StartChar: uni30C6
 Encoding: 12486 12486 2105
@@ -17756,7 +17756,7 @@ Fore
  528.667 471.667 604.167 482 670.5 490 c 128
  736.833 498 780.667 506.333 802 515 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C6.vert
+Substitution: 1 0 'vert' uni30C6.vert
 EndChar
 StartChar: uni30C7
 Encoding: 12487 12487 2106
@@ -17840,7 +17840,7 @@ Fore
  784.167 731.833 770.333 745.333 751 762 c 1
  745.667 769.333 747.333 773 756 773 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C7.vert
+Substitution: 1 0 'vert' uni30C7.vert
 EndChar
 StartChar: uni30C8
 Encoding: 12488 12488 2107
@@ -17883,7 +17883,7 @@ Fore
  368.667 761.667 355 771.667 333 775 c 1
  327.667 783.667 329.333 790 338 794 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C8.vert
+Substitution: 1 0 'vert' uni30C8.vert
 EndChar
 StartChar: uni30C9
 Encoding: 12489 12489 2108
@@ -17944,7 +17944,7 @@ Fore
  368.667 761.667 355 771.667 333 775 c 1
  327.667 783.667 329.333 790 338 794 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30C9.vert
+Substitution: 1 0 'vert' uni30C9.vert
 EndChar
 StartChar: uni30CA
 Encoding: 12490 12490 2109
@@ -17997,7 +17997,7 @@ Fore
  583.667 507 628.333 513.167 683 521.5 c 128
  737.667 529.833 771.667 537.667 785 545 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CA.vert
+Substitution: 1 0 'vert' uni30CA.vert
 EndChar
 StartChar: uni30CB
 Encoding: 12491 12491 2110
@@ -18047,7 +18047,7 @@ Fore
  166 192 214.667 195.333 292 208 c 128
  369.333 220.667 444.333 229.667 517 235 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CB.vert
+Substitution: 1 0 'vert' uni30CB.vert
 EndChar
 StartChar: uni30CC
 Encoding: 12492 12492 2111
@@ -18105,7 +18105,7 @@ Fore
  267.167 576 258.667 591.333 252 612 c 1
  250 627.333 254.667 631.667 266 625 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CC.vert
+Substitution: 1 0 'vert' uni30CC.vert
 EndChar
 StartChar: uni30CD
 Encoding: 12493 12493 2112
@@ -18183,7 +18183,7 @@ Fore
  455.5 728.833 425.667 752.333 381 781 c 1
  373 791 376.333 795.333 391 794 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CD.vert
+Substitution: 1 0 'vert' uni30CD.vert
 EndChar
 StartChar: uni30CE
 Encoding: 12494 12494 2113
@@ -18209,7 +18209,7 @@ Fore
  667.167 679 657.667 690.667 643 700 c 1
  632.333 709.333 634 715.333 648 718 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CE.vert
+Substitution: 1 0 'vert' uni30CE.vert
 EndChar
 StartChar: uni30CF
 Encoding: 12495 12495 2114
@@ -18251,7 +18251,7 @@ Fore
  365 577.167 349.333 584.667 326 588 c 1
  317.333 594.667 317.667 600.667 327 606 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30CF.vert
+Substitution: 1 0 'vert' uni30CF.vert
 EndChar
 StartChar: uni30D0
 Encoding: 12496 12496 2115
@@ -18315,7 +18315,7 @@ Fore
  766.167 652.833 752.333 666.333 733 683 c 1
  727.667 690.333 729.333 694 738 694 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D0.vert
+Substitution: 1 0 'vert' uni30D0.vert
 EndChar
 StartChar: uni30D1
 Encoding: 12497 12497 2116
@@ -18375,7 +18375,7 @@ Fore
  365 577.167 349.333 584.667 326 588 c 1
  317.333 594.667 317.667 600.667 327 606 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D1.vert
+Substitution: 1 0 'vert' uni30D1.vert
 EndChar
 StartChar: uni30D2
 Encoding: 12498 12498 2117
@@ -18434,7 +18434,7 @@ Fore
  220 694.667 209 700.333 195 703 c 1
  183 707 182.667 712.333 194 719 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D2.vert
+Substitution: 1 0 'vert' uni30D2.vert
 EndChar
 StartChar: uni30D3
 Encoding: 12499 12499 2118
@@ -18515,7 +18515,7 @@ Fore
  220 694.667 209 700.333 195 703 c 1
  183 707 182.667 712.333 194 719 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D3.vert
+Substitution: 1 0 'vert' uni30D3.vert
 EndChar
 StartChar: uni30D4
 Encoding: 12500 12500 2119
@@ -18592,7 +18592,7 @@ Fore
  220 694.667 209 700.333 195 703 c 1
  183 707 182.667 712.333 194 719 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D4.vert
+Substitution: 1 0 'vert' uni30D4.vert
 EndChar
 StartChar: uni30D5
 Encoding: 12501 12501 2120
@@ -18635,7 +18635,7 @@ Fore
  181.167 570.667 168 590 152 616 c 1
  147.333 631.333 152 636.333 166 631 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D5.vert
+Substitution: 1 0 'vert' uni30D5.vert
 EndChar
 StartChar: uni30D6
 Encoding: 12502 12502 2121
@@ -18692,7 +18692,7 @@ Fore
  173.167 570.667 160 590 144 616 c 1
  139.333 631.333 144 636.333 158 631 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D6.vert
+Substitution: 1 0 'vert' uni30D6.vert
 EndChar
 StartChar: uni30D7
 Encoding: 12503 12503 2122
@@ -18753,7 +18753,7 @@ Fore
  173.167 570.667 160 590 144 616 c 1
  139.333 631.333 144 636.333 158 631 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D7.vert
+Substitution: 1 0 'vert' uni30D7.vert
 EndChar
 StartChar: uni30D8
 Encoding: 12504 12504 2123
@@ -18793,7 +18793,7 @@ Fore
  356.5 559.5 369.167 573 381.5 585 c 128
  393.833 597 404 603 412 603 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D8.vert
+Substitution: 1 0 'vert' uni30D8.vert
 EndChar
 StartChar: uni30D9
 Encoding: 12505 12505 2124
@@ -18855,7 +18855,7 @@ Fore
  688.667 638.333 673 653.333 651 672 c 1
  645.667 680.667 647.667 685 657 685 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30D9.vert
+Substitution: 1 0 'vert' uni30D9.vert
 EndChar
 StartChar: uni30DA
 Encoding: 12506 12506 2125
@@ -18913,7 +18913,7 @@ Fore
  356.5 559.5 369.167 573 381.5 585 c 128
  393.833 597 404 603 412 603 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DA.vert
+Substitution: 1 0 'vert' uni30DA.vert
 EndChar
 StartChar: uni30DB
 Encoding: 12507 12507 2126
@@ -18988,7 +18988,7 @@ Fore
  585.333 568.667 638.5 575.167 693.5 581.5 c 128
  748.5 587.833 786.667 595.333 808 604 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DB.vert
+Substitution: 1 0 'vert' uni30DB.vert
 EndChar
 StartChar: uni30DC
 Encoding: 12508 12508 2127
@@ -19077,7 +19077,7 @@ Fore
  585.333 568.667 638.5 575.167 693.5 581.5 c 128
  748.5 587.833 786.667 595.333 808 604 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DC.vert
+Substitution: 1 0 'vert' uni30DC.vert
 EndChar
 StartChar: uni30DD
 Encoding: 12509 12509 2128
@@ -19170,7 +19170,7 @@ Fore
  585.333 568.667 638.5 575.167 693.5 581.5 c 128
  748.5 587.833 786.667 595.333 808 604 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DD.vert
+Substitution: 1 0 'vert' uni30DD.vert
 EndChar
 StartChar: uni30DE
 Encoding: 12510 12510 2129
@@ -19222,7 +19222,7 @@ Fore
  120.5 531 106 551 90 577 c 1
  88.6667 590.333 94 594.333 106 589 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DE.vert
+Substitution: 1 0 'vert' uni30DE.vert
 EndChar
 StartChar: uni30DF
 Encoding: 12511 12511 2130
@@ -19265,7 +19265,7 @@ Fore
  470.333 140 418.667 164 366 184 c 128
  313.333 204 262.667 221.333 214 236 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30DF.vert
+Substitution: 1 0 'vert' uni30DF.vert
 EndChar
 StartChar: uni30E0
 Encoding: 12512 12512 2131
@@ -19311,7 +19311,7 @@ Fore
  438.833 657.667 439.167 684.833 431.5 702.5 c 128
  423.833 720.167 412 732.667 396 740 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E0.vert
+Substitution: 1 0 'vert' uni30E0.vert
 EndChar
 StartChar: uni30E1
 Encoding: 12513 12513 2132
@@ -19352,7 +19352,7 @@ Fore
  391.5 455.5 338.333 478.333 275 499 c 1
  269 508.333 271 513.667 281 515 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E1.vert
+Substitution: 1 0 'vert' uni30E1.vert
 EndChar
 StartChar: uni30E2
 Encoding: 12514 12514 2133
@@ -19429,7 +19429,7 @@ Fore
  584.5 374.167 538.667 370.333 494 365 c 1
  493.333 306.333 495 248.667 499 192 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E2.vert
+Substitution: 1 0 'vert' uni30E2.vert
 EndChar
 StartChar: uni30E3
 Encoding: 12515 12515 2134
@@ -19488,7 +19488,7 @@ Fore
  347.833 524.167 330.333 535 305 539 c 1
  295 545 294.667 550.667 304 556 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E3.vert
+Substitution: 1 0 'vert' uni30E3.vert
 EndChar
 StartChar: uni30E4
 Encoding: 12516 12516 2135
@@ -19550,7 +19550,7 @@ Fore
  333.667 729.5 313 738 283 736 c 1
  275.667 741.333 275.333 747 282 753 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E4.vert
+Substitution: 1 0 'vert' uni30E4.vert
 EndChar
 StartChar: uni30E5
 Encoding: 12517 12517 2136
@@ -19601,7 +19601,7 @@ Fore
  650.667 209.5 644 174 638 132 c 1
  700.667 136 741 141 759 147 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E5.vert
+Substitution: 1 0 'vert' uni30E5.vert
 EndChar
 StartChar: uni30E6
 Encoding: 12518 12518 2137
@@ -19652,7 +19652,7 @@ Fore
  299 532.667 345.667 534.667 413 542 c 128
  480.333 549.333 556.667 558.667 642 570 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E6.vert
+Substitution: 1 0 'vert' uni30E6.vert
 EndChar
 StartChar: uni30E7
 Encoding: 12519 12519 2138
@@ -19717,7 +19717,7 @@ Fore
  313.167 230.667 306.667 243 302 257 c 1
  304.667 269 308.667 271.333 314 264 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E7.vert
+Substitution: 1 0 'vert' uni30E7.vert
 EndChar
 StartChar: uni30E8
 Encoding: 12520 12520 2139
@@ -19781,7 +19781,7 @@ Fore
  249.167 365.5 241 379.667 235 397 c 1
  239 411.667 244.333 414.667 251 406 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E8.vert
+Substitution: 1 0 'vert' uni30E8.vert
 EndChar
 StartChar: uni30E9
 Encoding: 12521 12521 2140
@@ -19838,7 +19838,7 @@ Fore
  179.833 448 166 468 150 494 c 1
  148.667 507.333 154 511.333 166 506 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30E9.vert
+Substitution: 1 0 'vert' uni30E9.vert
 EndChar
 StartChar: uni30EA
 Encoding: 12522 12522 2141
@@ -19889,7 +19889,7 @@ Fore
  297.833 687 286.333 694.667 269 698 c 1
  260.333 704 261 710.333 271 717 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30EA.vert
+Substitution: 1 0 'vert' uni30EA.vert
 EndChar
 StartChar: uni30EB
 Encoding: 12523 12523 2142
@@ -19950,7 +19950,7 @@ Fore
  304.667 617.5 293.333 627 278 633 c 1
  270 642.333 273 647.667 287 649 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30EB.vert
+Substitution: 1 0 'vert' uni30EB.vert
 EndChar
 StartChar: uni30EC
 Encoding: 12524 12524 2143
@@ -19991,7 +19991,7 @@ Fore
  298.667 680.833 283.333 695 260 699 c 1
  252 711 255 717.667 269 719 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30EC.vert
+Substitution: 1 0 'vert' uni30EC.vert
 EndChar
 StartChar: uni30ED
 Encoding: 12525 12525 2144
@@ -20050,7 +20050,7 @@ Fore
  732.333 292.333 740.5 364.5 745.5 421.5 c 128
  750.5 478.5 749.667 529.333 743 574 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30ED.vert
+Substitution: 1 0 'vert' uni30ED.vert
 EndChar
 StartChar: uni30EE
 Encoding: 12526 12526 2145
@@ -20099,7 +20099,7 @@ Fore
  250 466.5 244 473.667 236 479 c 1
  230.667 493.667 232.333 500.333 241 499 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30EE.vert
+Substitution: 1 0 'vert' uni30EE.vert
 EndChar
 StartChar: uni30EF
 Encoding: 12527 12527 2146
@@ -20148,7 +20148,7 @@ Fore
  217.5 647.167 209.667 656 199 662 c 1
  191.667 674 194 679.333 206 678 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30EF.vert
+Substitution: 1 0 'vert' uni30EF.vert
 EndChar
 StartChar: uni30F0
 Encoding: 12528 12528 2147
@@ -20233,7 +20233,7 @@ Fore
  375.667 346.833 375.667 310 377 268 c 1
  451 276 451 276 520 283 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F0.vert
+Substitution: 1 0 'vert' uni30F0.vert
 EndChar
 StartChar: uni30F1
 Encoding: 12529 12529 2148
@@ -20309,7 +20309,7 @@ Fore
  144 115.333 130.833 124.833 120.5 136.5 c 128
  110.167 148.167 102.333 168.333 97 197 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F1.vert
+Substitution: 1 0 'vert' uni30F1.vert
 EndChar
 StartChar: uni30F2
 Encoding: 12530 12530 2149
@@ -20366,7 +20366,7 @@ Fore
  220.833 625.333 207 644 191 670 c 1
  186.333 685.333 191 690.333 205 685 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F2.vert
+Substitution: 1 0 'vert' uni30F2.vert
 EndChar
 StartChar: uni30F3
 Encoding: 12531 12531 2150
@@ -20406,7 +20406,7 @@ Fore
  680.333 321.333 725.833 361.5 767.5 402.5 c 128
  809.167 443.5 856.667 498.667 910 568 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F3.vert
+Substitution: 1 0 'vert' uni30F3.vert
 EndChar
 StartChar: uni30F4
 Encoding: 12532 12532 2151
@@ -20484,7 +20484,7 @@ Fore
  460.333 751.167 445.333 764 424 768 c 1
  417.333 774 418.667 780 428 786 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F4.vert
+Substitution: 1 0 'vert' uni30F4.vert
 EndChar
 StartChar: uni30F5
 Encoding: 12533 12533 2152
@@ -20550,7 +20550,7 @@ Fore
  452.167 545.5 440.667 557 422 565 c 1
  413.333 574.333 413.667 580.333 423 583 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F5.vert
+Substitution: 1 0 'vert' uni30F5.vert
 EndChar
 StartChar: uni30F6
 Encoding: 12534 12534 2153
@@ -20609,7 +20609,7 @@ Fore
  358.833 556.167 349.667 563 335 565 c 1
  327.667 570.333 329.667 576 341 582 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30F6.vert
+Substitution: 1 0 'vert' uni30F6.vert
 EndChar
 StartChar: uni30FB
 Encoding: 12539 12539 2158
@@ -20626,7 +20626,7 @@ Fore
  469.667 303 451.5 310.5 436.5 325.5 c 128
  421.5 340.5 414 359 414 381 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30FB.vert
+Substitution: 1 0 'vert' uni30FB.vert
 EndChar
 StartChar: uni30FC
 Encoding: 12540 12540 2159
@@ -20652,7 +20652,7 @@ Fore
  159.333 342.167 141.333 365.667 124 403 c 1
  124.667 414.333 130.667 418 142 414 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30FC.vert
+Substitution: 1 0 'vert' uni30FC.vert
 EndChar
 StartChar: uni30FD
 Encoding: 12541 12541 2160
@@ -20676,7 +20676,7 @@ Fore
  329.167 528.5 298.333 544.333 269 555 c 1
  262.333 561.667 263.667 565.667 273 567 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30FD.vert
+Substitution: 1 0 'vert' uni30FD.vert
 EndChar
 StartChar: uni30FE
 Encoding: 12542 12542 2161
@@ -20715,7 +20715,7 @@ Fore
  329.167 528.5 298.333 544.333 269 555 c 1
  262.333 561.667 263.667 565.667 273 567 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni30FE.vert
+Substitution: 1 0 'vert' uni30FE.vert
 EndChar
 StartChar: uni3303
 Encoding: 13059 13059 2309
@@ -20846,7 +20846,7 @@ Fore
  545.333 601.167 534 614 524 634 c 1
  521.333 642.667 524 645 532 641 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3303.vert
+Substitution: 1 0 'vert' uni3303.vert
 EndChar
 StartChar: uni330D
 Encoding: 13069 13069 2319
@@ -21025,7 +21025,7 @@ Fore
  856.667 592.333 861.333 627.167 864 655.5 c 128
  866.667 683.833 866.333 708 863 728 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni330D.vert
+Substitution: 1 0 'vert' uni330D.vert
 EndChar
 StartChar: uni3314
 Encoding: 13076 13076 2326
@@ -21145,7 +21145,7 @@ Fore
  206.833 802 199 804.333 189 803 c 1
  181 807 180.333 811 187 815 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3314.vert
+Substitution: 1 0 'vert' uni3314.vert
 EndChar
 StartChar: uni3318
 Encoding: 13080 13080 2330
@@ -21301,7 +21301,7 @@ Fore
  481 807.5 472.333 816.667 461 826 c 1
  456.333 831.333 457 834 463 834 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3318.vert
+Substitution: 1 0 'vert' uni3318.vert
 EndChar
 StartChar: uni3322
 Encoding: 13090 13090 2340
@@ -21456,7 +21456,7 @@ Fore
  828.667 615.167 854.5 634.833 877.5 654.5 c 128
  900.5 674.167 928.333 702.333 961 739 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3322.vert
+Substitution: 1 0 'vert' uni3322.vert
 EndChar
 StartChar: uni3323
 Encoding: 13091 13091 2341
@@ -21591,7 +21591,7 @@ Fore
  828.667 615.167 854.5 634.833 877.5 654.5 c 128
  900.5 674.167 928.333 702.333 961 739 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3323.vert
+Substitution: 1 0 'vert' uni3323.vert
 EndChar
 StartChar: uni3326
 Encoding: 13094 13094 2344
@@ -21705,7 +21705,7 @@ Fore
  429 763.5 420.333 772.667 409 782 c 1
  404.333 787.333 405 790 411 790 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3326.vert
+Substitution: 1 0 'vert' uni3326.vert
 EndChar
 StartChar: uni3327
 Encoding: 13095 13095 2345
@@ -21780,7 +21780,7 @@ Fore
  804.667 115.167 830.5 134.833 853.5 154.5 c 128
  876.5 174.167 904.333 202.333 937 239 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3327.vert
+Substitution: 1 0 'vert' uni3327.vert
 EndChar
 StartChar: uni332B
 Encoding: 13099 13099 2349
@@ -21987,7 +21987,7 @@ Fore
  441.333 703 428.833 708.167 418.5 718.5 c 128
  408.167 728.833 403 741.333 403 756 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni332B.vert
+Substitution: 1 0 'vert' uni332B.vert
 EndChar
 StartChar: uni3336
 Encoding: 13110 13110 2360
@@ -22194,7 +22194,7 @@ Fore
  204.167 719.333 209.833 726.167 215.5 732.5 c 128
  221.167 738.833 227.333 742 234 742 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3336.vert
+Substitution: 1 0 'vert' uni3336.vert
 EndChar
 StartChar: uni333B
 Encoding: 13115 13115 2365
@@ -22336,7 +22336,7 @@ Fore
  457 371.5 448.333 380.667 437 390 c 1
  432.333 395.333 433 398 439 398 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni333B.vert
+Substitution: 1 0 'vert' uni333B.vert
 EndChar
 StartChar: uni3349
 Encoding: 13129 13129 2379
@@ -22422,7 +22422,7 @@ Fore
  621.167 324.167 615 328.333 605 333 c 1
  597.667 339 598.667 342.667 608 344 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3349.vert
+Substitution: 1 0 'vert' uni3349.vert
 EndChar
 StartChar: uni334A
 Encoding: 13130 13130 2380
@@ -22633,7 +22633,7 @@ Fore
  381 319.5 372.333 328.667 361 338 c 1
  356.333 343.333 357 346 363 346 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni334A.vert
+Substitution: 1 0 'vert' uni334A.vert
 EndChar
 StartChar: uni334D
 Encoding: 13133 13133 2383
@@ -22782,7 +22782,7 @@ Fore
  620.833 266.167 615.333 269.667 608 271 c 1
  600 278.333 603.333 282 618 282 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni334D.vert
+Substitution: 1 0 'vert' uni334D.vert
 EndChar
 StartChar: uni3351
 Encoding: 13137 13137 2387
@@ -22963,7 +22963,7 @@ Fore
  141.167 788.167 135 792.333 125 797 c 1
  117.667 803 118.667 806.667 128 808 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3351.vert
+Substitution: 1 0 'vert' uni3351.vert
 EndChar
 StartChar: uni3357
 Encoding: 13143 13143 2393
@@ -23088,7 +23088,7 @@ Fore
  588.833 609.333 579.667 621 565 637 c 1
  561.667 643.667 564.333 646.333 573 645 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3357.vert
+Substitution: 1 0 'vert' uni3357.vert
 EndChar
 StartChar: uni339C
 Encoding: 13212 13212 2458
@@ -23186,7 +23186,7 @@ Fore
  381 53.3333 396 68 396 90 c 2
  396 366 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni339C.vert
+Substitution: 1 0 'vert' uni339C.vert
 EndChar
 StartChar: uni339D
 Encoding: 13213 13213 2459
@@ -23269,7 +23269,7 @@ Fore
  53 332.333 76.6667 389.167 124 437.5 c 128
  171.333 485.833 225.667 510 287 510 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni339D.vert
+Substitution: 1 0 'vert' uni339D.vert
 EndChar
 StartChar: uni339E
 Encoding: 13214 13214 2460
@@ -23350,7 +23350,7 @@ Fore
  156 249 l 1
  156 96 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni339E.vert
+Substitution: 1 0 'vert' uni339E.vert
 EndChar
 StartChar: uni33C4
 Encoding: 13252 13252 2498
@@ -23418,7 +23418,7 @@ Fore
  529 332.333 552.667 389.167 600 437.5 c 128
  647.333 485.833 701.667 510 763 510 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uni33C4.vert
+Substitution: 1 0 'vert' uni33C4.vert
 EndChar
 StartChar: uniFF01
 Encoding: 65281 65281 14795
@@ -23443,7 +23443,7 @@ Fore
  463.167 569 459 643.667 459 733 c 1
  465.667 759.667 481.667 774.333 507 777 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF01.vert
+Substitution: 1 0 'vert' uniFF01.vert
 EndChar
 StartChar: uniFF03
 Encoding: 65283 65283 14797
@@ -23485,7 +23485,7 @@ Fore
  645 551 l 1
  442 551 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF03.vert
+Substitution: 1 0 'vert' uniFF03.vert
 EndChar
 StartChar: uniFF04
 Encoding: 65284 65284 14798
@@ -23546,7 +23546,7 @@ Fore
  584.333 75 623.833 89.6667 655.5 117 c 128
  687.167 144.333 703 183.333 703 234 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF04.vert
+Substitution: 1 0 'vert' uniFF04.vert
 EndChar
 StartChar: uniFF05
 Encoding: 65285 65285 14799
@@ -23597,7 +23597,7 @@ Fore
  723 335 697.167 318.833 675.5 286.5 c 128
  653.833 254.167 643 215.667 643 171 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF05.vert
+Substitution: 1 0 'vert' uniFF05.vert
 EndChar
 StartChar: uniFF06
 Encoding: 65286 65286 14800
@@ -23659,7 +23659,7 @@ Fore
  282.333 366.667 251.5 344.333 226.5 317 c 128
  201.5 289.667 189 249.333 189 196 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF06.vert
+Substitution: 1 0 'vert' uniFF06.vert
 EndChar
 StartChar: uniFF08
 Encoding: 65288 65288 14802
@@ -23678,7 +23678,7 @@ Fore
  648 477 672.5 566.667 721.5 642 c 128
  770.5 717.333 845.333 788.333 946 855 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF08.vert
+Substitution: 1 0 'vert' uniFF08.vert
 EndChar
 StartChar: uniFF09
 Encoding: 65289 65289 14803
@@ -23697,7 +23697,7 @@ Fore
  209 702.167 144.667 770.667 54 838 c 1
  45.3333 852 49.6667 857.667 67 855 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF09.vert
+Substitution: 1 0 'vert' uniFF09.vert
 EndChar
 StartChar: uniFF0A
 Encoding: 65290 65290 14804
@@ -23760,7 +23760,7 @@ Fore
  447.167 621.5 449 641 459 657 c 128
  469 673 480 681 492 681 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0A.vert
+Substitution: 1 0 'vert' uniFF0A.vert
 EndChar
 StartChar: uniFF0B
 Encoding: 65291 65291 14805
@@ -23781,7 +23781,7 @@ Fore
  483 420 l 1
  483 743 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0B.vert
+Substitution: 1 0 'vert' uniFF0B.vert
 EndChar
 StartChar: uniFF0C
 Encoding: 65292 65292 14806
@@ -23802,7 +23802,7 @@ Fore
  97.3333 19.3333 88.1667 27.5 76.5 38.5 c 128
  64.8333 49.5 59 65.6667 59 87 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0C.vert
+Substitution: 1 0 'vert' uniFF0C.vert
 EndChar
 StartChar: uniFF0D
 Encoding: 65293 65293 14807
@@ -23815,7 +23815,7 @@ Fore
  159 371 l 1
  159 420 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0D.vert
+Substitution: 1 0 'vert' uniFF0D.vert
 EndChar
 StartChar: uniFF0E
 Encoding: 65294 65294 14808
@@ -23832,7 +23832,7 @@ Fore
  115.667 -55 97.5 -47.5 82.5 -32.5 c 128
  67.5 -17.5 60 1 60 23 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0E.vert
+Substitution: 1 0 'vert' uniFF0E.vert
 EndChar
 StartChar: uniFF0F
 Encoding: 65295 65295 14809
@@ -23845,7 +23845,7 @@ Fore
  58 -50 l 1
  928 818 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF0F.vert
+Substitution: 1 0 'vert' uniFF0F.vert
 EndChar
 StartChar: uniFF10
 Encoding: 65296 65296 14810
@@ -23871,7 +23871,7 @@ Fore
  453 703 408 672.667 372 612 c 128
  336 551.333 318 473 318 377 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF10.vert
+Substitution: 1 0 'vert' uniFF10.vert
 EndChar
 StartChar: uniFF11
 Encoding: 65297 65297 14811
@@ -23893,7 +23893,7 @@ Fore
  541 96 l 2
  541 70 583.667 53.3333 669 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF11.vert
+Substitution: 1 0 'vert' uniFF11.vert
 EndChar
 StartChar: uniFF12
 Encoding: 65298 65298 14812
@@ -23933,7 +23933,7 @@ Fore
  339.833 684.833 363.833 702.5 395.5 717.5 c 128
  427.167 732.5 465.667 740 511 740 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF12.vert
+Substitution: 1 0 'vert' uniFF12.vert
 EndChar
 StartChar: uniFF13
 Encoding: 65299 65299 14813
@@ -23984,7 +23984,7 @@ Fore
  344.667 698.667 365.167 712.5 389.5 723.5 c 128
  413.833 734.5 446 740 486 740 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF13.vert
+Substitution: 1 0 'vert' uniFF13.vert
 EndChar
 StartChar: uniFF14
 Encoding: 65300 65300 14814
@@ -24012,7 +24012,7 @@ Fore
  541 238 l 1
  541 654 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF14.vert
+Substitution: 1 0 'vert' uniFF14.vert
 EndChar
 StartChar: uniFF15
 Encoding: 65301 65301 14815
@@ -24052,7 +24052,7 @@ Fore
  327 355 l 1
  341.667 489 349.333 616.667 350 738 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF15.vert
+Substitution: 1 0 'vert' uniFF15.vert
 EndChar
 StartChar: uniFF16
 Encoding: 65302 65302 14816
@@ -24098,7 +24098,7 @@ Fore
  346.667 224.333 364.5 166 393.5 120 c 128
  422.5 74 462.333 51 513 51 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF16.vert
+Substitution: 1 0 'vert' uniFF16.vert
 EndChar
 StartChar: uniFF17
 Encoding: 65303 65303 14817
@@ -24123,7 +24123,7 @@ Fore
  564.167 155 561.167 110.667 559.5 72 c 128
  557.833 33.3333 544.667 14 520 14 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF17.vert
+Substitution: 1 0 'vert' uniFF17.vert
 EndChar
 StartChar: uniFF18
 Encoding: 65304 65304 14818
@@ -24166,7 +24166,7 @@ Fore
  581.667 450.667 609.833 468.667 631.5 490 c 128
  653.167 511.333 664 542.333 664 583 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF18.vert
+Substitution: 1 0 'vert' uniFF18.vert
 EndChar
 StartChar: uniFF19
 Encoding: 65305 65305 14819
@@ -24212,7 +24212,7 @@ Fore
  671.333 527.667 653.5 586 624.5 632 c 128
  595.5 678 555.667 701 505 701 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF19.vert
+Substitution: 1 0 'vert' uniFF19.vert
 EndChar
 StartChar: uniFF1A
 Encoding: 65306 65306 14820
@@ -24238,7 +24238,7 @@ Fore
  474.333 55 456.667 62.3333 442 77 c 128
  427.333 91.6667 420 109.333 420 130 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1A.vert
+Substitution: 1 0 'vert' uniFF1A.vert
 EndChar
 StartChar: uniFF1B
 Encoding: 65307 65307 14821
@@ -24268,7 +24268,7 @@ Fore
  456.333 69.5 447.5 77 436.5 87 c 128
  425.5 97 420 111.333 420 130 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1B.vert
+Substitution: 1 0 'vert' uniFF1B.vert
 EndChar
 StartChar: uniFF1C
 Encoding: 65308 65308 14822
@@ -24288,7 +24288,7 @@ Fore
  40 372.667 50.3333 382.667 71 392 c 1
  904 809 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1C.vert
+Substitution: 1 0 'vert' uniFF1C.vert
 EndChar
 StartChar: uniFF1D
 Encoding: 65309 65309 14823
@@ -24306,7 +24306,7 @@ Fore
  159 242 l 1
  159 291 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1D.vert
+Substitution: 1 0 'vert' uniFF1D.vert
 EndChar
 StartChar: uniFF1E
 Encoding: 65310 65310 14824
@@ -24326,7 +24326,7 @@ Fore
  86.3333 779 84.3333 788 89 798 c 128
  93.6667 808 102.667 811.667 116 809 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1E.vert
+Substitution: 1 0 'vert' uniFF1E.vert
 EndChar
 StartChar: uniFF1F
 Encoding: 65311 65311 14825
@@ -24372,7 +24372,7 @@ Fore
  339.333 717.833 365 735.333 397 752 c 128
  429 768.667 470.667 777 522 777 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF1F.vert
+Substitution: 1 0 'vert' uniFF1F.vert
 EndChar
 StartChar: uniFF20
 Encoding: 65312 65312 14826
@@ -24431,7 +24431,7 @@ Fore
  502.5 208.833 522.333 225.167 537 243.5 c 128
  551.667 261.833 566 293.333 580 338 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF20.vert
+Substitution: 1 0 'vert' uniFF20.vert
 EndChar
 StartChar: uniFF21
 Encoding: 65313 65313 14827
@@ -24461,7 +24461,7 @@ Fore
  342 267 l 1
  273 96 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF21.vert
+Substitution: 1 0 'vert' uniFF21.vert
 EndChar
 StartChar: uniFF22
 Encoding: 65314 65314 14828
@@ -24511,7 +24511,7 @@ Fore
  629.167 443.167 657.5 460.167 674.5 482.5 c 128
  691.5 504.833 700 530.667 700 560 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF22.vert
+Substitution: 1 0 'vert' uniFF22.vert
 EndChar
 StartChar: uniFF23
 Encoding: 65315 65315 14829
@@ -24543,7 +24543,7 @@ Fore
  403.667 14 325.333 47.8333 254 115.5 c 128
  182.667 183.167 147 269.667 147 375 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF23.vert
+Substitution: 1 0 'vert' uniFF23.vert
 EndChar
 StartChar: uniFF24
 Encoding: 65316 65316 14830
@@ -24579,7 +24579,7 @@ Fore
  694 135.333 731.667 175 755 223 c 128
  778.333 271 790 323.333 790 380 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF24.vert
+Substitution: 1 0 'vert' uniFF24.vert
 EndChar
 StartChar: uniFF25
 Encoding: 65317 65317 14831
@@ -24616,7 +24616,7 @@ Fore
  278 690 247.333 706.667 186 714 c 1
  186 740 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF25.vert
+Substitution: 1 0 'vert' uniFF25.vert
 EndChar
 StartChar: uniFF26
 Encoding: 65318 65318 14832
@@ -24649,7 +24649,7 @@ Fore
  311 690 280.333 706.667 219 714 c 1
  219 740 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF26.vert
+Substitution: 1 0 'vert' uniFF26.vert
 EndChar
 StartChar: uniFF27
 Encoding: 65319 65319 14833
@@ -24689,7 +24689,7 @@ Fore
  398.667 14 322 47.8333 252 115.5 c 128
  182 183.167 147 269.667 147 375 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF27.vert
+Substitution: 1 0 'vert' uniFF27.vert
 EndChar
 StartChar: uniFF28
 Encoding: 65320 65320 14834
@@ -24726,7 +24726,7 @@ Fore
  315 96 l 2
  315 70 345 53.3333 405 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF28.vert
+Substitution: 1 0 'vert' uniFF28.vert
 EndChar
 StartChar: uniFF29
 Encoding: 65321 65321 14835
@@ -24747,7 +24747,7 @@ Fore
  543 96 l 2
  543 70 581.667 53.3333 659 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF29.vert
+Substitution: 1 0 'vert' uniFF29.vert
 EndChar
 StartChar: uniFF2A
 Encoding: 65322 65322 14836
@@ -24782,7 +24782,7 @@ Fore
  600 664 l 2
  600 690 562 706.667 486 714 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2A.vert
+Substitution: 1 0 'vert' uniFF2A.vert
 EndChar
 StartChar: uniFF2B
 Encoding: 65323 65323 14837
@@ -24819,7 +24819,7 @@ Fore
  317 96 l 2
  317 70 347 53.3333 407 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2B.vert
+Substitution: 1 0 'vert' uniFF2B.vert
 EndChar
 StartChar: uniFF2C
 Encoding: 65324 65324 14838
@@ -24844,7 +24844,7 @@ Fore
  823 133 808.333 68 801 20 c 1
  607 22 413 22 219 20 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2C.vert
+Substitution: 1 0 'vert' uniFF2C.vert
 EndChar
 StartChar: uniFF2D
 Encoding: 65325 65325 14839
@@ -24878,7 +24878,7 @@ Fore
  878 96 l 2
  878 70 910.333 53.3333 975 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2D.vert
+Substitution: 1 0 'vert' uniFF2D.vert
 EndChar
 StartChar: uniFF2E
 Encoding: 65326 65326 14840
@@ -24908,7 +24908,7 @@ Fore
  254 664 l 1
  254 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2E.vert
+Substitution: 1 0 'vert' uniFF2E.vert
 EndChar
 StartChar: uniFF2F
 Encoding: 65327 65327 14841
@@ -24934,7 +24934,7 @@ Fore
  431.667 708 364 676.5 308 613.5 c 128
  252 550.5 224 470.333 224 373 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF2F.vert
+Substitution: 1 0 'vert' uniFF2F.vert
 EndChar
 StartChar: uniFF30
 Encoding: 65328 65328 14842
@@ -24968,7 +24968,7 @@ Fore
  665.5 689.167 607.333 703 528 703 c 2
  425 703 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF30.vert
+Substitution: 1 0 'vert' uniFF30.vert
 EndChar
 StartChar: uniFF31
 Encoding: 65329 65329 14843
@@ -25020,7 +25020,7 @@ Fore
  557 175.5 545.833 197.833 533.5 211.5 c 128
  521.167 225.167 503.333 232 480 232 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF31.vert
+Substitution: 1 0 'vert' uniFF31.vert
 EndChar
 StartChar: uniFF32
 Encoding: 65330 65330 14844
@@ -25060,7 +25060,7 @@ Fore
  607.5 689.167 552 703 474 703 c 2
  389 703 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF32.vert
+Substitution: 1 0 'vert' uniFF32.vert
 EndChar
 StartChar: uniFF33
 Encoding: 65331 65331 14845
@@ -25103,7 +25103,7 @@ Fore
  273 610.333 298.667 657.5 350 692.5 c 128
  401.333 727.5 452.333 745 503 745 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF33.vert
+Substitution: 1 0 'vert' uniFF33.vert
 EndChar
 StartChar: uniFF34
 Encoding: 65332 65332 14846
@@ -25132,7 +25132,7 @@ Fore
  540 96 l 2
  540 70 577.333 53.3333 652 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF34.vert
+Substitution: 1 0 'vert' uniFF34.vert
 EndChar
 StartChar: uniFF35
 Encoding: 65333 65333 14847
@@ -25163,7 +25163,7 @@ Fore
  316 706.667 284 690 284 664 c 2
  284 320 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF35.vert
+Substitution: 1 0 'vert' uniFF35.vert
 EndChar
 StartChar: uniFF36
 Encoding: 65334 65334 14848
@@ -25188,7 +25188,7 @@ Fore
  318.333 706.667 299.667 690 309 664 c 1
  540 124 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF36.vert
+Substitution: 1 0 'vert' uniFF36.vert
 EndChar
 StartChar: uniFF37
 Encoding: 65335 65335 14849
@@ -25224,7 +25224,7 @@ Fore
  725 15 l 1
  692 15 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF37.vert
+Substitution: 1 0 'vert' uniFF37.vert
 EndChar
 StartChar: uniFF38
 Encoding: 65336 65336 14850
@@ -25261,7 +25261,7 @@ Fore
  531 454 l 1
  700 664 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF38.vert
+Substitution: 1 0 'vert' uniFF38.vert
 EndChar
 StartChar: uniFF39
 Encoding: 65337 65337 14851
@@ -25293,7 +25293,7 @@ Fore
  543 96 l 1
  541.667 70 577.667 53.3333 651 46 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF39.vert
+Substitution: 1 0 'vert' uniFF39.vert
 EndChar
 StartChar: uniFF3A
 Encoding: 65338 65338 14852
@@ -25318,7 +25318,7 @@ Fore
  273 57 l 1
  632 57 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3A.vert
+Substitution: 1 0 'vert' uniFF3A.vert
 EndChar
 StartChar: uniFF3B
 Encoding: 65339 65339 14853
@@ -25335,7 +25335,7 @@ Fore
  646 -113 l 1
  646 842 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3B.vert
+Substitution: 1 0 'vert' uniFF3B.vert
 EndChar
 StartChar: uniFF3C
 Encoding: 65340 65340 14854
@@ -25348,7 +25348,7 @@ Fore
  57 779 l 1
  90 818 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3C.vert
+Substitution: 1 0 'vert' uniFF3C.vert
 EndChar
 StartChar: uniFF3D
 Encoding: 65341 65341 14855
@@ -25365,7 +25365,7 @@ Fore
  61 793 l 1
  61 842 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3D.vert
+Substitution: 1 0 'vert' uniFF3D.vert
 EndChar
 StartChar: uniFF3E
 Encoding: 65342 65342 14856
@@ -25385,7 +25385,7 @@ Fore
  425 765 l 1
  435.667 781 458.667 806.667 494 842 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3E.vert
+Substitution: 1 0 'vert' uniFF3E.vert
 EndChar
 StartChar: uniFF3F
 Encoding: 65343 65343 14857
@@ -25398,7 +25398,7 @@ Fore
  0 -135 l 1
  0 -96 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF3F.vert
+Substitution: 1 0 'vert' uniFF3F.vert
 EndChar
 StartChar: uniFF40
 Encoding: 65344 65344 14858
@@ -25415,7 +25415,7 @@ Fore
  418 798 l 1
  462 842 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF40.vert
+Substitution: 1 0 'vert' uniFF40.vert
 EndChar
 StartChar: uniFF41
 Encoding: 65345 65345 14859
@@ -25467,7 +25467,7 @@ Fore
  417 247.5 392.333 228.667 375 204 c 128
  357.667 179.333 349 156.667 349 136 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF41.vert
+Substitution: 1 0 'vert' uniFF41.vert
 EndChar
 StartChar: uniFF42
 Encoding: 65346 65346 14860
@@ -25504,7 +25504,7 @@ Fore
  444 83.6667 460.5 71 481.5 63 c 128
  502.5 55 526.667 51 554 51 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF42.vert
+Substitution: 1 0 'vert' uniFF42.vert
 EndChar
 StartChar: uniFF43
 Encoding: 65347 65347 14861
@@ -25539,7 +25539,7 @@ Fore
  447.333 473 402.833 452.5 370.5 411.5 c 128
  338.167 370.5 322 322.333 322 267 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF43.vert
+Substitution: 1 0 'vert' uniFF43.vert
 EndChar
 StartChar: uniFF44
 Encoding: 65348 65348 14862
@@ -25578,7 +25578,7 @@ Fore
  576 409.667 550.833 442.167 526.5 454.5 c 128
  502.167 466.833 477 473 451 473 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF44.vert
+Substitution: 1 0 'vert' uniFF44.vert
 EndChar
 StartChar: uniFF45
 Encoding: 65349 65349 14863
@@ -25612,7 +25612,7 @@ Fore
  246 332.333 271.667 389.167 323 437.5 c 128
  374.333 485.833 434.667 510 504 510 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF45.vert
+Substitution: 1 0 'vert' uniFF45.vert
 EndChar
 StartChar: uniFF46
 Encoding: 65350 65350 14864
@@ -25650,7 +25650,7 @@ Fore
  478 494 l 1
  677 494 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF46.vert
+Substitution: 1 0 'vert' uniFF46.vert
 EndChar
 StartChar: uniFF47
 Encoding: 65351 65351 14865
@@ -25720,7 +25720,7 @@ Fore
  387.667 94.3333 356 75.6667 340 57 c 128
  324 38.3333 316 18.6667 316 -2 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF47.vert
+Substitution: 1 0 'vert' uniFF47.vert
 EndChar
 StartChar: uniFF48
 Encoding: 65352 65352 14866
@@ -25757,7 +25757,7 @@ Fore
  727.167 434.167 747 389.333 747 330 c 2
  747 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF48.vert
+Substitution: 1 0 'vert' uniFF48.vert
 EndChar
 StartChar: uniFF49
 Encoding: 65353 65353 14867
@@ -25786,7 +25786,7 @@ Fore
  541 532 l 1
  541 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF49.vert
+Substitution: 1 0 'vert' uniFF49.vert
 EndChar
 StartChar: uniFF4A
 Encoding: 65354 65354 14868
@@ -25826,7 +25826,7 @@ Fore
  608 14 591.167 -32 557.5 -66 c 128
  523.833 -100 484 -117 438 -117 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4A.vert
+Substitution: 1 0 'vert' uniFF4A.vert
 EndChar
 StartChar: uniFF4B
 Encoding: 65355 65355 14869
@@ -25862,7 +25862,7 @@ Fore
  383 218 l 1
  383 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4B.vert
+Substitution: 1 0 'vert' uniFF4B.vert
 EndChar
 StartChar: uniFF4C
 Encoding: 65356 65356 14870
@@ -25882,7 +25882,7 @@ Fore
  541 777 l 1
  541 94 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4C.vert
+Substitution: 1 0 'vert' uniFF4C.vert
 EndChar
 StartChar: uniFF4D
 Encoding: 65357 65357 14871
@@ -25935,7 +25935,7 @@ Fore
  295.5 376.833 290.667 345.667 290 307 c 1
  290 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4D.vert
+Substitution: 1 0 'vert' uniFF4D.vert
 EndChar
 StartChar: uniFF4E
 Encoding: 65358 65358 14872
@@ -25972,7 +25972,7 @@ Fore
  389.333 376.833 379.667 345.667 379 307 c 1
  379 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4E.vert
+Substitution: 1 0 'vert' uniFF4E.vert
 EndChar
 StartChar: uniFF4F
 Encoding: 65359 65359 14873
@@ -25998,7 +25998,7 @@ Fore
  453 473 410.167 454 374.5 416 c 128
  338.833 378 321 328.333 321 267 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF4F.vert
+Substitution: 1 0 'vert' uniFF4F.vert
 EndChar
 StartChar: uniFF50
 Encoding: 65360 65360 14874
@@ -26038,7 +26038,7 @@ Fore
  463.833 81.3333 439 95.3333 413 114 c 1
  413 -38 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF50.vert
+Substitution: 1 0 'vert' uniFF50.vert
 EndChar
 StartChar: uniFF51
 Encoding: 65361 65361 14875
@@ -26078,7 +26078,7 @@ Fore
  552 -88 l 1
  607.333 -80.6667 635 -64 635 -38 c 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF51.vert
+Substitution: 1 0 'vert' uniFF51.vert
 EndChar
 StartChar: uniFF52
 Encoding: 65362 65362 14876
@@ -26114,7 +26114,7 @@ Fore
  461.833 349.833 447 315.667 447 287 c 2
  447 96 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF52.vert
+Substitution: 1 0 'vert' uniFF52.vert
 EndChar
 StartChar: uniFF53
 Encoding: 65363 65363 14877
@@ -26161,7 +26161,7 @@ Fore
  589.5 493.333 605.167 490 613.5 490 c 128
  621.833 490 636 496.667 656 510 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF53.vert
+Substitution: 1 0 'vert' uniFF53.vert
 EndChar
 StartChar: uniFF54
 Encoding: 65364 65364 14878
@@ -26194,7 +26194,7 @@ Fore
  419.833 640.833 428 667 428 681 c 1
  447 681 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF54.vert
+Substitution: 1 0 'vert' uniFF54.vert
 EndChar
 StartChar: uniFF55
 Encoding: 65365 65365 14879
@@ -26229,7 +26229,7 @@ Fore
  379 518 l 1
  379 182 l 2
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF55.vert
+Substitution: 1 0 'vert' uniFF55.vert
 EndChar
 StartChar: uniFF56
 Encoding: 65366 65366 14880
@@ -26253,7 +26253,7 @@ Fore
  319 434 289.667 450.667 241 458 c 1
  241 484 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF56.vert
+Substitution: 1 0 'vert' uniFF56.vert
 EndChar
 StartChar: uniFF57
 Encoding: 65367 65367 14881
@@ -26288,7 +26288,7 @@ Fore
  215.667 434 186.667 450.667 136 458 c 1
  136 484 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF57.vert
+Substitution: 1 0 'vert' uniFF57.vert
 EndChar
 StartChar: uniFF58
 Encoding: 65368 65368 14882
@@ -26325,7 +26325,7 @@ Fore
  521 313 l 1
  622 408 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF58.vert
+Substitution: 1 0 'vert' uniFF58.vert
 EndChar
 StartChar: uniFF59
 Encoding: 65369 65369 14883
@@ -26365,7 +26365,7 @@ Fore
  547 123 l 1
  679 408 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF59.vert
+Substitution: 1 0 'vert' uniFF59.vert
 EndChar
 StartChar: uniFF5A
 Encoding: 65370 65370 14884
@@ -26390,7 +26390,7 @@ Fore
  261 337 l 1
  277 393 288.333 442 295 484 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF5A.vert
+Substitution: 1 0 'vert' uniFF5A.vert
 EndChar
 StartChar: uniFF5B
 Encoding: 65371 65371 14885
@@ -26426,7 +26426,7 @@ Fore
  766.833 752.167 788.5 778.167 815.5 796.5 c 128
  842.5 814.833 877.667 831.667 921 847 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF5B.vert
+Substitution: 1 0 'vert' uniFF5B.vert
 EndChar
 StartChar: uniFF5C
 Encoding: 65372 65372 14886
@@ -26439,7 +26439,7 @@ Fore
  483 -136 l 1
  483 875 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF5C.vert
+Substitution: 1 0 'vert' uniFF5C.vert
 EndChar
 StartChar: uniFF5D
 Encoding: 65373 65373 14887
@@ -26475,7 +26475,7 @@ Fore
  121.167 798.5 92 816.667 56 832 c 1
  50 838.667 51 843.667 59 847 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF5D.vert
+Substitution: 1 0 'vert' uniFF5D.vert
 EndChar
 StartChar: uniFF5E
 Encoding: 65374 65374 14888
@@ -26504,7 +26504,7 @@ Fore
  114.667 391 138.333 417.333 171 442 c 128
  203.667 466.667 243.333 481 290 485 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFF5E.vert
+Substitution: 1 0 'vert' uniFF5E.vert
 EndChar
 StartChar: uniFF61
 Encoding: 65377 65377 14889
@@ -29667,7 +29667,7 @@ Fore
  582 740 l 1
  616 730 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFFE0.vert
+Substitution: 1 0 'vert' uniFFE0.vert
 EndChar
 StartChar: uniFFE1
 Encoding: 65505 65505 14953
@@ -29733,7 +29733,7 @@ Fore
  413.333 102.667 396.167 110.667 370.5 122 c 128
  344.833 133.333 319.667 139 295 139 c 0
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFFE1.vert
+Substitution: 1 0 'vert' uniFFE1.vert
 EndChar
 StartChar: uniFFE2
 Encoding: 65506 65506 14954
@@ -29748,7 +29748,7 @@ Fore
  61 275 l 1
  61 324 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFFE2.vert
+Substitution: 1 0 'vert' uniFFE2.vert
 EndChar
 StartChar: uniFFE3
 Encoding: 65507 65507 14955
@@ -29761,7 +29761,7 @@ Fore
  0 826 l 1
  0 874 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFFE3.vert
+Substitution: 1 0 'vert' uniFFE3.vert
 EndChar
 StartChar: uniFFE4
 Encoding: 65508 65508 14956
@@ -29831,7 +29831,7 @@ Fore
  495 429 l 1
  529 379 l 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uniFFE5.vert
+Substitution: 1 0 'vert' uniFFE5.vert
 EndChar
 StartChar: uni2010.vert
 Encoding: 65658 -1 15087
