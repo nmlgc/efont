@@ -134,6 +134,11 @@ endif
 if (WorthOutputting("uniFF0D")) ### && !WorthOutputting("U+2212"))
 	Select("uniFF0D"); Copy(); Select("uni2212"); Paste()
 endif
+if (WorthOutputting("uniFF5E"))
+	Select("uniFF5E"); Copy(); Select("uni223C"); Paste()
+elsif (WorthOutputting("uni301C"))
+	Select("uni301C"); Copy(); Select("uni223C"); Paste()
+endif
 
 # ビットマップの再読込み後、ファイルを生成
 Print("Importing BDFs...")
