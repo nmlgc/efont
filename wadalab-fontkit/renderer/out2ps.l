@@ -257,10 +257,9 @@ end
 ; ファイルの生成
 ;
 (defun out-to-ps-all (outlines tag psfile 
-			       &optional
-			       (col 9) (line (round (* 0.67 col)))
- 			       (printfile t)
-			       &key (remove-overlap t) (set-code-by-kanji t)
+		      &key (col 9) (line (round (* 0.67 col)))
+		           (printfile t) (remove-overlap t) 
+			   (set-code-by-kanji t)
 	             )
  (with-open-stream (*standard-output* (open psfile :direction :output))
    (let* ((scale (floor (* 160.0 (min (/ 9.0 col) (/ 6.0 line)))))
