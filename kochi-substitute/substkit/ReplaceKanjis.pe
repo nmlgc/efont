@@ -145,6 +145,7 @@ endif
 
 # ビットマップの再読込み後、ファイルを生成
 Print("Importing BDFs...")
+Import("mplus-10.bdf")
 i = 0; while (i < SizeOf(bitmaps))
 	bdfname = fontfile:r:t + "-subst-" + bitmaps[i] + ".bdf";
 	Import(bdfname);
