@@ -13,60 +13,99 @@ size = $1; ISO8859_1 = $2; JISX0208 = $3; JISX0201 = $4; result = $5
 Open(ISO8859_1)
 Reencode("iso10646-1")
 Generate(ISO8859_1:t:r + ".bdf", "bdf", 0)
+SetCharCnt(65536)
 Close()
 
 Open(JISX0201)
 Reencode("iso10646-1")
 Generate(JISX0201:t:r + ".bdf", "bdf", 0)
+SetCharCnt(65536)
 Close()
 
+$trace=1
+
 Open(JISX0208)
+
+if (result == "mplus.bdf")
+#	Select("uni0000", "uni001F"); Clear()
+	Select("0x2474"); SetCharName("uni3094")
+	Select("0x2D21"); SetCharName("uni2460")
+	Select("0x2D22"); SetCharName("uni2461")
+	Select("0x2D23"); SetCharName("uni2462")
+	Select("0x2D24"); SetCharName("uni2463")
+	Select("0x2D25"); SetCharName("uni2464")
+	Select("0x2D26"); SetCharName("uni2465")
+	Select("0x2D27"); SetCharName("uni2466")
+	Select("0x2D28"); SetCharName("uni2467")
+	Select("0x2D29"); SetCharName("uni2468")
+	Select("0x2D2A"); SetCharName("uni2469")
+	Select("0x2D2B"); SetCharName("uni246A")
+	Select("0x2D2C"); SetCharName("uni246B")
+	Select("0x2D2D"); SetCharName("uni246C")
+	Select("0x2D2E"); SetCharName("uni246D")
+	Select("0x2D2F"); SetCharName("uni246E")
+	Select("0x2D30"); SetCharName("uni246F")
+	Select("0x2D31"); SetCharName("uni2470")
+	Select("0x2D32"); SetCharName("uni2471")
+	Select("0x2D33"); SetCharName("uni2472")
+	Select("0x2D34"); SetCharName("uni2473")
+
+	Select("0x2D35"); SetCharName("uni2160")
+	Select("0x2D36"); SetCharName("uni2161")
+	Select("0x2D37"); SetCharName("uni2162")
+	Select("0x2D38"); SetCharName("uni2163")
+	Select("0x2D39"); SetCharName("uni2164")
+	Select("0x2D3A"); SetCharName("uni2165")
+	Select("0x2D3B"); SetCharName("uni2166")
+	Select("0x2D3C"); SetCharName("uni2167")
+	Select("0x2D3D"); SetCharName("uni2168")
+	Select("0x2D3E"); SetCharName("uni2169")
+
+	Select("0x2D40"); SetCharName("uni3349")	# ミリ
+	Select("0x2D41"); SetCharName("uni3314")	# キロ
+	Select("0x2D42"); SetCharName("uni3322")	# センチ
+	Select("0x2D43"); SetCharName("uni334D")	# メートル
+	Select("0x2D44"); SetCharName("uni3318")	# グラム
+	Select("0x2D45"); SetCharName("uni3327")	# トン
+	Select("0x2D46"); SetCharName("uni3303")	# アール
+	Select("0x2D47"); SetCharName("uni3336")	# ヘクタール
+	Select("0x2D48"); SetCharName("uni3351")	# リットル
+	Select("0x2D49"); SetCharName("uni3357")	# ワット
+	Select("0x2D4A"); SetCharName("uni330D")	# カロリー
+	Select("0x2D4B"); SetCharName("uni3326")	# ドル
+	Select("0x2D4C"); SetCharName("uni3323")	# セント
+	Select("0x2D4D"); SetCharName("uni332B")	# パーセント
+	Select("0x2D4E"); SetCharName("uni334A")	# ミリバール
+	Select("0x2D4F"); SetCharName("uni333B")	# ページ
+	Select("0x2D50"); SetCharName("uni339C")	# mm
+	Select("0x2D51"); SetCharName("uni339D")	# cm
+	Select("0x2D52"); SetCharName("uni339E") 	# km
+	Select("0x2D53"); SetCharName("uni338E")	# mg
+	Select("0x2D54"); SetCharName("uni33C4")	# cc
+	Select("0x2D55"); SetCharName("uni33A1")	# m^2
+	Select("0x2D56"); SetCharName("uni337B")	# 平成
+	Select("0x2D62"); SetCharName("uni2116")	# No
+	Select("0x2D63"); SetCharName("uni33CD")	# KK
+	Select("0x2D64"); SetCharName("uni2121")	# Tel
+	Select("0x2D65"); SetCharName("uni32A4")
+	Select("0x2D66"); SetCharName("uni32A5")
+	Select("0x2D67"); SetCharName("uni32A6")
+	Select("0x2D68"); SetCharName("uni32A7")
+	Select("0x2D69"); SetCharName("uni32A8")
+	Select("0x2D6A"); SetCharName("uni3231")	# (株)
+	Select("0x2D6B"); SetCharName("uni3232")	# (有)
+	Select("0x2D6C"); SetCharName("uni3239")	# (代)
+	Select("0x2D6D"); SetCharName("uni337E")	# 明治
+	Select("0x2D6E"); SetCharName("uni337D")	# 大正
+	Select("0x2D6F"); SetCharName("uni337C")	# 昭和
+	Select("0x2D73"); SetCharName("uni222E")
+	Select("0x2D78"); SetCharName("uni221F")
+	Select("0x2D79"); SetCharName("uni22BF")
+endif
+
 Reencode("iso10646-1")
 Import(ISO8859_1:t:r + "-" + size + ".bdf")
 Import(JISX0201:t:r + "-"+ size + ".bdf")
-
-if (result == "mplus.bdf")
-	Select("uni0000", "uni001F"); Clear()
-	Select("0x2474"); Cut(); Select("uni3094"); Paste()
-	Select("0x2D21", "0x2D34"); Cut(); Select("uni2460"); Paste()
-	Select("0x2D35", "0x2D3E"); Cut(); Select("uni2160"); Paste()
-	Select("0x2D40"); Cut(); Select("uni3349"); Paste()	# ミリ
-	Select("0x2D41"); Cut(); Select("uni3314"); Paste()	# キロ
-	Select("0x2D42"); Cut(); Select("uni3322"); Paste()	# センチ
-	Select("0x2D43"); Cut(); Select("uni334D"); Paste()	# メートル
-	Select("0x2D44"); Cut(); Select("uni3318"); Paste()	# グラム
-	Select("0x2D45"); Cut(); Select("uni3327"); Paste()	# トン
-	Select("0x2D46"); Cut(); Select("uni3303"); Paste()	# アール
-	Select("0x2D47"); Cut(); Select("uni3336"); Paste()	# ヘクタール
-	Select("0x2D48"); Cut(); Select("uni3351"); Paste()	# リットル
-	Select("0x2D49"); Cut(); Select("uni3357"); Paste()	# ワット
-	Select("0x2D4A"); Cut(); Select("uni330D"); Paste()	# カロリー
-	Select("0x2D4B"); Cut(); Select("uni3326"); Paste()	# ドル
-	Select("0x2D4C"); Cut(); Select("uni3323"); Paste()	# セント
-	Select("0x2D4D"); Cut(); Select("uni332B"); Paste()	# パーセント
-	Select("0x2D4E"); Cut(); Select("uni334A"); Paste()	# ミリバール
-	Select("0x2D4F"); Cut(); Select("uni333B"); Paste()	# ページ
-	Select("0x2D50", "0x2D52"); Cut(); Select("uni339C"); Paste() #mm,cm,km
-	Select("0x2D53"); Cut(); Select("uni338E"); Paste()	# mg
-	Select("0x2D54"); Cut(); Select("uni33C4"); Paste()	# cc
-	Select("0x2D55"); Cut(); Select("uni33A1"); Paste()	# m^2
-	Select("0x2D56"); Cut(); Select("uni337B"); Paste()	# 平成
-	Select("0x2D62"); Cut(); Select("uni2116"); Paste()	# No
-	Select("0x2D63"); Cut(); Select("uni33CD"); Paste()	# KK
-	Select("0x2D64"); Cut(); Select("uni2121"); Paste()	# Tel
-	Select("0x2D65", "0x2D69"); Cut(); Select("uni32A4"); Paste()
-	Select("0x2D6A", "0x2D6B"); Cut(); Select("uni3231"); Paste() #(株)(有)
-	Select("0x2D6C"); Cut(); Select("uni3239"); Paste()	# (代)
-	Select("0x2D6D"); Cut(); Select("uni337E"); Paste()	# 明治
-	Select("0x2D6E"); Cut(); Select("uni337D"); Paste()	# 大正
-	Select("0x2D6F"); Cut(); Select("uni337C"); Paste()	# 昭和
-	Select("0x2D73"); Cut(); Select("uni222E"); Paste()
-	Select("0x2D78"); Cut(); Select("uni221F"); Paste()
-	Select("0x2D79"); Cut(); Select("uni22BF"); Paste()
-endif
-$trace=1
-SetCharCnt(0xff9f+1);
-$trace=0
 	
 Generate(result, "bdf", 0)
 Close()
