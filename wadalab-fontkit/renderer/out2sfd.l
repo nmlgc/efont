@@ -171,9 +171,9 @@ EndChar
 ;	 (stringp (symbol-value namestr))
 ;	 (setq namestr (symbol-value namestr)))
     (cond 
-     ((equal (subseq namestr 0 2) "1-")
+     ((and (>= (length namestr) 2) (equal (subseq namestr 0 2) "1-"))
       (hojo2uni (parse-integer (remove #\- (subseq namestr 2)))))
-     ((equal (subseq namestr 0 3) "UNI")
+     ((and (>= (length namestr) 3) (equal (subseq namestr 0 3) "UNI"))
       (parse-integer (subseq namestr 3) :radix 16))
      (t
       (jis2uni (parse-integer (jiscode charname) :radix 16))))))
