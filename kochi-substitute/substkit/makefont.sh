@@ -10,8 +10,8 @@
 # http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/sasagemono20030620.tgz
 #  tar xvfz sasagemono20030620.tgz sasage-mono.ttf
 pfaedit -script Shrink.pe
-pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd sasage-mono.ttf
+pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd G.sfd s.ttf
 rm kochi-gothic-subst-*.bdf gothic-Fix-*.bdf
-pfaedit -script ReplaceKanjis.pe  kochi-mincho.ttf Mincho-Fix.sfd wadalab-mincho-descent-1024.sfd sasage-mono.ttf
-rm kochi-mincho-subst-*.bdf mincho-Fix-*.bdf
+pfaedit -script ReplaceKanjis.pe  kochi-mincho.ttf Mincho-Fix.sfd M.sfd s.ttf
+rm G.sfd M.sfd s.ttf kochi-mincho-subst-*.bdf mincho-Fix-*.bdf
 # rm wadalab-*.sfd wadalab-*.sfd~ sasage-mono.ttf kg20m-u.bdf *.orig *.rej
