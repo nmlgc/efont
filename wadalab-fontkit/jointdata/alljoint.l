@@ -4327,7 +4327,7 @@
 ;于
 ;亞
 (setq 亟 '極の右)
-(setq 亠 'なべぶた)
+(setq 亠 '(yscale 0.4 なべぶた))
 (setq 亢 '(tate なべぶた 几))
 (setq 亰 '(tate なべぶた 日小))
 (setq 亳 '(tate なべぶた 口 わかんむり 宅の下))
