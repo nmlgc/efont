@@ -36,10 +36,10 @@ SRC=	makeall.l ../wadalab-fontkit/kanjidata/alljis.l \
 
 all: sazanami-mincho.ttf sazanami-gothic.ttf
 
-sazanami-mincho.ttf: Sznm-M-K.sfd ../kochi-nokanji/mincho.sfd
+sazanami-mincho.ttf: Sznm-M-K.sfd ../kochi-nokanji/kochi-mincho-nokanji.sfd
 	fontforge -script mergefonts.pe sazanami-mincho.ttf Sznm-M-K.sfd ../kochi-nokanji/kochi-mincho-nokanji.sfd
 
-sazanami-gothic.ttf: Sznm-G-K.sfd ../kochi-nokanji/gothic.sfd
+sazanami-gothic.ttf: Sznm-G-K.sfd ../kochi-nokanji/kochi-gothic-nokanji.sfd
 	fontforge -script mergefonts.pe sazanami-gothic.ttf Sznm-G-K.sfd ../kochi-nokanji/kochi-gothic-nokanji.sfd
 
 Sznm-G-K.sfd: ${SRC}
