@@ -1,7 +1,7 @@
 #!/usr/local/bin/pfaedit -script
 
 # oradano.ttf の未定義のグリフを取り除く
-SetPref("GreekFixup", 1)
+#SetPref("GreekFixup", 1)
 Open("oradano.ttf")
 Select(0u000, 0u390); Clear()
 Select(0u452, 0uffff); Clear()
@@ -13,3 +13,19 @@ Open("wadalab-gothic-descent-1024.sfd")
 SelectAll(); Move(0, 61); Save("G.sfd")
 Open("wadalab-mincho-descent-1024.sfd")
 SelectAll(); Move(0, 61); Save("M.sfd")
+Close()
+
+Open("Kappa20-0.396/10x20rkm.bdf")
+Reencode("iso10646-1")
+Generate("10x20rk-u.bdf", "bdf", 0)
+Open("Kappa20-0.396/10x20m.bdf")
+Reencode("iso10646-1")
+Generate("10x20-u.bdf", "bdf", 0)
+Close()
+Open("Kappa20-0.396/k20m.bdf")
+Reencode("iso10646-1")
+Import("10x20-u-20.bdf")
+Import("10x20rk-u-20.bdf")
+SetCharCnt(65440)
+Generate("kappa.bdf", "bdf", 0)
+Close()

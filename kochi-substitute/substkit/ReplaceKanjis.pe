@@ -1,7 +1,7 @@
 #!/usr/local/bin/pfaedit -script
 
 # フラグ設定
-SetPref("AutoHint", 0); SetPref("HintForGen", 0); SetPref("GreekFixup", 1)
+SetPref("AutoHint", 0); SetPref("HintForGen", 0); #SetPref("GreekFixup", 1)
 
 # 定数定義
 hex = Array(16)
@@ -154,8 +154,8 @@ if (Strcasestr(fontfile:r, "gothic") >= 0)
 	Import("k20gm-u.bdf")
 	Import("k21gm-u.bdf")
 else
-	Import("Mincho-Fix-20.bdf")
-	Import("Mincho-Fix-21.bdf")
+	Import("kappa-20.bdf")
+	Import("kappa-21.bdf")
 endif
 
 Print("Generating font...")
