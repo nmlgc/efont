@@ -1,4 +1,4 @@
-# Copyright (c) 2003-2004
+# Copyright (c) 2004
 #	Electronic Font Open Laboratory (/efont/). All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -27,21 +27,44 @@
 #
 # $Id$
 
-ttf = $1; shift
-Open($1); shift
+# This file is encoded in UTF-8.
 
-if ($1 == "Sznm-M-K.sfd")
-	style = "min"
+ja_JP = 0x411
+
+style= $1
+
+if (style == "min")
+    jFontFamilyName = "さざなみ明朝"
+    jFontSubfamilyName = "Medium"
+    jFontName = jFontFamilyName + jFontSubfamilyName
 else
-	style = "goth"
+    jFontFamilyName = "さざなみゴシック"
+    jFontSubfamilyName = "Medium"
+    jFontName = jFontFamilyName + jFontSubfamilyName
 endif
 
-while ($argc > 1)
-	MergeFonts($1); shift
-endloop
+jManufacturerName = "電子書体オープンラボ(/efont/)"
+jDesigner = "CLWFKによる漢字自動デザイン(非漢字は古川泰之氏)"
+jSampleText = "波のように広がっていくことを願って「漣」と命名されました"
 
-SetNameTable(style)
-
-Generate(ttf, "ttf", 12)
-
-Quit()
+# SetTTFName(ja_JP, 0, jCopyrightNotice)
+SetTTFName(ja_JP, 1, jFontFamilyName)
+SetTTFName(ja_JP, 2, jFontSubfamilyName)
+# SetTTFName(ja_JP, 3, jUniqueFontIdentifier)
+SetTTFName(ja_JP, 4, jFontName);
+# SetTTFName(ja_JP, 5, jVersionString)
+# SetTTFName(ja_JP, 6, jPostScriptName)
+# SetTTFName(ja_JP, 7, jTradeMark)
+SetTTFName(ja_JP, 8, jManufacturerName)
+SetTTFName(ja_JP, 9, jDesigner)
+# SetTTFName(ja_JP, 10, jDescription)
+# SetTTFName(ja_JP, 11, jUrlVerdor)
+# SetTTFName(ja_JP, 12, jUrlDesigner)
+# SetTTFName(ja_JP, 13, jLicenseInformation)
+# SetTTFName(ja_JP, 14, jLicenseInfoURL)
+# 15 is reserved.
+# SetTTFName(ja_JP, 16, jPreferredFamily)
+# SetTTFName(ja_JP, 17, jPreferredSubfamily)
+# SetTTFName(ja_JP, 18, jCompatibleFullNameForMacintosh)
+SetTTFName(ja_JP, 19, jSampleText)
+# SetTTFName(ja_JP, 20, jPostScriptCidName)
