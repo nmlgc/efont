@@ -50,12 +50,12 @@ setVariables()
 // endif
 # section, dieresis ¢º JIS X 0208
 // if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF23"))
-	circle("copyright", "uniFF23"); Scale(70, 0,_TOP); centerinhankaku()
+	circle("copyright", "uniFF23"); Scale(64, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("ordfeminine"))
 	copy("underscore", "ordfeminine"); down(_40th)
 	append("a", "ordfeminine")
-	super("ordfeminine")
+	super("ordfeminine"); yscale(110)
 // endif
 // if (!defined("guillemotleft"))
 	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
@@ -69,7 +69,7 @@ setVariables()
 	copy("hyphen", "softhyphen")
 // endif
 // if (!defined("registered") && defined(_CIRCLE) && defined("uniFF32")
-	circle("registered", "uniFF32"); Scale(70, 0,_TOP); centerinhankaku()
+	circle("registered", "uniFF32"); Scale(64, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("macron"))
 	copy("underscore", "macron"); settop("macron", _FW)
@@ -94,7 +94,7 @@ setVariables()
 // if (!defined("ordmasculine"))
 	copy("underscore", "ordmasculine"); down(_40th)
 	append("o", "ordmasculine")
-	super("ordmasculine")
+	super("ordmasculine"); yscale(110)
 // endif
 // if (!defined("guillemotright"))
 	copy("greater", "guillemotright")
