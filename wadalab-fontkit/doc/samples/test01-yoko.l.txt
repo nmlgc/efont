@@ -1,0 +1,129 @@
+; Copyright (c) 1990-2003
+;	Wada Laboratory, the University of Tokyo. All rights reserved.
+; Copyright (c) 2003-2004
+;	Electronic Font Open Laboratory (/efont/). All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions
+; are met:
+; 1. Redistributions of source code must retain the above copyright notice, 
+;    this list of conditions and the following disclaimer.
+; 2. Redistributions in binary form must reproduce the above copyright notice,
+;    this list of conditions and the following disclaimer in the documentation 
+;    and/or other materials provided with the distribution.
+; 3. Neither the name of the Wada Laboratory, the University of Tokyo nor
+;    the names of its contributors may be used to endorse or promote products 
+;    derived from this software without specific prior written permission.
+;
+; THIS SOFTWARE IS PROVIDED BY WADA LABORATORY, THE UNIVERSITY OF TOKYO AND
+; CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+; NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+; PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE LABORATORY OR
+; CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+; EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
+; PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+; WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
+; OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+; ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+;
+; $Id$
+
+; 最も簡単な例である「什」を順次展開して実行する。
+; コメントアウトしてあるコードを評価して、同じ結果が帰って来ることを
+; 確認すると分かりやすいだろう。
+
+(and (equal (lisp-implementation-type) "CMU Common Lisp")
+     (setq *top-level-auto-declare* t))	; 後で直さねば
+
+(defvar base-directory)
+(defparameter source-load t)
+(defun load-directory (dir)
+  (let* ((base-directory dir))
+	(load (concatenate 'string  base-directory "/" "load.l"))))
+(load-directory "../../renderer/")
+(load-directory "../../primdata/")
+(load-directory "../../jointdata/")
+(load-directory "../../kanjidata/")
+
+;----------------------------------------------------------------
+; 文字の定義 (hook を取り除いてある)
+(setq にんべん
+      '(((129 22) (93 141) (9 214) (89 132) (89 391) (110 0) (110 400))
+	((hidari (0 1 2) (link 3)) (tate (3 4)) (xlimit (5 6)))
+	(ylimit 10 398)
+	(yunit . 150)))
+(setq 十 `(((11 176) (390 176) (200 11) (200 388))
+           ((yoko (0 1)) (tate (2 3)))
+	   (xunit . 200)
+	   (yunit . 200)))
+; 組合せの定義
+(setq 什 '(yoko にんべん 十))
+
+;----------------------------------------------------------------
+; applykanji: スケルトンへの展開を行う。
+; 	      文字の場合は get-def で組合せ定義のリストに展開。
+;             (プリミティブだと setq された上記の定義に展開される (unpackprim))
+;             リストの場合は組合せがスケルトン生成処理の名前。apply する。
+;(print (applykanji '什 'mincho))
+;(print (applykanji (get-def '什 'mincho)))
+;(print (funcall 'yoko 'mincho '(にんべん 十)))
+
+;----------------------------------------------------------------
+; yoko の処理の実体。
+;
+; 0) 部品を全てスケルトンに展開したものが nprims。
+; 1) affine-yoko-n で横方向の各部品のアフィン変換を求め, affines に格納。
+; 2) joint で変換を適用。
+;
+#|
+(let* ((prims '(にんべん 十)) ; 引数
+       (fonttype 'mincho)     ; 引数
+       (nprims (mapcar #'(LAMBDA (x) (applykanji x fonttype)) prims))
+       (affines (affine-yoko-n nprims fonttype)))
+  (joint fonttype affines nprims nil))
+|#
+
+; affines の値は以下のとおり。
+;(#(1.3188908 0 0 1.0309278  -11.870018 -10.309278)
+; #(0.7018488 0 0 1.061008   126.27895  -11.671087) 
+;  (XUNIT . 140.36975) (YUNIT . 154.63916)
+;  (YLIMIT 0 400) (CENTER)) 
+
+;----------------------------------------------------------------
+; joint (簡略版)
+#|
+(defun joint (fonttype affines prims &optional (alist))
+  (do ((outlines (affinepart (applykanji (car prims) fonttype)(car affines)))
+       (a (cdr affines)(cdr a))
+       (p (cdr prims)(cdr p)))
+    ((atom p) `(,(car outlines), (cadr outlines) . ,(append alist a)))
+    (setq outlines
+	  (appendpart outlines
+		      (affinepart (applykanji (car p) fonttype)(car a))))))
+|#
+;----------------------------------------------------------------
+; affine-yoko-n (newjoint.l)
+;
+; 1) 各部分字体の固有幅を xunit で求める。
+; 2)
+
+;--------------------------------
+; xunit (unit.l)
+;
+; 1) 部分字体の定義リストに (xunit . 200) とあれば値 200 を返す (十の場合)
+; 2) [部分の region-width] / [部分の yokowidth] を返す。
+;    region-width = realregion で求めた、各点に外接する矩形
+;    yokowidth = (プリミティブの幅 / 縦画同士の最も狭い幅 / 1.4) か
+;                (縦画の長さの総和の高さに対する比 - 1.0) か 1.0 の最大値
+; 3) region-width が 0 の場合は、デフォルトの幅 (100.0) を返す
+;
+
+;(print (prim-ylen (applykanji 十) (realregion (applykanji 十))))
+;(print (tatekankaku 十))
+
+;            ylen   yokowidth
+; にんべん  2.1275    1.1275
+;    十     2.0       1.0
+
+(quit)
