@@ -1,13 +1,13 @@
 #!/usr/local/bin/pfaedit -script
 
-# oradano.ttf $B$NL$Dj5A$N%0%j%U$r<h$j=|$/(B
+# oradano.ttf ¤ÎÌ¤ÄêµÁ¤Î¥°¥ê¥Õ¤ò¼è¤ê½ü¤¯
 Open("oradano.ttf")
 Select(0u000, 0u390); Clear()
 Select(0u452, 0uffff); Clear()
 Generate("o.ttf", "", 0xa0000)
 Close()
 
-# $B4A;z$r(B 61 $BC10L$@$1>e$KF0$+$9(B
+# ´Á»ú¤ò 61 Ã±°Ì¤À¤±¾å¤ËÆ°¤«¤¹
 Open("wadalab-gothic-descent-1024.sfd")
 SelectAll(); Move(0, 61); Save("G.sfd")
 Open("wadalab-mincho-descent-1024.sfd")
