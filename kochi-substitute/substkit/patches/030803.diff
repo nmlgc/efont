@@ -68,12 +68,151 @@
  		offset = -1;
  	    }
  	    free(glyphs);
---- pfaedit/tottf.c.orig	Wed Jul 16 13:13:12 2003
-+++ pfaedit/tottf.c	Wed Jul 23 11:57:36 2003
-@@ -344,6 +344,142 @@
+--- pfaedit/splinefill.c.orig	Tue Jun  3 02:34:11 2003
++++ pfaedit/splinefill.c	Thu Aug  7 14:30:27 2003
+@@ -756,7 +756,7 @@
+     }
+     if ( i!=0 ) {
+ 	bdfc->ymax -= i;
+-	memcpy(bdfc->bitmap,bdfc->bitmap+i*bdfc->bytes_per_line,(bdfc->ymax-bdfc->ymin+1)*bdfc->bytes_per_line );
++	memmove(bdfc->bitmap,bdfc->bitmap+i*bdfc->bytes_per_line,(bdfc->ymax-bdfc->ymin+1)*bdfc->bytes_per_line );
+     }
+ 
+     for ( i=bdfc->ymax-bdfc->ymin; i>0; --i ) {
+@@ -779,8 +779,19 @@
+ 	    if ( any )
+ 	break;
+ 	}
+-	if ( j!=0 ) {
+-	    off = j;
++	off = j;
++	if ( off/8>0 ) {
++	    for ( i=0; i<bdfc->ymax-bdfc->ymin+1; ++i ) {
++		memmove(bdfc->bitmap+i*bdfc->bytes_per_line,
++			bdfc->bitmap+i*bdfc->bytes_per_line+off/8,
++			bdfc->bytes_per_line-off/8);
++		memset(bdfc->bitmap+(i+1)*bdfc->bytes_per_line-off/8,
++			0, off/8);
++	    }
++	    bdfc->xmin += off-off%8;
++	    off %= 8;
++	}
++	if ( off!=0 ) {
+ 	    for ( i=0; i<bdfc->ymax-bdfc->ymin+1; ++i ) {
+ 		last = 0;
+ 		for ( j=bdfc->bytes_per_line-1; j>=0; --j ) {
+@@ -816,13 +827,13 @@
+ 	    if ( any )
+ 	break;
+ 	}
+-	if ( j!=0 ) {
+-	    off = j;
++	off = j;
++	if ( off!=0 ) {
+ 	    for ( i=0; i<bdfc->ymax-bdfc->ymin+1; ++i ) {
+-		memcpy(bdfc->bitmap+i*bdfc->bytes_per_line,
++		memmove(bdfc->bitmap+i*bdfc->bytes_per_line,
+ 			bdfc->bitmap+i*bdfc->bytes_per_line+off,
+ 			bdfc->bytes_per_line-off);
+-		memset(bdfc->bitmap+i*bdfc->bytes_per_line+bdfc->bytes_per_line-off,
++		memset(bdfc->bitmap+(i+1)*bdfc->bytes_per_line-off,
+ 			0, off);
+ 	    }
+ 	    bdfc->xmin += off;
+--- pfaedit/tottf.c.orig	Sun Aug  3 11:20:09 2003
++++ pfaedit/tottf.c	Thu Aug  7 19:12:52 2003
+@@ -344,94 +344,139 @@
  "dcroat"
  };
  
+-static unichar_t uniranges[][2] = {
+-    { 0x20, 0x7e },
+-    { 0xa0, 0xff },
+-    { 0x100, 0x17f },
+-    { 0x180, 0x24f },
+-    { 0x250, 0x2af },
+-    { 0x2b0, 0x2ff },
+-    { 0x300, 0x36f },
+-    { 0x370, 0x3ff },
+-    { 0,0 },		/* Obsolete */
+-    { 0x400, 0x4ff },
+-    { 0x530, 0x58f },
+-    { 0x590, 0x5ff },
+-    { 0,0 },		/* Obsolete */
+-    { 0x600, 0x6ff },
+-    { 0,0 },		/* Obsolete */
+-    { 0x900, 0x97f },
+-    { 0x980, 0x9ff },
+-    { 0xa00, 0xa7f },
+-    { 0xa80, 0xaff },
+-    { 0xb00, 0xb7f },
+-    { 0xb80, 0xbff },		/* bit 20, tamil */
+-    { 0xc00, 0xc7f },
+-    { 0xc80, 0xcff },
+-    { 0xd00, 0xd7f },
+-    { 0xe00, 0xe7f },
+-    { 0xe80, 0xeff },		/* bit 25, lao */
+-    { 0x10a0, 0x10ff },
+-    { 0, 0 },			/* bit 27, obsolete */
+-    { 0x1100, 0x11ff },
+-    { 0x1e00, 0x1eff },
+-    { 0x1f00, 0x1fff },		/* bit 30, greek extended */
+-    { 0x2000, 0x206f },
+-
+-    { 0x2070, 0x209f },		/* bit 32, subscripts, super scripts */
+-    { 0x20a0, 0x20cf },
+-    { 0x20d0, 0x20ff },
+-    { 0x2100, 0x214f },
+-    { 0x2150, 0x218f },
+-    { 0x2190, 0x21ff },
+-    { 0x2200, 0x22ff },
+-    { 0x2300, 0x237f },
+-    { 0x2400, 0x243f },		/* bit 40 control pictures */
+-    { 0x2440, 0x245f },
+-    { 0x2460, 0x24ff },
+-    { 0x2500, 0x257f },
+-    { 0x2580, 0x259f },
+-    { 0x25a0, 0x25ff },		/* bit 45 geometric shapes */
+-    { 0x2600, 0x267f },
+-    { 0x2700, 0x27bf },		/* bit 47 zapf dingbats */
+-    { 0x3000, 0x303f },
+-    { 0x3040, 0x309f },
+-    { 0x30a0, 0x30ff },		/* bit 50 katakana */
+-    { 0x3100, 0x312f },			/* Also includes 3180-31AF */
+-    { 0x3130, 0x318f },
+-    { 0x3190, 0x31ff },
+-    { 0x3200, 0x32ff },
+-    { 0x3300, 0x33ff },		/* bit 55 CJK compatability */
+-    { 0xac00, 0xd7af },		/* bit 56 Hangul */
+-    { 0, 0 },			/* subranges */
+-    { 0, 0 },			/* subranges */
+-    { 0x3400, 0x9fff },		/* bit 59, CJK */ /* also 2E80-29FF */
+-    { 0xE000, 0xF8FF },		/* bit 60, private use */
+-    { 0xf900, 0xfaff },
+-    { 0xfb00, 0xfb4f },
+-    { 0xfb50, 0xfdff },
+-
+-    { 0xfe20, 0xfe2f },		/* bit 64 combining half marks */
+-    { 0xfe30, 0xfe4f },
+-    { 0xfe50, 0xfe6f },
+-    { 0xfe70, 0xfeef },
+-    { 0xff00, 0xffef },
+-    { 0xfff0, 0xffff },
+-    { 0x0f00, 0x0fff },		/* bit 70 tibetan */
+-    { 0x0700, 0x074f },
+-    { 0x0780, 0x07Bf },
+-    { 0x0D80, 0x0Dbf },
+-    { 0x1000, 0x109f },
+-    { 0x1200, 0x12ff },		/* bit 75 ethiopic */
+-    { 0x13A0, 0x13ff },
+-    { 0x1400, 0x167f },
+-    { 0x1680, 0x169f },
+-    { 0x16A0, 0x16ff },
+-    { 0x1780, 0x17ff },		/* bit 80 khmer */
+-    { 0x1800, 0x18af },
+-    { 0x2800, 0x28ff },
+-    { 0xA000, 0xa4af },		/* bit 83, Yi & Yi radicals */
+-    { 0xffff, 0xffff}
 +static int uniranges[][3] = {
 +    { 0x20, 0x7e, 0 },		/* Basic Latin */
 +    { 0xa0, 0xff, 1 },		/* Latin-1 Supplement */
@@ -207,44 +346,62 @@
 +    { 0xe0100, 0xe01ef, 91 },	/* Variation Selectors Supplement */
 +    { 0xf0000, 0xffffd, 90 },	/* Supplementary Private Use Area-A */
 +    { 0x100000, 0x10fffd, 90 },	/* Supplementary Private Use Area-B */
-+};
-+
-+#if 0
- static unichar_t uniranges[][2] = {
-     { 0x20, 0x7e },
-     { 0xa0, 0xff },
-@@ -433,6 +569,7 @@
-     { 0xA000, 0xa4af },		/* bit 83, Yi & Yi radicals */
-     { 0xffff, 0xffff}
  };
-+#endif
  
  static int32 getuint32(FILE *ttf) {
-     int ch1 = getc(ttf);
-@@ -2643,10 +2780,21 @@
+@@ -2566,7 +2611,7 @@
+     k=0; _sf = sf;
      do {
  	sf = ( _sf->subfontcnt==0 ) ? _sf : _sf->subfonts[k];
+-	for ( i=0; i<sf->charcnt; ++i ) if ( sf->chars[i]!=NULL ) {
++	for ( i=0; i<sf->charcnt; ++i ) if ( SCWorthOutputting(sf->chars[i])) {
+ 	    if ( sf->chars[i]->unicodeenc=='A' )
+ 		CodePage[1] |= 1<<31;		/* US (Ascii I assume) */
+ 	    else if ( sf->chars[i]->unicodeenc==0xde ) {
+@@ -2614,7 +2659,8 @@
+ 		CodePage[0] |= 1<<19;		/* korean wansung */
+ 	    else if ( sf->chars[i]->unicodeenc==0xacf4 )
+ 		CodePage[0] |= 1<<21;		/* korean Johab */
+-	    else if ( sf->chars[i]->unicodeenc==0x21d4 )
++	    else if ( sf->chars[i]->unicodeenc>=0xf000 &&
++		      sf->chars[i]->unicodeenc<=0xf0ff)
+ 		CodePage[0] |= 1<<31;		/* symbol */
+ 	}
+ 	++k;
+@@ -2661,14 +2707,25 @@
+     cnt1 = cnt2 = 0;
+     k = 0;
+     do {
++	int bit;
+ 	sf = ( _sf->subfontcnt==0 ) ? _sf : _sf->subfonts[k];
++	j = 0;
  	for ( i=0; i<sf->charcnt; ++i ) if ( sf->chars[i]!=NULL && sf->chars[i]->unicodeenc!=-1 ) {
-+#if 1
+-	    for ( j=0; j<sizeof(uniranges)/sizeof(uniranges[0]); ++j )
+-		if ( sf->chars[i]->unicodeenc>=uniranges[j][0] &&
+-			sf->chars[i]->unicodeenc<=uniranges[j][1] ) {
+-		    os2->unicoderange[j>>5] |= (1<<(j&31));
+-	    break;
+-		}
 +	    if ( sf->chars[i]->unicodeenc > 0xffff )
 +		os2->unicoderange[57>>5] |= (1<<(57&31));
-+#endif
- 	    for ( j=0; j<sizeof(uniranges)/sizeof(uniranges[0]); ++j )
- 		if ( sf->chars[i]->unicodeenc>=uniranges[j][0] &&
- 			sf->chars[i]->unicodeenc<=uniranges[j][1] ) {
-+#if 0
- 		    os2->unicoderange[j>>5] |= (1<<(j&31));
-+#else
-+		    if (uniranges[j][2] >= 0) {
-+		        int bit = uniranges[j][2];
-+		        os2->unicoderange[bit>>5] |= (1<<(bit&31));
++	    if ( sf->chars[i]->unicodeenc>=uniranges[j][0] &&
++		 sf->chars[i]->unicodeenc<=uniranges[j][1] ) {
++		bit = uniranges[j][2];
++		os2->unicoderange[bit>>5] |= (1<<(bit&31));
++	    } else {
++		for ( j=0; j<sizeof(uniranges)/sizeof(uniranges[0]); ++j )
++		    if ( sf->chars[i]->unicodeenc>=uniranges[j][0] &&
++			 sf->chars[i]->unicodeenc<=uniranges[j][1] ) {
++			bit = uniranges[j][2];
++			os2->unicoderange[bit>>5] |= (1<<(bit&31));
++		break;
 +		    }
-+#endif
- 	    break;
- 		}
++	    }
  	    if ( sf->chars[i]->unicodeenc<first ) first = sf->chars[i]->unicodeenc;
---- tottfgpos.c.orig	Mon Aug  4 12:37:58 2003
-+++ tottfgpos.c	Wed Aug  6 19:16:01 2003
+ 	    if ( sf->chars[i]->unicodeenc>last ) last = sf->chars[i]->unicodeenc;
+ 	    avg2 += sf->chars[i]->width; ++cnt2;
+--- pfaedit/tottfgpos.c.orig	Mon Aug  4 12:37:58 2003
++++ pfaedit/tottfgpos.c	Wed Aug  6 19:16:01 2003
 @@ -553,7 +553,7 @@
  	last = glyphs[i]->ttf_glyph;
      }
