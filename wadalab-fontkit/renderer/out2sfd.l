@@ -70,15 +70,23 @@ FitToEm: 1
   (princ
 "StartChar: .notdef
 Encoding: 0 0 65535
-Width: 1024
-Flags: W
+")
+  (format t "Width: ~A~%" em)
+  (princ
+"Flags: W
 Fore
-400 400 m 1
- 400 624 l 1
- 624 624 l 1
- 624 400 l 1
- 400 400 l 1
-EndSplineSet
+")
+  (let ((minx (round (* 0.375 em)))
+	(maxx (round (* 0.625 em)))
+	(miny (round (- ascent (* 0.625 em))))
+	(maxy (round (- ascent (* 0.375 em)))))
+    (format t "~A ~A m 1~%" minx miny m 1)
+    (format t " ~A ~A l 1~%" maxx miny m 1)
+    (format t " ~A ~A l 1~%" maxx maxy m 1)
+    (format t " ~A ~A l 1~%" minx maxy m 1)
+    (format t " ~A ~A l 1~%" minx miny m 1))
+  (princ
+"EndSplineSet
 EndChar
 ")
 )
@@ -86,42 +94,44 @@ EndChar
 ;
 ; 文字アウトラインの生成
 ; 
-(defun out2sfd (outline em ascent)
-  (let ((descent (- em ascent))
-	(type1ratio (/ em 400.0)))
-    (format t "Fore~%")
-    (do ((l (remove-if #'null outline) (cdr l))
-	 (next)(nextnext)
-	 (curx 0)(cury 0)(newx)(newy)(x1)(y1)(x2)(y2)(x3)(y3)(last))
-	((atom l))
-	(setq last (caar l))
-	(setq newx (round (* type1ratio (cadr last)))
-	      newy (- type1max descent (round (* type1ratio (caddr last)))))
-	(format t "~A ~A m 1 ~%" newx newy)
-	(do ((ll (cdar l) (cdr ll)))
-	    ((atom ll))
-	    (match (car ll)
-	      (('angle x y)
-	       (setq x1 (round (* type1ratio x)) 
-		     y1 (- type1max descent (round (* type1ratio y))))
-	       (format t " ~A ~A l 1~%" x1 y1))
-	      (('bezier x y)
-	       (setq next (cadr ll))
-	       (setq nextnext 
-		     (cond ((cddr ll)(setq ll (cddr ll))(car ll))
-			   (t (setq ll (cdr ll)) last)))
-	       (setq x1 (round (* type1ratio x)) 
-		     y1 (- type1max descent (round (* type1ratio y))))
-	       (setq x2 (round (* type1ratio (cadr next)))
-		     y2 (- type1max descent
-			   (round (* type1ratio (caddr next)))))
-	       (setq x3 (round (* type1ratio (cadr nextnext)))
-		     y3 (- type1max descent 
-			   (round (* type1ratio (caddr nextnext)))))
-	       (format t " ~A ~A ~A ~A ~A ~A c 1~%" x1 y1 x2 y2 x3 y3))))
-	(format t " ~A ~A l 1~%" newx newy))
-    (format t "EndSplineSet~%")
-))
+(defun out2sfd (outline em ascent :round-points t)
+  (labels ((_round (x) 
+	      (if :round-points (round x) x)))
+    (let ((descent (- em ascent))
+	  (scale (/ em 400.0)))
+      (format t "Fore~%")
+      (do ((l (remove-if #'null outline) (cdr l))
+	   (next)(nextnext)
+	   (curx 0)(cury 0)(newx)(newy)(x1)(y1)(x2)(y2)(x3)(y3)(last))
+	  ((atom l))
+	  (setq last (caar l))
+	  (setq newx (round (* scale (cadr last)))
+		newy (- em descent (round (* scale (caddr last)))))
+	  (format t "~A ~A m 1 ~%" newx newy)
+	  (do ((ll (cdar l) (cdr ll)))
+	      ((atom ll))
+	      (match (car ll)
+	        (('angle x y)
+	         (setq x1 (round (* scale x)) 
+		       y1 (- em descent (round (* scale y))))
+	         (format t " ~A ~A l 1~%" x1 y1))
+		(('bezier x y)
+		 (setq next (cadr ll))
+		 (setq nextnext 
+		       (cond ((cddr ll)(setq ll (cddr ll))(car ll))
+			     (t (setq ll (cdr ll)) last)))
+		 (setq x1 (round (* scale x)) 
+		       y1 (- em descent (round (* scale y))))
+		 (setq x2 (round (* scale (cadr next)))
+		       y2 (- em descent
+			     (round (* scale (caddr next)))))
+		 (setq x3 (round (* scale (cadr nextnext)))
+		       y3 (- em descent 
+			     (round (* scale (caddr nextnext)))))
+		 (format t " ~A ~A ~A ~A ~A ~A c 1~%" x1 y1 x2 y2 x3 y3))))
+	  (format t " ~A ~A l 1~%" newx newy))
+      (format t "EndSplineSet~%")
+)))
 
 ;
 ; ファイルの生成
