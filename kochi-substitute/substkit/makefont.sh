@@ -6,9 +6,9 @@
 #  tar xvfy Kappa20-0.396.tar.bz2
 #  cd Kappa20-0.396 ; sh makebdf.sh ; cd ..
 #
-# fetch http://downloads.sourceforge.jp/mplus-fonts/5030/mplus_bitmap_fonts-2.1.0.tar.gz
-#  tar xvfz mplus_bitmap_fonts-2.1.0.tar.gz
-#  cd mplus_bitmap_fonts-2.1.0.tar.gz ; DESTDIR=pcf ./install_mplus_fonts ; cd ..
+# fetch http://downloads.sourceforge.jp/mplus-fonts/5030/mplus_bitmap_fonts-2.1.3.tar.gz
+#  tar xvfz mplus_bitmap_fonts-2.1.3.tar.gz
+#  cd mplus_bitmap_fonts-2.1.3.tar.gz ; DESTDIR=pcf ./install_mplus_fonts ; cd ..
 # cvs -d :pserver:guest:guest@openlab.ring.gr.jp:/circus/cvsroot login
 # cvs -d :pserver:guest@openlab.ring.gr.jp:/circus/cvsroot co efont-devel/shinonome
 #  cd efont/shinonome ; sh autogen.sh ; gmake ; cd ../..
@@ -18,8 +18,8 @@
 # fetch http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
 #  bzcat wadalab-mincho-descent-1024.sfd.bz2 > wadalab-mincho-descent-1024.sfd
 #
-# fetch http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
-#  tar xvfz Oradano20030619.tgz oradano.ttf
+# fetch http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano2003-1026.tgz
+#  tar xvfz Oradano2003-1026.tgz oradano.ttf
 #
 pfaedit -script Shrink.pe
 pfaedit -script ReencodeBDFs.pe
