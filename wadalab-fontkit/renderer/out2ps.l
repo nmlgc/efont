@@ -261,7 +261,9 @@ end
 		           (printfile t) (remove-overlap t) 
 			   (set-code-by-kanji t)
 	             )
- (with-open-stream (*standard-output* (open psfile :direction :output))
+ (with-open-stream (*standard-output* (open psfile :direction :output
+					    :if-exists :overwrite
+					    :if-does-not-exist :create))
    (let* ((scale (floor (* 160.0 (min (/ 9.0 col) (/ 6.0 row)))))
 	  (ii nil)(jj nil)(page nil)(last #x2120)
 	  (skeleton)(hints)(type1)(kstr)

@@ -129,7 +129,9 @@ EndChar
 (defun out-to-sfd-all (outlines tag sfdfile &optional (fontname "Untitled1")
 				            &key (remove-overlap t)
 					         (em 1024) (ascent 880))
- (with-open-stream (*standard-output* (open sfdfile :direction :output))
+ (with-open-stream (*standard-output* (open sfdfile :direction :output
+					    :if-exists :overwrite
+					    :if-does-not-exist :create))
    (output-sfd-header (length outlines) fontname em ascent)
    (do ((ol outlines (cdr ol))
 	(l nil)(kanji)(skeleton)(jiscode)(unicode))
