@@ -1,5 +1,7 @@
 README			this file.
 
+_xxx		prefix '_' in funcion name mean doing xxx() only if target is missing.
+
 makeroman		make roman numeral
 
 copy		copy

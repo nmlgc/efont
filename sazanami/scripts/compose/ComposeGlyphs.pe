@@ -1,4 +1,4 @@
-# Copyright (c) 2004
+# Copyright (c) 2004-2005
 #	Electronic Font Open Laboratory (/efont/). All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,90 +29,92 @@
 
 setVariables()
 
-// if (!defined("exclamdown")) 
+if (!DrawsSomething("exclamdown")) 
 	copy("exclam", "exclamdown"); hcrotate(180)
-// endif
-// if (!defined("cent") && defined("uniFFE0"))
+endif
+if (!DrawsSomething("cent") && DrawsSomething("uniFFE0"))
 	copy("uniFFE0", "cent")
 	xscaletogwidth(_HW-_10th); centerinhankaku()
-// endif
-// if (!defined("sterling") && defined("uniFFE1"))
+endif
+if (!DrawsSomething("sterling") && DrawsSomething("uniFFE1"))
 	copy("uniFFE1", "sterling");
 	xscaletogwidth(_HW-_20th); centerinhankaku()
-// endif
+endif
 # currency 风
-// if (!defined("yen"))
+if (!DrawsSomething("yen"))
 	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
-// endif
-// if (!defined("brokenbar"))
+endif
+if (!DrawsSomething("brokenbar"))
 	copy("bar", "brokenbar"); up(_FW+_QW); Paste()
 	yscaletogheight(getgheight("bar")); alignycenter("brokenbar", "bar")
-// endif
+endif
 # section, dieresis ⒑ JIS X 0208
-// if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF23"))
+if (!DrawsSomething("copyright") && \
+     DrawsSomething(_CIRCLE) && DrawsSomething("uniFF23"))
 	circle("copyright", "uniFF23"); Scale(64, 0,_TOP); centerinhankaku()
-// endif
-// if (!defined("ordfeminine"))
+endif
+if (!DrawsSomething("ordfeminine"))
 	copy("underscore", "ordfeminine"); down(_40th)
 	append("a", "ordfeminine")
 	super("ordfeminine"); yscale(110)
-// endif
-// if (!defined("guillemotleft"))
+endif
+if (!DrawsSomething("guillemotleft"))
 	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
 	Scale(60); centerinhankaku()
-// endif
-// if (!defined("logicalnot") && defined("uniFFE2"))
+endif
+if (!DrawsSomething("logicalnot") && DrawsSomething("uniFFE2"))
 	copy("uniFFE2", "logicalnot"); xscaletogwidth(_HW-_10th);
 	centerinhankaku(); left(_100th)
-// endif
-// if (!defined("softhyphen"))
+endif
+if (!DrawsSomething("softhyphen"))
 	copy("hyphen", "softhyphen")
-// endif
-// if (!defined("registered") && defined(_CIRCLE) && defined("uniFF32")
+endif
+if (!DrawsSomething("registered") && \
+     DrawsSomething(_CIRCLE) && DrawsSomething("uniFF32"))
 	circle("registered", "uniFF32"); Scale(64, 0,_TOP); centerinhankaku()
-// endif
-// if (!defined("macron"))
+endif
+if (!DrawsSomething("macron"))
 	copy("underscore", "macron"); settop("macron", _FW)
-// endif
+endif
 # degree plusminus ⒑ JIS X 0208
-// if (!defined("uni00B2"))
+if (!DrawsSomething("uni00B2"))
 	copy("two", "uni00B2"); super("uni00B2")
-// endif
-// if (!defined("uni00B3"))
+endif
+if (!DrawsSomething("uni00B3"))
 	copy("three", "uni00B3"); super("uni00B3")
-// endif
+endif
 # acute ⒑ JIS X 0208
 # mu 风
 # paragraph ⒑ JIS X 0208
-// if (!defined("periodcentered") && defined("uniFF65"))
+if (!DrawsSomething("periodcentered") && DrawsSomething("uniFF65"))
 	copy("uniFF65", "periodcentered")
-// endif
+endif
 # cedilla 风
-// if (!defined("uni00B9"))
+if (!DrawsSomething("uni00B9"))
 	copy("one", "uni00B9"); super("uni00B9")
-// endif
-// if (!defined("ordmasculine"))
+endif
+if (!DrawsSomething("ordmasculine"))
 	copy("underscore", "ordmasculine"); down(_40th)
 	append("o", "ordmasculine")
 	super("ordmasculine"); yscale(110)
-// endif
-// if (!defined("guillemotright"))
+endif
+if (!DrawsSomething("guillemotright"))
 	copy("greater", "guillemotright")
 	right(_5th); PasteInto(); left(_10th,0)
 	Scale(60); centerinhankaku()
-// endif
-// if (!defined "onequarter")
+endif
+if (!DrawsSomething("onequarter"))
 	hdfrac("onequarter", "one", "four"); up(_5th)
-// endif
-// if (!defined "onehalf")
+endif
+if (!DrawsSomething("onehalf"))
 	hdfrac("onehalf", "one", "two"); up(_5th)
-// endif
-// if (!defined "threequarters")
+endif
+if (!DrawsSomething("threequarters"))
 	hdfrac("threequarters", "three", "four"); up(_5th)
-// endif
-// if (!defined "questiondown")
+endif
+if (!DrawsSomething("questiondown"))
 	copy("question", "questiondown"); hcrotate(180)
-// endif
+endif
 
 #------------------------------------------------------------------------------
 # アクセント淡规の年盗
@@ -139,75 +141,81 @@ copy("asciitilde", tilde); centerinhankaku()
 # Latin-1 の菠矢 (风けている湿のみ)
 #------------------------------------------------------------------------------
 # 络矢机
-accented("Agrave",      "A", grave); hankaku()
-accented("Aacute",      "A", acute); hankaku()
-accented("Acircumflex", "A", circ);  hankaku()
-accented("Atilde",      "A", tilde); hankaku()
-accented("Adieresis",   "A", uml);   hankaku()
-accented("Aring",       "A", ring);  hankaku()
+_accented("Agrave",      "A", grave)
+_accented("Aacute",      "A", acute)
+_accented("Acircumflex", "A", circ)
+_accented("Atilde",      "A", tilde)
+_accented("Adieresis",   "A", uml)
+_accented("Aring",       "A", ring)
 # AE, Ccedil 风
-accented("Egrave",      "E", grave); hankaku()
-accented("Eacute",      "E", acute); hankaku()
-accented("Ecircumflex", "E", circ);  hankaku()
-accented("Edieresis",   "E", uml);   hankaku()
-accented("Igrave",      "I", grave); hankaku()
-accented("Iacute",      "I", acute); hankaku()
-accented("Icircumflex", "I", circ);  hankaku()
-accented("Idieresis",   "I", uml);   hankaku()
+_accented("Egrave",      "E", grave)
+_accented("Eacute",      "E", acute)
+_accented("Ecircumflex", "E", circ)
+_accented("Edieresis",   "E", uml)
+_accented("Igrave",      "I", grave)
+_accented("Iacute",      "I", acute)
+_accented("Icircumflex", "I", circ)
+_accented("Idieresis",   "I", uml)
 
 # Eth = 'D' + '-'
-copy("hyphen", "Eth"); Scale(70,120); left(_6th)
-append("D", "Eth"); right(_6th); RemoveOverlap(); centerinhankaku()
+if (!DrawsSomething("Eth"))
+	copy("hyphen", "Eth"); Scale(70,120); left(_6th)
+	append("D", "Eth"); right(_6th); RemoveOverlap(); centerinhankaku()
+endif
 
-accented("Ntilde",      "N", tilde); hankaku()
-accented("Ograve",      "O", grave); hankaku()
-accented("Oacute",      "O", acute); hankaku()
-accented("Ocircumflex", "O", circ);  hankaku()
-accented("Otilde",      "O", tilde); hankaku()
-accented("Odieresis",   "O", uml);   hankaku()
+_accented("Ntilde",      "N", tilde)
+_accented("Ograve",      "O", grave)
+_accented("Oacute",      "O", acute)
+_accented("Ocircumflex", "O", circ)
+_accented("Otilde",      "O", tilde)
+_accented("Odieresis",   "O", uml)
 
-# Oslash
-copy("O", "Oslash"); append("slash", "Oslash"); RemoveOverlap()
+if (!DrawsSomething("Oslash"))
+	copy("O", "Oslash"); append("slash", "Oslash"); RemoveOverlap()
+endif
 
-accented("Ugrave",      "U", grave); hankaku()
-accented("Uacute",      "U", acute); hankaku()
-accented("Ucircumflex", "U", circ);  hankaku()
-accented("Udieresis",   "U", uml);   hankaku()
-accented("Yacute",      "Y", acute); hankaku()
+_accented("Ugrave",      "U", grave)
+_accented("Uacute",      "U", acute)
+_accented("Ucircumflex", "U", circ)
+_accented("Udieresis",   "U", uml)
+_accented("Yacute",      "Y", acute)
 # Thorn, szlig 风
 
 # 井矢机
-accented("agrave",      "a", grave); hankaku()
-accented("aacute",      "a", acute); hankaku()
-accented("acircumflex", "a", circ);  hankaku()
-accented("atilde",      "a", tilde); hankaku()
-accented("adieresis",   "a", uml);   hankaku()
-accented("aring",       "a", ring);  hankaku()
+_accented("agrave",      "a", grave)
+_accented("aacute",      "a", acute)
+_accented("acircumflex", "a", circ)
+_accented("atilde",      "a", tilde)
+_accented("adieresis",   "a", uml)
+_accented("aring",       "a", ring)
 # ae, ccedil 风
-accented("egrave",      "e",        grave); hankaku()
-accented("eacute",      "e",        acute); hankaku()
-accented("ecircumflex", "e",        circ);  hankaku()
-accented("edieresis",   "e",        uml);   hankaku()
-accented("igrave",      "dotlessi", grave); hankaku()
-accented("iacute",      "dotlessi", acute); hankaku()
-accented("icircumflex", "dotlessi", circ);  hankaku()
-accented("idieresis",   "dotlessi", uml);   hankaku()
+_accented("egrave",      "e",        grave)
+_accented("eacute",      "e",        acute)
+_accented("ecircumflex", "e",        circ)
+_accented("edieresis",   "e",        uml)
+_accented("igrave",      "dotlessi", grave)
+_accented("iacute",      "dotlessi", acute)
+_accented("icircumflex", "dotlessi", circ)
+_accented("idieresis",   "dotlessi", uml)
 # eth 风
-accented("ntilde",      "n", tilde); hankaku()
-accented("ograve",      "o", grave); hankaku()
-accented("oacute",      "o", acute); hankaku()
-accented("ocircumflex", "o", circ);  hankaku()
-accented("otilde",      "o", tilde); hankaku()
-accented("odieresis",   "o", uml);   hankaku()
+_accented("ntilde",      "n", tilde)
+_accented("ograve",      "o", grave)
+_accented("oacute",      "o", acute)
+_accented("ocircumflex", "o", circ)
+_accented("otilde",      "o", tilde)
+_accented("odieresis",   "o", uml)
 
 # oslash
-copy("slash", "oslash"); Scale(80,75, _HW,0); centerinhankaku(); 
-append("o", "oslash"); RemoveOverlap(); centerinhankaku()
+if (!DrawsSomething("oslash"))
+	_w = getgwidth ("o")
+	copy("slash", "oslash"); Scale(80,75, _w,0); centerinwidth(_w)
+	append("o", "oslash"); RemoveOverlap()
+endif
 
-accented("ugrave",      "u", grave); hankaku()
-accented("uacute",      "u", acute); hankaku()
-accented("ucircumflex", "u", circ);  hankaku()
-accented("udieresis",   "u", uml);   hankaku()
-accented("yacute",      "y", acute); hankaku()
+_accented("ugrave",      "u", grave)
+_accented("uacute",      "u", acute)
+_accented("ucircumflex", "u", circ)
+_accented("udieresis",   "u", uml)
+_accented("yacute",      "y", acute)
 # thorn 风
-accented("ydieresis",   "y", uml);   hankaku()
+_accented("ydieresis",   "y", uml)
