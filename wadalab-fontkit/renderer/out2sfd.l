@@ -1407,7 +1407,10 @@ EndChar
 
 (defun output-skel2eps-header ()
   (princ 
-"/TEN         { 0 0  1 256 div } def
+"%PS-2.0
+gsave
+
+/TEN         { 0 0  1 256 div } def
 /TATE        { 0 0  2 256 div } def
 /YOKO        { 0 0  3 256 div } def
 /MIGIUE      { 0 0  4 256 div } def
@@ -1439,7 +1442,7 @@ EndChar
 	newpath
 	moveto % consume 2 args on stack
 	0 0 rlineto
-	draw
+	stroke
 	grestore
 } def
 0 800 translate 2.5 -2.5 scale
@@ -1456,7 +1459,7 @@ EndChar
 		(let ((p (nth pindex points)))
 		  (format t "~A ~A lineto~%" (car p) (cadr p))))
 	    (cdr point-indexes))
-    (format t "stroke~%")))
+    (format t "stroke~%~%grestore~%")))
 
 (defun output-skel2eps-joints (points)
   (format t "~%")
