@@ -57,7 +57,7 @@ FSType: 8
 PfmFamily: 17
 TTFWeight: 500
 TTFWidth: 5
-Panose: 2 0 6 9 0 0 0 0 0 0
+Panose: 2 0 0 0 0 0 0 0 0 0
 LineGap: 0
 VLineGap: 0
 Encoding: unicode
