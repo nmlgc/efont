@@ -143,9 +143,8 @@
 	 (param `((yunit 0 .,(yunit nprim1))(xunit 0 .,(xunit nprim1))))
 	 (section (general-section1 prim11 nprim22 param))
 	 (limit (cond (section (minus (section-minus section)))
-		      (t 0.0)))
-
-    (joint nil affines `(,prim1 ,(transprim nil limit prim2)) nil))))
+		      (t 0.0))))
+    (joint nil affines `(,prim1 ,(transprim nil limit prim2)) nil)))
 ;
 (defun remassoc (item list)
   (do ((l list (cdr l))
