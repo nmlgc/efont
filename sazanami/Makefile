@@ -52,4 +52,4 @@ sfd: ${SRC}
 	${LISP} ./makeall.l
 
 clean:
-	rm -f *.ps *.sfd *.ttf *~
+	rm -f *.ps *.sfd *.ttf *.core *~
