@@ -20,7 +20,7 @@
      str = _readencstring(ttf,stroff,strlen,enc);
      if ( str==NULL )		/* we didn't understand the encoding */
 --- pfaedit/parsettfbmf.c.orig	Wed Jul 16 13:54:30 2003
-+++ pfaedit/parsettfbmf.c	Mon Aug  4 11:12:58 2003
++++ pfaedit/parsettfbmf.c	Wed Aug  6 23:23:12 2003
 @@ -59,10 +59,14 @@
      struct bigmetrics big;
      int i,j,ch,l,p, num;
@@ -54,6 +54,20 @@
  return;
      }
      if ( info->chars!=NULL ) {
+@@ -305,11 +311,11 @@
+ 	    }
+ 	    if ( num&1 )
+ 		getushort(ttf);		/* padding */
+-	    for ( i=first, g=0; i<=last; ++i ) {
++	    for ( i=first, g=0; i<=last; ++i, ++g ) {
+ 		if ( (info->inuse==NULL || info->inuse[i+first]) && g<num )
+ 		    ttfreadbmfglyph(ttf,info,offset,
+ 			    size,&big,
+-			    imageformat,glyphs[g++],bdf);
++			    imageformat,glyphs[g],bdf);
+ 		offset = -1;
+ 	    }
+ 	    free(glyphs);
 --- pfaedit/tottf.c.orig	Wed Jul 16 13:13:12 2003
 +++ pfaedit/tottf.c	Wed Jul 23 11:57:36 2003
 @@ -344,6 +344,142 @@
