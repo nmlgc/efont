@@ -27,6 +27,9 @@
 #
 # $Id$
 
+# usage:
+#     fontforge -script BuildTTF.pe TTFfile [ OutlineFile...] [ BDFfile...] 
+
 if ($1 == "sazanami-mincho.ttf")
 	style = "min"
 else
@@ -36,16 +39,16 @@ endif
 ttf = $1; shift
 Open($1); shift
 
-while ($argc > 1)
-	if ($1:e == "bdf")
-		Import($1); shift
-	else
-		MergeFonts($1); shift
-	endif
-endloop
+while ($argc > 1 && $1:e == "bdf")
+	MergeFonts($1); shift
 
 "scripts/compose/fixupOutline"()
 "scripts/compose/ComposeGlyphs.pe"()
+
+while ($argc > 1)
+	Import($1); shift
+endloop
+
 
 SelectAll();
 foreach;  RemoveATT("Ligature", "*", "*"); endloop
