@@ -20,7 +20,7 @@ OS2WinDOffset: 1
 ScriptLang: 1
  1 kana 2 JAN  dflt 
 TableOrder: GSUB 1
-	'vrt2'
+	'vert'
 Encoding: unicode
 UnicodeInterp: none
 DisplaySize: -24
@@ -3728,7 +3728,7 @@ Fore
  662 436 l 1
  663 438 664 438 665 436 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3095.vert
+Substitution: 1 0 'vert' uni3095.vert
 EndChar
 StartChar: uni3096
 Encoding: 12438 12438 106
@@ -3773,7 +3773,7 @@ Fore
  525 406 555 408 578 410 c 1
  576 507 571 560 566 573 c 1
 EndSplineSet
-Substitution: 1 0 'vrt2' uni3096.vert
+Substitution: 1 0 'vert' uni3096.vert
 EndChar
 StartChar: uni30F7
 Encoding: 12535 12535 105
