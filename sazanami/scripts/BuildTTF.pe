@@ -45,6 +45,7 @@ while ($argc > 1)
 endloop
 
 "scripts/compose/fixupOutline"()
+"scripts/compose/ComposeGlyphs.pe"()
 
 SetNameTable(style)
 SetPanose(3, 9)	 // monospaced
