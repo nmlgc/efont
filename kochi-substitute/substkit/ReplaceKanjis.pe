@@ -12,13 +12,13 @@ hex = Array(16)
 Greek = Array(24)
 	i = 0
 	Greek[i++]="Alpha"; Greek[i++]="Beta";	Greek[i++]="Gamma"
-	Greek[i++]="Delta"; Greek[i++]="Epsilon"; Greek[i++]="Zeta"
+	Greek[i++]="uni0394"; Greek[i++]="Epsilon"; Greek[i++]="Zeta"
 	Greek[i++]="Eta"; Greek[i++]="Theta"; Greek[i++]="Iota"
 	Greek[i++]="Kappa"; Greek[i++]="Lambda"; Greek[i++]="Mu"
 	Greek[i++]="Nu"; Greek[i++]="Xi"; Greek[i++]="Omicron"
 	Greek[i++]="Pi"; Greek[i++]="Rho"; Greek[i++]="Sigma"
 	Greek[i++]="Tau"; Greek[i++]="Upsilon"; Greek[i++]="Phi"
-	Greek[i++]="Chi"; Greek[i++]="Psi"; Greek[i++]="Omega"
+	Greek[i++]="Chi"; Greek[i++]="Psi"; Greek[i++]="uni03A9"
 greek = Array(24)
 	i = 0
 	greek[i++]="alpha"; greek[i++]="beta";	greek[i++]="gamma"
@@ -38,7 +38,7 @@ Open(fontfile)
 Print("saving BDFs...")
 Generate(fontfile:r:t + "-subst.ttf", "bdf", 0)
 bitmaps = Array(SizeOf($bitmaps))
-i = 0; while (i < SizeOf($bitmaps)) 
+i = 0; while (i < SizeOf($bitmaps))
     bitmaps[i] = $bitmaps[i]
 i++; endloop
 
@@ -82,11 +82,11 @@ i = 2; while (i < $argc)
        # sasage-mono.ttf から文字が読み込めないので、除去する
        # ギリシャ文字小文字は常に。ギリシャ文字大文字とキリル文字は明朝の時のみ
        j = 0; while (j < 24) 
-           if (InFont(Greek[j])) Select(Greek[j]); Clear(); endif
+           if (InFont(greek[j])) Select(greek[j]); Clear(); endif
        j++; endloop
        if (Strcasestr(fontfile:r, "mincho") >= 0) 
            j = 0; while (j < 24) 
-               if (InFont(greek[j])) Select(greek[j]); Clear(); endif
+               if (InFont(Greek[j])) Select(Greek[j]); Clear(); endif
            j++; endloop
            y = 1; while (y <= 9)
                z = 0; while (z <= 9)
