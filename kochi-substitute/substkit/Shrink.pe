@@ -1,10 +1,10 @@
 #!/usr/local/bin/pfaedit -script
 
-# sasage-mono.ttf の未定義のグリフを取り除く
-Open("sasage-mono.ttf");
+# oradano.ttf の未定義のグリフを取り除く
+Open("oradano.ttf");
 Select(0u000, 0u390); Clear()
 Select(0u452, 0uffff); Clear()
-Generate("s.ttf");
+Generate("o.ttf");
 Close()
 
 # 漢字を 61 単位だけ上に動かす
