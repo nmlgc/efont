@@ -1,0 +1,72 @@
+#!/usr/local/bin/pfaedit -script
+#
+# Merge3bitmaps.pe size ISO8859-1.bdf JISX0208.bdf JISX0201.bdf result.bdf
+
+if ($argc <= 5)
+	Print("usage:")
+	Print("	Merge3bitmaps.pe size ISO8859-1.bdf JISX0208.bdf JISX0201.bdf result.bdf");
+	Quit()
+endif
+
+size = $1; ISO8859_1 = $2; JISX0208 = $3; JISX0201 = $4; result = $5
+
+Open(ISO8859_1)
+Reencode("iso10646-1")
+Generate(ISO8859_1:t:r + ".bdf", "bdf", 0)
+Close()
+
+Open(JISX0201)
+Reencode("iso10646-1")
+Generate(JISX0201:t:r + ".bdf", "bdf", 0)
+Close()
+
+Open(JISX0208)
+Reencode("iso10646-1")
+Import(ISO8859_1:t:r + "-" + size + ".bdf")
+Import(JISX0201:t:r + "-"+ size + ".bdf")
+
+if (result == "mplus.bdf")
+	Select("uni0000", "uni001F"); Clear()
+	Select("0x2474"); Cut(); Select("uni3094"); Paste()
+	Select("0x2D21", "0x2D34"); Cut(); Select("uni2460"); Paste()
+	Select("0x2D35", "0x2D3E"); Cut(); Select("uni2160"); Paste()
+	Select("0x2D40"); Cut(); Select("uni3349"); Paste()	# ミリ
+	Select("0x2D41"); Cut(); Select("uni3314"); Paste()	# キロ
+	Select("0x2D42"); Cut(); Select("uni3322"); Paste()	# センチ
+	Select("0x2D43"); Cut(); Select("uni334D"); Paste()	# メートル
+	Select("0x2D44"); Cut(); Select("uni3318"); Paste()	# グラム
+	Select("0x2D45"); Cut(); Select("uni3327"); Paste()	# トン
+	Select("0x2D46"); Cut(); Select("uni3303"); Paste()	# アール
+	Select("0x2D47"); Cut(); Select("uni3336"); Paste()	# ヘクタール
+	Select("0x2D48"); Cut(); Select("uni3351"); Paste()	# リットル
+	Select("0x2D49"); Cut(); Select("uni3357"); Paste()	# ワット
+	Select("0x2D4A"); Cut(); Select("uni330D"); Paste()	# カロリー
+	Select("0x2D4B"); Cut(); Select("uni3326"); Paste()	# ドル
+	Select("0x2D4C"); Cut(); Select("uni3323"); Paste()	# セント
+	Select("0x2D4D"); Cut(); Select("uni332B"); Paste()	# パーセント
+	Select("0x2D4E"); Cut(); Select("uni334A"); Paste()	# ミリバール
+	Select("0x2D4F"); Cut(); Select("uni333B"); Paste()	# ページ
+	Select("0x2D50", "0x2D52"); Cut(); Select("uni339C"); Paste() #mm,cm,km
+	Select("0x2D53"); Cut(); Select("uni338E"); Paste()	# mg
+	Select("0x2D54"); Cut(); Select("uni33C4"); Paste()	# cc
+	Select("0x2D55"); Cut(); Select("uni33A1"); Paste()	# m^2
+	Select("0x2D56"); Cut(); Select("uni337B"); Paste()	# 平成
+	Select("0x2D62"); Cut(); Select("uni2116"); Paste()	# No
+	Select("0x2D63"); Cut(); Select("uni33CD"); Paste()	# KK
+	Select("0x2D64"); Cut(); Select("uni2121"); Paste()	# Tel
+	Select("0x2D65", "0x2D69"); Cut(); Select("uni32A4"); Paste()
+	Select("0x2D6A", "0x2D6B"); Cut(); Select("uni3231"); Paste() #(株)(有)
+	Select("0x2D6C"); Cut(); Select("uni3239"); Paste()	# (代)
+	Select("0x2D6D"); Cut(); Select("uni337E"); Paste()	# 明治
+	Select("0x2D6E"); Cut(); Select("uni337D"); Paste()	# 大正
+	Select("0x2D6F"); Cut(); Select("uni337C"); Paste()	# 昭和
+	Select("0x2D73"); Cut(); Select("uni222E"); Paste()
+	Select("0x2D78"); Cut(); Select("uni221F"); Paste()
+	Select("0x2D79"); Cut(); Select("uni22BF"); Paste()
+endif
+$trace=1
+SetCharCnt(0xff9f+1);
+$trace=0
+	
+Generate(result, "bdf", 0)
+Close()

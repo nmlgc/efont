@@ -1,6 +1,5 @@
 #!/usr/local/bin/pfaedit -script
 
-if (0) 
 # oradano.ttf の未定義のグリフを取り除く
 Open("oradano.ttf")
 Select(0u000, 0u390); Clear()
@@ -15,36 +14,3 @@ Open("wadalab-mincho-descent-1024.sfd")
 SelectAll(); Move(0, 61); Save("M.sfd")
 Close()
 
-Open("Kappa20-0.396/10x20rkm.bdf")
-Reencode("iso10646-1")
-Generate("10x20rk-u.bdf", "bdf", 0)
-Close()
-Open("Kappa20-0.396/10x20m.bdf")
-Reencode("iso10646-1")
-Generate("10x20-u.bdf", "bdf", 0)
-Close()
-Open("Kappa20-0.396/k20m.bdf")
-Reencode("iso10646-1")
-Import("10x20-u-20.bdf")
-Import("10x20rk-u-20.bdf")
-SetCharCnt(65440)
-Generate("kappa.bdf", "bdf", 0)
-Close()
-
-endif
-
-$trace=1
-Open("mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-jisx0201.bdf")
-Reencode("iso10646-1")
-Generate("mplus-0201.bdf", "bdf", 0)
-Close()
-Open("mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-iso.bdf")
-Reencode("iso10646-1")
-Generate("mplus-iso.bdf", "bdf", 0)
-Close()
-Open("mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r.bdf")
-Reencode("iso10646-1")
-Import("mplus-iso-10.bdf")
-Import("mplus-0201-10.bdf")
-Generate("mplus.bdf", "bdf", 0)
-Close()

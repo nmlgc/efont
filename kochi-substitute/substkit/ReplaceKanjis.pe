@@ -34,14 +34,6 @@ greek = Array(24)
 fontfile = $1
 Open(fontfile)
 
-# 埋め込みビットマップを BDF で保存し、余計なラスタライズをしないようにする
-Print("saving BDFs...")
-Generate(fontfile:r:t + "-subst.ttf", "bdf", 0)
-bitmaps = Array(SizeOf($bitmaps))
-i = 0; while (i < SizeOf($bitmaps))
-    bitmaps[i] = $bitmaps[i]
-i++; endloop
-
 # 漢字を取り除く
 # 東風には U+Fxxx の互換漢字は無いので、U+4000〜U+9FFF を削ればいい
 w = 4; while (w <= 9)
@@ -69,7 +61,7 @@ w++; endloop
   y++; endloop
  x++; endloop
 
-# ビットマップを取り除くためには保存して再読み込みするしかない。
+# ビットマップを取り除く。保存して再読み込みするしかない。
 Print("Removing bitmap...")
 Generate(fontfile:r:t + "-subst.ttf", "", 0)
 Close()
@@ -143,18 +135,25 @@ elseif (WorthOutputting("uni301C"))
 	Select("uni301C"); Copy(); Select("uni223C"); Paste()
 endif
 
-# ビットマップの再読込み後、ファイルを生成
-Print("Importing BDFs...")
+# ビットマップの読込み後、ファイルを生成
 Import("mplus-10.bdf")
-i = 0; while (i < SizeOf(bitmaps))
-	bdfname = fontfile:r:t + "-subst-" + bitmaps[i] + ".bdf";
-	Import(bdfname);
-	Print(bdfname);
-i++; endloop
+Import("mplus-11.bdf")
 if (Strcasestr(fontfile:r, "gothic") >= 0)
-	Import("k20gm-u.bdf")
-	Import("k21gm-u.bdf")
+	Import("shinonome-goth-12.bdf")
+	Import("shinonome-goth-13.bdf")
+	Import("shinonome-goth-14.bdf")
+	Import("shinonome-goth-15.bdf")
+	Import("shinonome-goth-16.bdf")
+	Import("shinonome-goth-17.bdf")
+	Import("ayu-20.bdf")
+	Import("ayu-21.bdf")
 else
+	Import("shinonome-min-12.bdf")
+	Import("shinonome-min-13.bdf")
+	Import("shinonome-min-14.bdf")
+	Import("shinonome-min-15.bdf")
+	Import("shinonome-min-16.bdf")
+	Import("shinonome-min-17.bdf")
 	Import("kappa-20.bdf")
 	Import("kappa-21.bdf")
 endif

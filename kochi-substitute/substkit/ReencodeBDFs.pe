@@ -1,0 +1,15 @@
+#!/usr/local/bin/pfaedit -script
+
+Merge3Bitmaps.pe("10", "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-iso.bdf",  "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r.bdf", "mplus_bitmap_fonts-2.0.8/fonts_j/mplus_j10r-jisx0201.bdf", "mplus.bdf")
+
+Merge3Bitmaps.pe("12", "efont-devel/shinonome/12/latin1/shnm6x12a.bdf", "efont-devel/shinonome/12/mincho/shnmk12min.bdf", "efont-devel/shinonome/12/hankaku/shnm6x12r.bdf", "shinonome-min.bdf")
+Merge3Bitmaps.pe("12", "efont-devel/shinonome/12/latin1/shnm6x12a.bdf", "efont-devel/shinonome/12/kanjic/shnmk12.bdf", "efont-devel/shinonome/12/hankaku/shnm6x12r.bdf", "shinonome-goth.bdf")
+
+Merge3Bitmaps.pe("14", "efont-devel/shinonome/14/latin1/shnm7x14a.bdf", "efont-devel/shinonome/14/mincho/shnmk14min.bdf", "efont-devel/shinonome/14/hankaku/shnm7x14r.bdf", "shinonome-min.bdf")
+Merge3Bitmaps.pe("14", "efont-devel/shinonome/14/latin1/shnm7x14a.bdf", "efont-devel/shinonome/14/kanjic/shnmk14.bdf", "efont-devel/shinonome/14/hankaku/shnm7x14r.bdf", "shinonome-goth.bdf")
+
+Merge3Bitmaps.pe("16", "efont-devel/shinonome/16/latin1/shnm8x16a.bdf", "efont-devel/shinonome/16/mincho/shnmk16min.bdf", "efont-devel/shinonome/16/hankaku/shnm8x16r.bdf", "shinonome-min.bdf")
+Merge3Bitmaps.pe("16", "efont-devel/shinonome/16/latin1/shnm8x16a.bdf", "efont-devel/shinonome/16/kanjic/shnmk16.bdf", "efont-devel/shinonome/16/hankaku/shnm8x16r.bdf", "shinonome-goth.bdf")
+
+Merge3Bitmaps.pe("20", "Kappa20-0.396/10x20m.bdf", "Kappa20-0.396/k20m.bdf", "Kappa20-0.396/10x20rkm.bdf", "kappa.bdf")
+Merge3Bitmaps.pe("20", "10x20gm.bdf", "k20gm.bdf", "10x20grkm.bdf", "ayu.bdf")
