@@ -259,7 +259,7 @@ end
 (defun out-to-ps-all (outlines tag psfile 
 			       &optional (nameflag)
 			       (col 9) (line (round (* 0.67 col)))
-			       (printfile t)
+ 			       (printfile t)
 			       &key (remove-overlap t) (set-code-by-kanji t)
 	             )
  (with-open-stream (*standard-output* (open psfile :direction :output))
@@ -305,7 +305,7 @@ end
 	(setq hints (type1hints skeleton tag))
 	(setq type1 (out2type1 (if remove-overlap (makeoutline l) l) hints))
 	(cond (set-code-by-kanji (setq kstr (jiscode kanji)))
-	      (t (format kstr "~X" (incf last))))
+	      (t (setq kstr (format nil "~X" (incf last)))))
 ;	(princ (concatenate 'string "" type1))
 	(princ type1)
 	(format t " <~A> CompD~%" kstr)
