@@ -62,3 +62,43 @@
 	   (xunit . 90.48164) (yunit . 7.883805)	   
 	   (ylimit 0 400)
 	   (center)))
+; 叶 など
+#|
+(deflimit mincho (tate yoko)
+  ((<= y00 y10 y11)
+   (and 
+    (>= (diffabs x01 x10)
+	(* '(0.1 . 0.2) xunit))
+    (>= (diffabs x01 x11)
+	(* '(0.1 . 0.2) xunit)))))
+|#
+
+; 氾 など
+(deflimit mincho (migiue tate)
+  ((<= y10 y02 y11)
+   (>= (diffabs x02 x10)
+       (* '(0.1 . 0.25) xunit))))
+
+; 他 など
+(deflimit mincho (tate migiue)
+  ((<= y00 y10 y01)
+   (>= (diffabs x00 x10)
+       (* '(0.25 . 0.1) xunit))))
+
+#|
+; 灯 など
+(deflimit mincho (hidari yoko)
+  ((<= y00 y10 y01)
+   (>= (diffabs x00 x10)
+       (* '(0.5 . 0.35) xunit))))
+|#
+
+; 扱 など
+(deflimit mincho (yoko hidari)
+  ((<= y10 y01 y11)
+   (>= (diffabs x01 x11)
+       (* '(0.3 . 0.2) xunit))))
+
+
+
+
