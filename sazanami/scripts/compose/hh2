@@ -1,0 +1,12 @@
+# make horizontal ligature from two half-width chars
+# hh2(lig, c1, c2 [, kern])
+
+kern = 0
+if ($argc > 4)	kern = $4; endif
+
+lig = $1; shift
+
+copy($2, lig); 	right(_HW - kern)
+append($1,lig); right(kern/2)
+
+zenkaku()
