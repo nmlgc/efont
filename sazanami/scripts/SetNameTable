@@ -38,9 +38,11 @@ style= $1
 if (style == "min")
     jFontFamilyName = "さざなみ明朝"
     eFontFamilyName = "Sazanami Mincho"
+    PostScriptName = "Sazanami-Mincho-Regular"
 else
     jFontFamilyName = "さざなみゴシック"
     eFontFamilyName = "Sazanami Gothic"
+    PostScriptName = "Sazanami-Gothic-Regular"
 endif
 
 FontSubfamilyName = "Regular"
@@ -70,7 +72,7 @@ SetTTFName(ja_JP, 3, jUniqueFontID)
 SetTTFName(en_US, 4, eFontName)
 SetTTFName(ja_JP, 4, jFontName)
 # SetTTFName(ja_JP, 5, jVersionString)
-# SetTTFName(ja_JP, 6, jPostScriptName)
+SetTTFName(en_US, 6, PostScriptName)
 # SetTTFName(ja_JP, 7, jTradeMark)
 SetTTFName(en_US, 8, eManufacturerName)
 SetTTFName(ja_JP, 8, jManufacturerName)
