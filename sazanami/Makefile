@@ -27,7 +27,7 @@
 #
 # $Id$
 
-VERSION=	20040618
+VERSION=	20040621
 DIST=		sazanami-${VERSION}
 
 LISP=	lisp -batch -quiet -load

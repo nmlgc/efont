@@ -29,7 +29,7 @@
 
 # This file is encoded in UTF-8.
 
-Build = "20040618"	# enter date when you release the font
+Build = "20040621"	# enter date when you release the font
 
 en_US = 0x401; ja_JP = 0x411
 
