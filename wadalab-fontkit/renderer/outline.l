@@ -351,7 +351,7 @@
 		    (bez2bez a6 a7 a8 a3 b6 b7 b8 b3 s1 t1 twidth1)
 		    (bez2bez a6 a7 a8 a3 b0 b4 b5 b6 s1 mint twidth1)))))))
 
-
+;
 (defun compute_bezierbezier (e1 e2 i1 j1 i2 j2)
   (let* ((a0 (cadar e1))(a1 (caddar e1))
 	 (a2 (fourth (car e1)))(a3 (fifth (car e1)))
@@ -391,6 +391,7 @@
 	(rplacd e2 
 		`((,tval ,(- flag) ,point ,i1 ,j1).,(cdr e2)))))))
 
+; 各曲線セグメント上の交差点を t の順に並べる。
 (defun sort_flatten (outs)
   (do ((l outs (cdr l))(ret))
     ((atom l)(nreverse ret))
@@ -656,8 +657,6 @@
 		 .,(and (eq flag -1)(rplaca (cdr cross) -2)
 			(tracestart outs point i1 j1))))))))))
 
-
-
 ;
 ; 2つの直線で接するoutlineをくっつけていく．
 ;
@@ -684,14 +683,12 @@
 ; else return nil
 ; (append_out '((angle 20.0 10.0)(angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)))
 ;             '((angle 5.0 15.0)(angle 10.0 10.0)(angle 15.0 15.0)(angle 10.0 20.0)))
-
-;->((angle +0.2000000^+02 +0.1000000^+02)
-; (angle +0.1500000^+02 +0.1500000^+02)
-; (angle +0.1000000^+02 +0.2000000^+02)
-; (angle +0.5000000^+01 +0.1500000^+02)
-; (angle +0.1000000^+02 +0.1000000^+02)
-; (angle +0.1500000^+02 +0.5000000^+01))
-; 
+; -> ((angle 20.0 10.0)
+;     (angle 15.0 15.0)
+;     (angle 10.0 20.0)
+;     (angle 5.0 15.0)
+;     (angle 10.0 10.0)
+;     (angle 15.0 5.0))
 ;
 #|
 (defun append_out (out1 out2)
