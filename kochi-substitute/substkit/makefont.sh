@@ -9,7 +9,6 @@
 #  bzcat wadalab-mincho-descent-1024.sfd.bz2 > wadalab-mincho-descent-1024.sfd
 # http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/sasagemono20030620.tgz
 #  tar xvfz sasagemono20030620.tgz sasage-mono.ttf
-perl pfaedit030619-kludge.pl
 pfaedit -script Shrink.pe
 pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd sasage-mono.ttf
 rm kochi-gothic-subst-*.bdf gothic-Fix-*.bdf
