@@ -42,6 +42,7 @@ endloop
 
 SetNameTable(style)
 SetFontHasVerticalMetrics(1)
+SetPanose(3, 9)	 // monospaced
 
 Generate(ttf, "ttf", 0x80084)
 
