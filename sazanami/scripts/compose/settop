@@ -1,15 +1,12 @@
 # set top of bbox to Y.
 #
-# settop(Y)
-# settop(cid, Y)
+# settop(y)
+# settop(gid, Y)
 
-if ($argc >=3)
+if ($argc >= 3)
 	top = gettop($1); y = $2
 else
-	c = $curcid;
 	top = gettop(); y = $1
-	Select(c)
 endif
 
-dy = y - top
-up(dy);
+dy = y - top;  up(dy)
