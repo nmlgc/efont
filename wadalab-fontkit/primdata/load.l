@@ -4,6 +4,7 @@
 	  "prim-patch.l"
 	  "prim-jis2.l"
 	  "prim-jis3.l"
+	  "prim-extra.l"
 	  "prim-hira.l"
 	  "prim-kata.l"
 	  "prim-sym.l"

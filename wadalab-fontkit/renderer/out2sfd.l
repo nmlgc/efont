@@ -147,6 +147,9 @@ FitToEm: 1
 
 (defun name2unicode (charname)
   (let ((namestr (symbol-name charname)))
+    (and (equal (subseq namestr 0 3) "cid")
+	 (stringp (symbol-value namestr))
+	 (setq namestr (symbol-value namestr)))
     (cond 
      ((equal (subseq namestr 0 2) "1-")
       (hojo2uni (parse-integer (remove #\- (subseq namestr 2)))))

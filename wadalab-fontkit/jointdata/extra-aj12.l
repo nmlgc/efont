@@ -48,7 +48,7 @@
 ;------------------------------------------------------------------------------
 ; CJK Compatibility ideographs (subset of IBM Selected Kanji)
 ;------------------------------------------------------------------------------
-(setq 旧朗 '(yoko 旧郎へん 月))
+(setq 旧朗 '(yoko 旧良へん 月))
 (setq uniF929 '旧朗)
 (setq 旧旧隆 '(yoko こざとへん (tate のぶん (kashira 一) 生)))
 (setq uniF9DC '旧旧隆)
@@ -274,7 +274,7 @@
 (setq cid7721 '旧噌)
 (setq cid7722 '(nyou しんにゅう 朔))
 ;ぼう倉の下
-(setq ぼう倉 (tate ひとかしら ぼう倉の下))
+(setq ぼう倉 '(tate ひとかしら ぼう倉の下))
 (setq ぼう創 '(yoko ぼう倉 りっとう))
 (setq cid7723 'ぼう創)
 (setq cid7724 '1-32-43)
