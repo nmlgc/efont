@@ -42,13 +42,13 @@ while ($argc > 1)
 	else
 		MergeFonts($1); shift
 	endif
-	
 endloop
 
+"scripts/compose/fixupOutline"()
+
 SetNameTable(style)
-SetFontHasVerticalMetrics(1)
 SetPanose(3, 9)	 // monospaced
 
-Generate(ttf, "ttf", 0x80084)
+Generate(ttf, "ttf", 0x80004)
 
 Quit()
