@@ -90,8 +90,11 @@ i = 2; while (i < $argc)
            j++; endloop
            y = 1; while (y <= 9)
                z = 0; while (z <= 9)
-                   cyrillic = "afii100" + hex[y] + hex[z]
-                   if (InFont(cyrillic)) Select(cyrillic); Clear(); endif
+		   cyrillic = "afii100" + hex[y] + hex[z]
+		   vcyrillic = cyrillic + ".vert"
+		   if (InFont(cyrillic) && InFont(vcyrillic))
+			Select(cyrillic); Clear()
+		   endif
                z++; endloop
            y++; endloop;
        endif
@@ -111,11 +114,11 @@ if ($argc > 2)
 
     i++; endloop
     y = 1; while (y <= 9)
-        z = 0; while (z <= 15)
-            cyrillic = "afii100" + hex[y] + hex[z]
-            if (InFont(cyrillic))
-    	        vcyrillic = cyrillic + ".vert"
-  	        Select(cyrillic); Copy(); Select(vcyrillic); Paste()
+        z = 0; while (z <= 9)
+	    cyrillic = "afii100" + hex[y] + hex[z]
+	    vcyrillic = cyrillic + ".vert"
+	    if (InFont(cyrillic) && InFont(vcyrillic))
+		Select(cyrillic); Copy(); Select(vcyrillic); Paste()
             endif
         z++; endloop
     y++; endloop;
