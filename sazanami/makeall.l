@@ -44,7 +44,7 @@
 (load-directory "../wadalab-fontkit/kanjidata/")
 
 (load "sazanami-patch.l")
-(setq allkanji (append '(仝 々) alljis1 alljis2))
+(setq allkanji (append '(仝 々) alljis1 alljis2 ibm-selected-kanji-nojis))
 ; 補助漢字がいらない場合は以下をコメントアウト
 (mapc #'(lambda (ku)
 	  (nconc allkanji (eval (intern (concatenate 'string "HOJO" ku)))))
