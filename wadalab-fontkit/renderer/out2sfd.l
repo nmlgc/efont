@@ -1427,12 +1427,21 @@ EndChar
 /HIRA3       { 0 0 18 256 div } def
 /FRAME       { 0 0 19 256 div } def
 /newstroke {
-	setrgbcolor  % consume stack
+	setrgbcolor  % consume 1 arg on stack
 	10 setlinewidth
-	1 setlinecap 1 setlinejoin
+	1 setlinecap 0 setlinejoin
 	newpath
 } def
-
+/newjoint {
+	gsave
+	0 1 0 setrgbcolor
+	2 setlinewidth
+	newpath
+	moveto % consume 2 args on stack
+	0 0 rlineto
+	draw
+	grestore
+} def
 0 800 translate 2.5 -2.5 scale
 
 "))
@@ -1449,11 +1458,19 @@ EndChar
 	    (cdr point-indexes))
     (format t "stroke~%")))
 
+(defun output-skel2eps-joints (points)
+  (format t "~%")
+  (mapcar #'(lambda (p) (format t "~A ~A newjoint~%" (car p) (cadr p)))
+	  (remove-if-not #'(lambda (pt) 
+			     (member '(LINK-OK T) (cddr pt) :test #'equal))
+			 points)))
+
 (defun output-skel2eps-body (skeleton)
   (let* ((points (car skeleton))
 	 (strokes (cadr skeleton))
 	 (frameinfo (cddr skeleton)))
     (mapcar #'(lambda (s) (output-skel2eps-stroke s points)) strokes)
+    (output-skel2eps-joints points)
     (output-skel2eps-frame)))
 
 (defun output-skel2eps-frame ()
