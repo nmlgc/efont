@@ -70,9 +70,9 @@ Open(fontfile:r:t + "-subst.ttf")
 # 残りのファイルを取り込む
 i = 2; while (i < $argc) 
 
-    if (Strcasestr($argv[i], "sasage-mono.ttf") >= 0) 
+    if (Strcasestr($argv[i], "o.ttf") >= 0) 
        # 和田研フォントから読み込んでしまった不要な非漢字のせいで
-       # sasage-mono.ttf から文字が読み込めないので、除去する
+       # oradano.ttf から文字が読み込めないので、除去する
        # ギリシャ文字小文字は常に。ギリシャ文字大文字とキリル文字は明朝の時のみ
        j = 0; while (j < 24) 
            if (InFont(greek[j])) 
