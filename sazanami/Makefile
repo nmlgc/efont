@@ -109,9 +109,9 @@ release: README
 	tar cvfy ${DIST}.tar.bz2 ${DIST}
 
 clean: 
-	rm -f *.ttf *.core *~
+	rm -rf ${DIST} *.ttf *.core *~
 	(cd bdf/; make clean)
 
 allclean:
-	rm -f *.ps *.sfd *.ttf *.core *.bz2 *~
+	rm -rf ${DIST} *.ps *.sfd *.ttf *.core *.bz2 *~
 	(cd bdf/; make clean)
