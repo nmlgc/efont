@@ -1207,6 +1207,7 @@
 ;旧えんにょう
 ;旧かたはね
 ;旧かたはねづくり
+;旧しめすへん
 ;旧しょうへん
 (setq 旧しょくへん '(tate ひとかしらへん (kashira 一) 旧艮へん))
 ;旧しんにゅう
@@ -1311,7 +1312,7 @@
 ;旧肖
 ;旧丈
 (setq 旧食 '(tate ひとかしら 旧良))
-(setq 旧神 '(yoko 示へん 申))
+(setq 旧神 '(yoko 旧しめすへん 申))
 (setq 旧秦 '(tate 三人 禾))
 (setq 旧尋 '(tate 帚の上 エロ 寸))
 (setq 旧遂 '(nyou 旧しんにゅう (tate 八 豕つくり)))
@@ -2138,7 +2139,6 @@
 (setq 磁 '(yoko いしへん 茲の略字))
 ;示
 ;示づくり
-;示へん
 (setq 示示 '(yoko 示 示))
 ;而
 ;耳
@@ -6236,24 +6236,24 @@
 (setq 礙 '(yoko いしへん 疑))
 (setq 礬 '(tate 欝の上 大がしら (kashira 石)))
 (setq 礫 '(yoko いしへん 樂))
-(setq 祀 '(yoko 示へん 巳))
-(setq 祠 '(yoko 示へん 司))
-(setq 祗 '(yoko 示へん 氏一))
+(setq 祀 '(yoko 旧しめすへん 巳))
+(setq 祠 '(yoko 旧しめすへん 司))
+(setq 祗 '(yoko 旧しめすへん 氏一))
 (setq 祟 '(tate 出 示))
-(setq 祚 '(yoko 示へん 乍))
-(setq 祕 '(yoko 示へん 必))
-(setq 祓 '(yoko 示へん 拔の右))
-(setq 祺 '(yoko 示へん 其))
-(setq 祿 '(yoko 示へん 碌の右))
-(setq 禊 '(yoko 示へん 旧契))
-(setq 禝 '(yoko 示へん (tate 田 にんにょう すいにょう)))
-(setq 禧 '(yoko 示へん 喜))
+(setq 祚 '(yoko 旧しめすへん 乍))
+(setq 祕 '(yoko 旧しめすへん 必))
+(setq 祓 '(yoko 旧しめすへん 拔の右))
+(setq 祺 '(yoko 旧しめすへん 其))
+(setq 祿 '(yoko 旧しめすへん 碌の右))
+(setq 禊 '(yoko 旧しめすへん 旧契))
+(setq 禝 '(yoko 旧しめすへん (tate 田 にんにょう すいにょう)))
+(setq 禧 '(yoko 旧しめすへん 喜))
 (setq 齋 '(tate 齋の上 斎の下づくり))
 (setq 齋の上 '(tate なべぶた (yoko 刀 わい 齊の中右)))
 (setq 齋の上へん '(tate なべぶた (yoko 刀 わい 留の左上)))
-(setq 禪 '(yoko 示へん 單))
-(setq 禮 '(yoko 示へん 豊))
-(setq 禳 '(yoko 示へん 襄))
+(setq 禪 '(yoko 旧しめすへん 單))
+(setq 禮 '(yoko 旧しめすへん 豊))
+(setq 禳 '(yoko 旧しめすへん 襄))
 ;禹
 ;禺
 ;秉
@@ -7522,7 +7522,7 @@
 (setq 隴 '(yoko こざとへん 龍))
 ;隶
 (setq 隸 '(yoko 隸の左 隷の右))
-(setq 隸の左 '(tate きへん 示へん))
+(setq 隸の左 '(tate きへん 示))
 ;隹
 (setq 隹乃 '(tate 隹 乃))
 (setq 隹隹 '(yoko 隹 隹))
