@@ -259,7 +259,8 @@ end
 (defun out-to-ps-all (outlines tag psfile 
 			       &optional (nameflag)
 			       (col 9) (line (round (* 0.67 col)))
-			       (printfile t))
+			       (printfile t)
+			       &key (remove-overlap t))
  (with-open-stream (*standard-output* (open psfile :direction :output))
    (let* ((scale (floor (* 160.0 (min (/ 9.0 col) (/ 6.0 line)))))
 	  (ii nil)(jj nil)(page nil)(last nil)
@@ -301,9 +302,7 @@ end
 	(format t "0 setlinewidth newpath 0 0 moveto 400 0 lineto~%")
 	(format t "400 400 lineto 0 400 lineto 0 0 lineto stroke~%")
 	(setq hints (type1hints skeleton tag))
-;;;; 一時的に重複除去をオフにしたいときは次行を変更
-	(setq type1 (out2type1 (makeoutline l) hints))
-;;;;	(setq type1 (out2type1 l hints))
+	(setq type1 (out2type1 (if remove-overlap (makeoutline l) l) hints))
 	(setq kstr (jiscode kanji))
 ;	(princ (concatenate 'string "" type1))
 	(princ type1)
