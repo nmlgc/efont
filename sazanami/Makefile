@@ -32,7 +32,7 @@ DIST=		sazanami-${VERSION}
 
 LISP=	lisp -batch -quiet -load
 #LISP=	clisp -interactive-debug
-FONTFORGE=	/usr/local/bin/fontforge -script
+FONTFORGE=	HOME=. /usr/local/bin/fontforge -script
 
 BUILDTTF=	${FONTFORGE} scripts/BuildTTF.pe
 
