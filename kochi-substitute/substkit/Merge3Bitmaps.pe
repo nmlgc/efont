@@ -11,14 +11,14 @@ endif
 size = $1; ISO8859_1 = $2; JISX0208 = $3; JISX0201 = $4; result = $5
 
 Open(ISO8859_1)
-Select(0u0,0u1F, 0u7F,0u9F); Clear()
+Select(0x0,0x1F, 0x7F,0x9F); Clear()
 Reencode("iso10646-1")
 Generate(ISO8859_1:t:r + ".bdf", "bdf", 0)
 SetCharCnt(65536)
 Close()
 
 Open(JISX0201)
-Select(0u0,0u1F, 0u7F,0uA0, 0uE0,0uFF); Clear()
+Select(0x0,0x1F, 0x7F,0xA0, 0xE0,0xFF); Clear()
 Reencode("iso10646-1")
 Generate(JISX0201:t:r + ".bdf", "bdf", 0)
 SetCharCnt(65536)
@@ -27,7 +27,13 @@ Close()
 Open(JISX0208)
 
 if (result == "mplus.bdf")
+	Select("0x2146"); SetCharName("uni2018")
+	Select("0x2147"); SetCharName("uni2019")
+	Select("0x2148"); SetCharName("uni201C")
+	Select("0x2149"); SetCharName("uni201D")
+
 	Select("0x2474"); SetCharName("uni3094")
+
 	Select("0x2D21"); SetCharName("uni2460")
 	Select("0x2D22"); SetCharName("uni2461")
 	Select("0x2D23"); SetCharName("uni2462")
@@ -81,8 +87,10 @@ if (result == "mplus.bdf")
 	Select("0x2D52"); SetCharName("uni339E") 	# km
 	Select("0x2D53"); SetCharName("uni338E")	# mg
 	Select("0x2D54"); SetCharName("uni33C4")	# cc
-	Select("0x2D55"); SetCharName("uni33A1")	# m^2
+	Select("0x2D56"); SetCharName("uni33A1")	# m^2
 	Select("0x2D5F"); SetCharName("uni337B")	# Ê¿À®
+	Select("0x2D60"); SetCharName("uni301D.vert")	#
+	Select("0x2D61"); SetCharName("uni301E.vert")	#
 	Select("0x2D62"); SetCharName("uni2116")	# No
 	Select("0x2D63"); SetCharName("uni33CD")	# KK
 	Select("0x2D64"); SetCharName("uni2121")	# Tel
@@ -97,9 +105,19 @@ if (result == "mplus.bdf")
 	Select("0x2D6D"); SetCharName("uni337E")	# ÌÀ¼£
 	Select("0x2D6E"); SetCharName("uni337D")	# ÂçÀµ
 	Select("0x2D6F"); SetCharName("uni337C")	# ¾¼ÏÂ
+	Select("0x2D70");  Clear()
+	Select("0x2D71");  Clear()
+	Select("0x2D72");  Clear()
 	Select("0x2D73"); SetCharName("uni222E")
+	Select("0x2D74");  Clear()
+	Select("0x2D75");  Clear()
+	Select("0x2D76");  Clear()
+	Select("0x2D77");  Clear()
 	Select("0x2D78"); SetCharName("uni221F")
 	Select("0x2D79"); SetCharName("uni22BF")
+	Select("0x2D7A");  Clear()
+	Select("0x2D7B");  Clear()
+	Select("0x2D7C");  Clear()
 endif
 
 Reencode("iso10646-1")
