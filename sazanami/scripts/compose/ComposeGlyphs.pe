@@ -42,11 +42,107 @@ if (!defined("sterling") && defined("uniFFE1"))
 	copy("uniFFE1", "sterling");
 	xscaletogwidth(_HW-_20th); centerinhankaku()
 endif
+# currency 欠
+if (!defined("yen"))
+	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
+endif
 
-accented("Aacute",      "A", "acute"); hankaku()
-accented("Agrave",      "A", "grave"); hankaku()
-accented("Acircumflex", "A", "asciicircum"); hankaku()
-accented("Atilde",      "A", "asciitilde"); hankaku()
-accented("Adieresis",   "A", "dieresis"); hankaku()
+#------------------------------------------------------------------------------
+# アクセント記号の定義
+#------------------------------------------------------------------------------
+# Spacing Modifier Letters のコードポイントを使用する
+uml   = 0u00A8
+acute = 0u02CA
+circ  = 0u02C6
+caron = 0u02C7
+macr  = 0u02C9
+grave = 0u02CB
+ring  = 0u02DA
+tilde = 0u02DC	# SMALL TILDE
+
+copy("acute", acute); centerinhankaku()
+# 東風の grave は逆アポストロフィ形なので、acute を左右反転する
+copy(acute, grave); HFlip(); CorrectDirection()	; centerinhankaku()
+copy("asciicircum", circ)
+copy(circ, caron); VFlip(); CorrectDirection()
+copy("degree", ring); centerinhankaku()
+copy("asciitilde", tilde); centerinhankaku()
+
+#------------------------------------------------------------------------------
+# Latin-1 の欧文 (欠けている物のみ)
+#------------------------------------------------------------------------------
+# 大文字
+accented("Agrave",      "A", grave); hankaku()
+accented("Aacute",      "A", acute); hankaku()
+accented("Acircumflex", "A", circ);  hankaku()
+accented("Atilde",      "A", tilde); hankaku()
+accented("Adieresis",   "A", uml);   hankaku()
+accented("Aring",       "A", ring);  hankaku()
+# AE, Ccedil 欠
+accented("Egrave",      "E", grave); hankaku()
+accented("Eacute",      "E", acute); hankaku()
+accented("Ecircumflex", "E", circ);  hankaku()
+accented("Edieresis",   "E", uml);   hankaku()
+accented("Igrave",      "I", grave); hankaku()
+accented("Iacute",      "I", acute); hankaku()
+accented("Icircumflex", "I", circ);  hankaku()
+accented("Idieresis",   "I", uml);   hankaku()
+
+# Eth = 'D' + '-'
+copy("hyphen", "Eth"); Scale(70,120); left(_6th)
+append("D", "Eth"); right(_6th); RemoveOverlap(); centerinhankaku()
+
+accented("Ntilde",      "N", tilde); hankaku()
+accented("Ograve",      "O", grave); hankaku()
+accented("Oacute",      "O", acute); hankaku()
+accented("Ocircumflex", "O", circ);  hankaku()
+accented("Otilde",      "O", tilde); hankaku()
+accented("Odieresis",   "O", uml);   hankaku()
+
+# Oslash
+copy("O", "Oslash"); append("slash", "Oslash"); RemoveOverlap()
+
+accented("Ugrave",      "U", grave); hankaku()
+accented("Uacute",      "U", acute); hankaku()
+accented("Ucircumflex", "U", circ);  hankaku()
+accented("Udieresis",   "U", uml);   hankaku()
+accented("Yacute",      "Y", acute); hankaku()
+# Thorn, szlig 欠
+
+# 小文字
+accented("agrave",      "a", grave); hankaku()
+accented("aacute",      "a", acute); hankaku()
+accented("acircumflex", "a", circ);  hankaku()
+accented("atilde",      "a", tilde); hankaku()
+accented("adieresis",   "a", uml);   hankaku()
+accented("aring",       "a", ring);  hankaku()
+# ae, ccedil 欠
+accented("egrave",      "e", grave); hankaku()
+accented("eacute",      "e", acute); hankaku()
+accented("ecircumflex", "e", circ);  hankaku()
+accented("edieresis",   "e", uml);   hankaku()
+accented("igrave",      "i", grave); hankaku()
+accented("iacute",      "i", acute); hankaku()
+accented("icircumflex", "i", circ);  hankaku()
+accented("idieresis",   "i", uml);   hankaku()
+# eth 欠
+accented("ntilde",      "n", tilde); hankaku()
+accented("ograve",      "o", grave); hankaku()
+accented("oacute",      "o", acute); hankaku()
+accented("ocircumflex", "o", circ);  hankaku()
+accented("otilde",      "o", tilde); hankaku()
+accented("odieresis",   "o", uml);   hankaku()
+
+# oslash
+copy("slash", "oslash"); Scale(80,75, _HW,0); centerinhankaku(); 
+append("o", "oslash"); RemoveOverlap(); centerinhankaku()
+
+accented("ugrave",      "u", grave); hankaku()
+accented("uacute",      "u", acute); hankaku()
+accented("ucircumflex", "u", circ);  hankaku()
+accented("udieresis",   "u", uml);   hankaku()
+accented("yacute",      "y", acute); hankaku()
+# thorn 欠
+accented("ydieresis",   "y", uml);   hankaku()
 
 #Save($2)
