@@ -116,10 +116,8 @@
        (bezier .,(inter2 b3 b2 ratio))
        (angle .,b3)))))
 
-
 ;
-(defkazari gothic ((tate hidari tatehidari tatehane kokoro tasuki magaritate) 0 
-	    (tate hidari tatehidari tatehane kokoro tasuki magaritate) 1)
+(defkazari gothic ((hidari tasuki magaritate) 0 (hidari tasuki magaritate) 1)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -136,6 +134,28 @@
 	    (normlen2 (* len 0.5) (diff2 p1 p0))))
     (angle .,
      (plus2 p1 (normlen2 (+ (* len 0.8)(* len sintheta)) (diff2 p3 p1)))))))
+;
+; 2004050: 縦画の打ち込みを水平に近くしてみた。(垂直方向≒75%, 水平≒90%)
+; オリジナルは上の定義を参照のこと。
+;
+(defkazari gothic ((tate tatehidari tatehane kokoro) 0 
+	    (tate tatehidari tatehane kokoro) 1)
+  (let* ((p0 (svref cross 0))
+	 (p1 (svref cross 1))
+	 (p2 (svref cross 2))
+	 (p3 (svref cross 3))
+	 (d0 (norm2 (diff2 p3 p1)))
+	 (len (metric2 p0 p1))
+	 (sintheta (* 0.5 (car d0))))
+  `((angle .,p0)
+    (bezier .,
+     (plus2 p1 (normlen2 (+ (* len 0.12)(* 0.9 len sintheta)) (diff2 p3 p1))
+	    (normlen2 (* len 0.5) (diff2 p1 p0))))
+    (bezier .,
+     (plus2 p1 (normlen2 (+ (* len 0.38)(* 1.35 len sintheta)) (diff2 p3 p1))
+	    (normlen2 (* len 0.5) (diff2 p1 p0))))
+    (angle .,
+     (plus2 p1 (normlen2 (+ (* len 0.55)(* len sintheta)) (diff2 p3 p1)))))))
 ;
 (defkazari gothic ((tatehane) 0 
 	    (tatehane) 1)
