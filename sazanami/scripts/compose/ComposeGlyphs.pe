@@ -27,30 +27,62 @@
 #
 # $Id$
 
-#Open($1)
-
 setVariables()
 
-if (!defined("exclamdown")) 
+// if (!defined("exclamdown")) 
 	copy("!", "exclamdown"); hcrotate(180)
-endif
-if (!defined("cent") && defined("uniFFE0"))
+// endif
+// if (!defined("cent") && defined("uniFFE0"))
 	copy("uniFFE0", "cent")
 	xscaletogwidth(_HW-_10th); centerinhankaku()
-endif
-if (!defined("sterling") && defined("uniFFE1"))
+// endif
+// if (!defined("sterling") && defined("uniFFE1"))
 	copy("uniFFE1", "sterling");
 	xscaletogwidth(_HW-_20th); centerinhankaku()
-endif
-# currency $B7g(B
-if (!defined("yen"))
+// endif
+# currency ·ç
+// if (!defined("yen"))
 	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
-endif
+// endif
+# brokenbar ·ç
+# section, dieresis ¢º JIS X 0208
+// if (!defined("copyright") && defined(_CIRCLE) && defined("uniFF43"))
+	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
+// endif
+// if (!defined("ordfeminine"))
+	copy("underscore", "ordfeminine"); down(_40th)
+	append("a", "ordfeminine");
+	super("ordfeminine");
+// endif
+// if (!defined("guillemotleft"))
+	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
+	hankaku()
+// endif
+// if (!defined("logicalnot") && defined("uniFFE2"))
+	copy("uniFFE2", "logicalnot"); xsccaletogwidth(_HW-_10th);
+	centerinhankaku(); left(_100th)
+// endif
+// if (!defined("softhyphen"))
+	copy("hyphen", "softhyphen")
+// endif
+// if (!defined("registered") && defined(_CIRCLE) && defined("uniFF32")
+	circle("copyright", "uniFF43"); Scale(50, 0,_TOP); centerinhankaku()
+// endif
+
+// if (!defined "onequarter")
+	hdfrac("onequarter", "one", "four")
+// endif
+// if (!defined "onehalf")
+	hdfrac("onehalf", "one", "two")
+// endif
+// if (!defined "threequarters")
+	hdfrac("threequarters", "three", "four")
+// endif
 
 #------------------------------------------------------------------------------
-# $B%"%/%;%s%H5-9f$NDj5A(B
+# ¥¢¥¯¥»¥ó¥Èµ­¹æ¤ÎÄêµÁ
 #------------------------------------------------------------------------------
-# Spacing Modifier Letters $B$N%3!<%I%]%$%s%H$r;HMQ$9$k(B
+# Spacing Modifier Letters ¤Î¥³¡¼¥É¥Ý¥¤¥ó¥È¤ò»ÈÍÑ¤¹¤ë
 uml   = 0u00A8
 acute = 0u02CA
 circ  = 0u02C6
@@ -61,7 +93,7 @@ ring  = 0u02DA
 tilde = 0u02DC	# SMALL TILDE
 
 copy("acute", acute); centerinhankaku()
-# $BElIw$N(B grave $B$O5U%"%]%9%H%m%U%#7A$J$N$G!"(Bacute $B$r:81&H?E>$9$k(B
+# ÅìÉ÷¤Î grave ¤ÏµÕ¥¢¥Ý¥¹¥È¥í¥Õ¥£·Á¤Ê¤Î¤Ç¡¢acute ¤òº¸±¦È¿Å¾¤¹¤ë
 copy(acute, grave); HFlip(); CorrectDirection()	; centerinhankaku()
 copy("asciicircum", circ)
 copy(circ, caron); VFlip(); CorrectDirection()
@@ -69,16 +101,16 @@ copy("degree", ring); centerinhankaku()
 copy("asciitilde", tilde); centerinhankaku()
 
 #------------------------------------------------------------------------------
-# Latin-1 $B$N2$J8(B ($B7g$1$F$$$kJ*$N$_(B)
+# Latin-1 ¤Î²¤Ê¸ (·ç¤±¤Æ¤¤¤ëÊª¤Î¤ß)
 #------------------------------------------------------------------------------
-# $BBgJ8;z(B
+# ÂçÊ¸»ú
 accented("Agrave",      "A", grave); hankaku()
 accented("Aacute",      "A", acute); hankaku()
 accented("Acircumflex", "A", circ);  hankaku()
 accented("Atilde",      "A", tilde); hankaku()
 accented("Adieresis",   "A", uml);   hankaku()
 accented("Aring",       "A", ring);  hankaku()
-# AE, Ccedil $B7g(B
+# AE, Ccedil ·ç
 accented("Egrave",      "E", grave); hankaku()
 accented("Eacute",      "E", acute); hankaku()
 accented("Ecircumflex", "E", circ);  hankaku()
@@ -107,16 +139,16 @@ accented("Uacute",      "U", acute); hankaku()
 accented("Ucircumflex", "U", circ);  hankaku()
 accented("Udieresis",   "U", uml);   hankaku()
 accented("Yacute",      "Y", acute); hankaku()
-# Thorn, szlig $B7g(B
+# Thorn, szlig ·ç
 
-# $B>.J8;z(B
+# ¾®Ê¸»ú
 accented("agrave",      "a", grave); hankaku()
 accented("aacute",      "a", acute); hankaku()
 accented("acircumflex", "a", circ);  hankaku()
 accented("atilde",      "a", tilde); hankaku()
 accented("adieresis",   "a", uml);   hankaku()
 accented("aring",       "a", ring);  hankaku()
-# ae, ccedil $B7g(B
+# ae, ccedil ·ç
 accented("egrave",      "e", grave); hankaku()
 accented("eacute",      "e", acute); hankaku()
 accented("ecircumflex", "e", circ);  hankaku()
@@ -125,7 +157,7 @@ accented("igrave",      "i", grave); hankaku()
 accented("iacute",      "i", acute); hankaku()
 accented("icircumflex", "i", circ);  hankaku()
 accented("idieresis",   "i", uml);   hankaku()
-# eth $B7g(B
+# eth ·ç
 accented("ntilde",      "n", tilde); hankaku()
 accented("ograve",      "o", grave); hankaku()
 accented("oacute",      "o", acute); hankaku()
@@ -142,7 +174,7 @@ accented("uacute",      "u", acute); hankaku()
 accented("ucircumflex", "u", circ);  hankaku()
 accented("udieresis",   "u", uml);   hankaku()
 accented("yacute",      "y", acute); hankaku()
-# thorn $B7g(B
+# thorn ·ç
 accented("ydieresis",   "y", uml);   hankaku()
 
 #Save($2)

@@ -1,0 +1,10 @@
+lig = $1; shift
+
+xshift = _HW * (100 -_SCRIPTX) / 100
+yshift = _SUPRAISE * _SCRIPTY / 100
+
+copy($2,lig); Move(xshift, -yshift*2)
+append(_SLASH,lig);  Move(xshift, -yshift*2)
+append($1, lig);  up(yshift*2)
+Scale(_SCRIPTX,_SCRIPTY, 0,0); up(yshift/2)
+centerinhankaku()
