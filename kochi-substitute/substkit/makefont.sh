@@ -1,5 +1,5 @@
 #!/bin/sh -v
-perl -e pfaedit030619-kludge.pl
+perl pfaedit030619-kludge.pl
 pfaedit -script Shrink.pe
 pfaedit -script ReplaceKanjis.pe  kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd sasage-mono.ttf
 rm kochi-gothic-subst-*.bdf gothic-Fix-*.bdf
