@@ -66,7 +66,7 @@ GOTHIC_SRC=	Sznm-G-K.sfd src/outline/sazanami-nokanji/gothic.sfd \
 		${GOTHIC_BDF}
 MINCHO_SRC=	Sznm-M-K.sfd src/outline/sazanami-nokanji/mincho.sfd \
 		src/outline/kochi-nokanji/kochi-mincho-nokanji.sfd \
-		src/outline/oradano/oradano.ttf \
+		oradano.sfd \
 		${MINCHO_BDF}
 
 all: sazanami-gothic.ttf sazanami-mincho.ttf 
@@ -84,6 +84,9 @@ Sznm-G-K.sfd: ${SKEL_SRC}
 	${LISP} ./makeall.l
 
 sfd: Sznm-G-K.sfd Sznm-M-K.sfd
+
+oradano.sfd: src/outline/oradano/oradano.ttf
+	${FONTFORGE} scripts/OradanoSubset.pe $(.ALLSRC) $(.TARGET)
 
 ${BDF}:
 	(cd bdf/; make)
