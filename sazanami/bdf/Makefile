@@ -50,10 +50,10 @@ S14_GOTHIC_SRC= ${S14DIR}/shnm7x14r.bdf ${S14DIR}/shnmk14.bdf ${S14DIR}/shnm7x14
 S14_MINCHO_SRC= ${S14DIR}/shnm7x14r.bdf ${S14DIR}/shnmk14min.bdf ${S14DIR}/shnm7x14a.bdf
 S16_GOTHIC_SRC= ${S16DIR}/shnm8x16r.bdf ${S16DIR}/shnmk16.bdf ${S16DIR}/shnm8x16a.bdf
 S16_MINCHO_SRC= ${S16DIR}/shnm8x16r.bdf ${S16DIR}/shnmk16min.bdf ${S16DIR}/shnm8x16a.bdf
-AYU18_GOTHIC_SRC=	${AYUDIR}/9x18gm.bdf ${AYUDIR}/k18gm.bdf ${AYUDIR}/9x18grkm.bdf 
-AYU18_MINCHO_SRC=	${AYUDIR}/9x18m.bdf ${AYUDIR}/k18m.bdf ${AYUDIR}/9x18rkm.bdf 
-AYU20_GOTHIC_SRC=	${AYUDIR}/10x20gm.bdf ${AYUDIR}/k20gm.bdf ${AYUDIR}/10x20grkm.bdf 
-KAPPA_SRC=	${KAPPADIR}/10x20m.bdf ${KAPPADIR}/k20m.bdf ${KAPPADIR}/10x20rkm.bdf
+AYU18_GOTHIC_SRC=	9x18gm.bdf ${AYUDIR}/k18gm.bdf 9x18grkm.bdf
+AYU18_MINCHO_SRC=	9x18m.bdf ${AYUDIR}/k18m.bdf 9x18rkm.bdf
+AYU20_GOTHIC_SRC=	10x20gm.bdf ${AYUDIR}/k20gm.bdf 10x20grkm.bdf
+KAPPA_SRC=	10x20m.bdf ${KAPPADIR}/k20m.bdf 10x20rkm.bdf
 
 UNIBDF= misaki-gothic-8.bdf misaki-mincho-8.bdf \
 	misaki-gothic-9.bdf misaki-mincho-9.bdf \
@@ -71,11 +71,38 @@ UNIBDF= misaki-gothic-8.bdf misaki-mincho-8.bdf \
 
 all: ${UNIBDF}
 
+# BBOX で指定されたより多いビットが右にある
 misaki-goth.bdf: ${MISAKIDIR}/misaki.bdf
 	sed 's/^\(..\)00$$/\1/' $(.ALLSRC) > $(.TARGET)
 
 misaki-min.bdf: misaki.bdf
 	sed 's/^\(..\)00$$/\1/' $(.ALLSRC) > $(.TARGET)
+
+# FontForge-20040618 には BDF 文字名が PostScript 名でなければいけないとして
+# いるので、xc/misc/8x16.bdf などが正しく読み込めない
+9x18gm.bdf: ${AYUDIR}/9x18gm.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+9x18grkm.bdf: ${AYUDIR}/9x18grkm.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+9x18m.bdf: ${AYUDIR}/9x18m.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+9x18rkm.bdf: ${AYUDIR}/9x18rkm.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+10x20gm.bdf: ${AYUDIR}/10x20gm.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+10x20grkm.bdf: ${AYUDIR}/10x20grkm.bdf
+	sed 's/^STARTCHAR.*/STARTCHAR ayu/' $(.ALLSRC) > $(.TARGET)
+
+10x20m.bdf: ${KAPPADIR}/10x20m.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
+
+10x20rkm.bdf: ${KAPPADIR}/10x20rkm.bdf
+	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
 
 misaki.bdf: ${MISAKIDIR}/misaki.bdf ${MISAKIDIR}/misakimn.diff
 	cp ${MISAKIDIR}/misaki.bdf .

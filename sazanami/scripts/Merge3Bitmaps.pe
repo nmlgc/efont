@@ -148,97 +148,101 @@ if (result == "mplus.bdf")
 	Select("0x2D7A");  Clear()
 	Select("0x2D7B");  Clear()
 	Select("0x2D7C");  Clear()
-elseif (result == "k18m.bdf" || result == "k18gm.bdf" || result == "k20gm.bdf")
-	Select("$13-01"); SetCharName("uni2460")	# 丸数字 (1〜20)
-	Select("$13-02"); SetCharName("uni2461")
-	Select("$13-03"); SetCharName("uni2462")
-	Select("$13-04"); SetCharName("uni2463")
-	Select("$13-05"); SetCharName("uni2464")
-	Select("$13-06"); SetCharName("uni2465")
-	Select("$13-07"); SetCharName("uni2466")
-	Select("$13-08"); SetCharName("uni2467")
-	Select("$13-09"); SetCharName("uni2468")
-	Select("$13-10"); SetCharName("uni2469")
-	Select("$13-11"); SetCharName("uni246A")
-	Select("$13-12"); SetCharName("uni246B")
-	Select("$13-13"); SetCharName("uni246C")
-	Select("$13-14"); SetCharName("uni246D")
-	Select("$13-15"); SetCharName("uni246E")
-	Select("$13-16"); SetCharName("uni246F")
-	Select("$13-17"); SetCharName("uni2470")
-	Select("$13-18"); SetCharName("uni2471")
-	Select("$13-19"); SetCharName("uni2472")
-	Select("$13-20"); SetCharName("uni2473")
+elseif (result == "ayu-gothic.bdf" || result == "ayu-mincho.bdf")
+#	Select("ayu13-01"); SetCharName("uni2460") # 丸数字 (1〜20)
+#	Select("ayu13-02"); SetCharName("uni2461")
+#	Select("ayu13-03"); SetCharName("uni2462")
+#	Select("ayu13-04"); SetCharName("uni2463")
+#	Select("ayu13-05"); SetCharName("uni2464")
+#	Select("ayu13-06"); SetCharName("uni2465")
+#	Select("ayu13-07"); SetCharName("uni2466")
+#	Select("ayu13-08"); SetCharName("uni2467")
+#	Select("ayu13-09"); SetCharName("uni2468")
+#	Select("ayu13-10"); SetCharName("uni2469")
+#	Select("ayu13-11"); SetCharName("uni246A")
+#	Select("ayu13-12"); SetCharName("uni246B")
+#	Select("ayu13-13"); SetCharName("uni246C")
+#	Select("ayu13-14"); SetCharName("uni246D")
+#	Select("ayu13-15"); SetCharName("uni246E")
+#	Select("ayu13-16"); SetCharName("uni246F")
+#	Select("ayu13-17"); SetCharName("uni2470")
+#	Select("ayu13-18"); SetCharName("uni2471")
+#	Select("ayu13-19"); SetCharName("uni2472")
+#	Select("ayu13-20"); SetCharName("uni2473")
 
-	Select("$13-21"); SetCharName("uni2160")	# ローマ数字 (1〜10)
-	Select("$13-22"); SetCharName("uni2161")
-	Select("$13-23"); SetCharName("uni2162")
-	Select("$13-24"); SetCharName("uni2163")
-	Select("$13-25"); SetCharName("uni2164")
-	Select("$13-26"); SetCharName("uni2165")
-	Select("$13-27"); SetCharName("uni2166")
-	Select("$13-28"); SetCharName("uni2167")
-	Select("$13-29"); SetCharName("uni2168")
-	Select("$13-30"); SetCharName("uni2169")
+#	Select("ayu13-21"); SetCharName("uni2160")	# ローマ数字 (1〜10)
+#	Select("ayu13-22"); SetCharName("uni2161")
+#	Select("ayu13-23"); SetCharName("uni2162")
+#	Select("ayu13-24"); SetCharName("uni2163")
+#	Select("ayu13-25"); SetCharName("uni2164")
+#	Select("ayu13-26"); SetCharName("uni2165")
+#	Select("ayu13-27"); SetCharName("uni2166")
+#	Select("ayu13-28"); SetCharName("uni2167")
+#	Select("ayu13-29"); SetCharName("uni2168")
+#	Select("ayu13-30"); SetCharName("uni2169")
 
-	Select("$13-32"); SetCharName("uni3349")	# ミリ
-	Select("$13-33"); SetCharName("uni3314")	# キロ
-	Select("$13-34"); SetCharName("uni3322")	# センチ
-	Select("$13-35"); SetCharName("uni334D")	# メートル
-	Select("$13-36"); SetCharName("uni3318")	# グラム
-	Select("$13-37"); SetCharName("uni3327")	# トン
-	Select("$13-38"); SetCharName("uni3303")	# アール
-	Select("$13-39"); SetCharName("uni3336")	# ヘクタール
-	Select("$13-40"); SetCharName("uni3351")	# リットル
-	Select("$13-41"); SetCharName("uni3357")	# ワット
-	Select("$13-42"); SetCharName("uni330D")	# カロリー
-	Select("$13-43"); SetCharName("uni3326")	# ドル
-	Select("$13-44"); SetCharName("uni3323")	# セント
-	Select("$13-45"); SetCharName("uni332B")	# パーセント
-	Select("$13-46"); SetCharName("uni334A")	# ミリバール
-	Select("$13-47"); SetCharName("uni333B")	# ページ
-	Select("$13-48"); SetCharName("uni339C")	# mm
-	Select("$13-49"); SetCharName("uni339D")	# cm
-	Select("$13-50"); SetCharName("uni339E")	# km
-	Select("$13-51"); SetCharName("uni338E")	# mg
-	Select("$13-52"); SetCharName("uni338F")	# kg
-	Select("$13-53"); SetCharName("uni33C4")	# cc
-	Select("$13-54"); SetCharName("uni33A1")	# m^2
-	Select("$13-63"); SetCharName("uni337B")	# 平成
-	Select("$13-64"); SetCharName("uni301D.vert")	#
-	Select("$13-65"); SetCharName("uni301E.vert")	#
-	Select("$13-66"); SetCharName("uni2116")	# No
-	Select("$13-67"); SetCharName("uni33CD")	# KK
-	Select("$13-68"); SetCharName("uni2121")	# Tel
-	Select("$13-69"); SetCharName("uni32A4")
-	Select("$13-70"); SetCharName("uni32A5")
-	Select("$13-71"); SetCharName("uni32A6")
-	Select("$13-72"); SetCharName("uni32A7")
-	Select("$13-73"); SetCharName("uni32A8")
-	Select("$13-74"); SetCharName("uni3231")	# (株)
-	Select("$13-75"); SetCharName("uni3232")	# (有)
-	Select("$13-76"); SetCharName("uni3239")	# (代)
-	Select("$13-77"); SetCharName("uni337E")	# 明治
-	Select("$13-78"); SetCharName("uni337D")	# 大正
-	Select("$13-79"); SetCharName("uni337C")	# 昭和
-	Select("$13-80");  Clear()
-	Select("$13-81");  Clear()
-	Select("$13-82");  Clear()
-	Select("$13-83"); SetCharName("uni222E")
-	Select("$13-84");  Clear()
-	Select("$13-85");  Clear()
-	Select("$13-86");  Clear()
-	Select("$13-87");  Clear()
-	Select("$13-88"); SetCharName("uni221F")
-	Select("$13-89"); SetCharName("uni22BF")
-	Select("$13-90");  Clear()
-	Select("$13-91");  Clear()
-	Select("$13-92");  Clear()
+#	Select("ayu13-32"); SetCharName("uni3349")	# ミリ
+#	Select("ayu13-33"); SetCharName("uni3314")	# キロ
+#	Select("ayu13-34"); SetCharName("uni3322")	# センチ
+#	Select("ayu13-35"); SetCharName("uni334D")	# メートル
+#	Select("ayu13-36"); SetCharName("uni3318")	# グラム
+#	Select("ayu13-37"); SetCharName("uni3327")	# トン
+#	Select("ayu13-38"); SetCharName("uni3303")	# アール
+#	Select("ayu13-39"); SetCharName("uni3336")	# ヘクタール
+#	Select("ayu13-40"); SetCharName("uni3351")	# リットル
+#	Select("ayu13-41"); SetCharName("uni3357")	# ワット
+#	Select("ayu13-42"); SetCharName("uni330D")	# カロリー
+#	Select("ayu13-43"); SetCharName("uni3326")	# ドル
+#	Select("ayu13-44"); SetCharName("uni3323")	# セント
+#	Select("ayu13-45"); SetCharName("uni332B")	# パーセント
+#	Select("ayu13-46"); SetCharName("uni334A")	# ミリバール
+#	Select("ayu13-47"); SetCharName("uni333B")	# ページ
+#	Select("ayu13-48"); SetCharName("uni339C")	# mm
+#	Select("ayu13-49"); SetCharName("uni339D")	# cm
+#	Select("ayu13-50"); SetCharName("uni339E")	# km
+#	Select("ayu13-51"); SetCharName("uni338E")	# mg
+#	Select("ayu13-52"); SetCharName("uni338F")	# kg
+#	Select("ayu13-53"); SetCharName("uni33C4")	# cc
+#	Select("ayu13-54"); SetCharName("uni33A1")	# m^2
+#	Select("ayu13-63"); SetCharName("uni337B")	# 平成
+#	Select("ayu13-64"); SetCharName("uni301D.vert")	#
+#	Select("ayu13-65"); SetCharName("uni301E.vert")	#
+#	Select("ayu13-66"); SetCharName("uni2116")	# No
+#	Select("ayu13-67"); SetCharName("uni33CD")	# KK
+#	Select("ayu13-68"); SetCharName("uni2121")	# Tel
+#	Select("ayu13-69"); SetCharName("uni32A4")
+#	Select("ayu13-70"); SetCharName("uni32A5")
+#	Select("ayu13-71"); SetCharName("uni32A6")
+#	Select("ayu13-72"); SetCharName("uni32A7")
+#	Select("ayu13-73"); SetCharName("uni32A8")
+#	Select("ayu13-74"); SetCharName("uni3231")	# (株)
+#	Select("ayu13-75"); SetCharName("uni3232")	# (有)
+#	Select("ayu13-76"); SetCharName("uni3239")	# (代)
+#	Select("ayu13-77"); SetCharName("uni337E")	# 明治
+#	Select("ayu13-78"); SetCharName("uni337D")	# 大正
+#	Select("ayu13-79"); SetCharName("uni337C")	# 昭和
+#	Select("ayu13-80");  Clear()
+#	Select("ayu13-81");  Clear()
+#	Select("ayu13-82");  Clear()
+#	Select("ayu13-83"); SetCharName("uni222E")
+#	Select("ayu13-84");  Clear()
+#	Select("ayu13-85");  Clear()
+#	Select("ayu13-86");  Clear()
+#	Select("ayu13-87");  Clear()
+#	Select("ayu13-88"); SetCharName("uni221F")
+#	Select("ayu13-89"); SetCharName("uni22BF")
+#	Select("ayu13-90");  Clear()
+#	Select("ayu13-91");  Clear()
+#	Select("ayu13-92");  Clear()
 endif
 
 Reencode("iso10646-1")
+if (result == "ayu-gothic.bdf" || result == "ayu-mincho.bdf" || result == "kappa.bdf")
+	SetCharCnt(65510)
+endif
+
 Import(ISO8859_1:t:r + "-" + size + ".bdf")
 Import(JISX0201:t:r + "-"+ size + ".bdf")
-	
+
 Generate(result, "bdf", 0)
 Close()
