@@ -43,4 +43,10 @@ if (!defined("sterling") && defined("uniFFE1"))
 	xscaletogwidth(_HW-_20th); centerinhankaku()
 endif
 
+accented("Aacute",      "A", "acute"); hankaku()
+accented("Agrave",      "A", "grave"); hankaku()
+accented("Acircumflex", "A", "asciicircum"); hankaku()
+accented("Atilde",      "A", "asciitilde"); hankaku()
+accented("Adieresis",   "A", "dieresis"); hankaku()
+
 #Save($2)
