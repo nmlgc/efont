@@ -79,7 +79,7 @@ Fore
  624 400 l 1
  400 400 l 1
 EndSplineSet
-"
+")
 )
 
 ;
