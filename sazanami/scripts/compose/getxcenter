@@ -1,0 +1,9 @@
+if ($argc > 1)
+	Select($1)
+endif
+
+w = CharInfo("Width")
+rsb = CharInfo("RBearing")
+lsb = CharInfo("LBearing")
+
+return((w - rsb + lsb) / 2)

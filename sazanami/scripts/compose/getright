@@ -1,0 +1,6 @@
+if ($argc > 1) 
+	Select($1);
+endif
+
+rsb = CharInfo("RBearing"); w = CharInfo("Width")
+return (w - rsb)

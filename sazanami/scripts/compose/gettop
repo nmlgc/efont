@@ -1,0 +1,10 @@
+if ($argc > 1)
+	Select($1)
+endif
+
+Rotate(-90, 0,_BOTTOM)
+w = CharInfo("Width")
+rsb = CharInfo("RBearing")
+Rotate(90, 0,_BOTTOM)
+
+return(w - rsb)

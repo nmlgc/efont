@@ -1,0 +1,3 @@
+// copy(from, to)
+
+Select($1); Copy(); Select($2); Paste()

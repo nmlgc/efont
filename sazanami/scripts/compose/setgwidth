@@ -1,0 +1,5 @@
+w = getgwidth();
+
+xfactor = $1 * 100 / w;
+
+Scale(xfactor, 100, 0,0);

@@ -1,0 +1,17 @@
+# set top of bbtox to the top of target.
+#
+# settop(target)
+# settop(cid, target)
+
+if ($argc >= 3)
+	c = $1;
+	top = gettop(c); target = $2
+else
+	c = 0; while ($selection[c] == 0) c++; endloop
+	top = gettop(); target = $1
+endif
+
+newy = gettop(target);
+dy = newy - top;
+
+Select(c); up(dy)

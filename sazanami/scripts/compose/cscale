@@ -1,0 +1,5 @@
+if ($argc == 2)
+	Scale($1,$1, _HW,_BOTTOM+_HW)
+else
+	Scale($1,$2, _HW,_BOTTOM+_HW)
+endif

@@ -2,4 +2,4 @@ if ($argc > 1)
 	Select($1)
 endif
 
-SetWidth(_FW)
+SetWidth(_HW)

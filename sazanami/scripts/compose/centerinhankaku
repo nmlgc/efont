@@ -1,0 +1,5 @@
+if ($argc >= 2) 
+	Select($1);
+endif
+
+hankaku(); CenterInWidth(); hankaku()
