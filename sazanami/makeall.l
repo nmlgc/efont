@@ -45,6 +45,10 @@
 
 (load "sazanami-patch.l")
 (setq allkanji (append '(仝 々) alljis1 alljis2))
+; 補助漢字がいらない場合は以下をコメントアウト
+(mapc #'(lambda (ku)
+	  (nconc allkanji (eval (intern (concatenate 'string "HOJO" ku)))))
+      allku-hojo)
 
 (setq minchowidth 11.0)
 (out-to-sfd-all allkanji 'mincho "Sznm-M-K.sfd" "Sazanami Mincho Medium")
