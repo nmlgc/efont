@@ -136,7 +136,7 @@ if (WorthOutputting("uniFF0D")) ### && !WorthOutputting("U+2212"))
 endif
 if (WorthOutputting("uniFF5E"))
 	Select("uniFF5E"); Copy(); Select("uni223C"); Paste()
-elsif (WorthOutputting("uni301C"))
+elseif (WorthOutputting("uni301C"))
 	Select("uni301C"); Copy(); Select("uni223C"); Paste()
 endif
 
