@@ -33,8 +33,14 @@ FONTFORGE=	/usr/local/bin/fontforge -script
 
 BUILDTTF=	${FONTFORGE} scripts/BuildTTF.pe
 
-SRC=	makeall.l ../wadalab-fontkit/kanjidata/alljis.l \
+SKEL_SRC=	makeall.l sazanami-patch.l \
+		../wadalab-fontkit/kanjidata/alljis.l \
 		../wadalab-fontkit/jointdata/alljoint.l \
+		../wadalab-fontkit/jointdata/jis3-0.l \
+		../wadalab-fontkit/jointdata/jis3-1.l \
+		../wadalab-fontkit/jointdata/jis3-2.l \
+		../wadalab-fontkit/jointdata/jis3-3.l \
+		../wadalab-fontkit/jointdata/extra-aj12.l \
 		../wadalab-fontkit/primdata/prim-all.l
 
 GOTHIC_BDF=	bdf/misaki-gothic-8.bdf bdf/misaki-gothic-9.bdf \
@@ -68,10 +74,10 @@ sazanami-gothic.ttf: ${GOTHIC_SRC}
 sazanami-mincho.ttf: ${MINCHO_SRC}
 	${BUILDTTF} sazanami-mincho.ttf $(.ALLSRC)
 
-Sznm-M-K.sfd: ${SRC}
+Sznm-M-K.sfd: ${SKEL_SRC}
 	${LISP} ./makeall.l
 
-Sznm-G-K.sfd: ${SRC}
+Sznm-G-K.sfd: ${SKEL_SRC}
 	${LISP} ./makeall.l
 
 sfd: Sznm-G-K.sfd Sznm-M-K.sfd
