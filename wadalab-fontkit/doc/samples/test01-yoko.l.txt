@@ -121,9 +121,11 @@
 
 ;(print (prim-ylen (applykanji 十) (realregion (applykanji 十))))
 ;(print (tatekankaku 十))
+(print (region-width (realregion にんべん)))
+;(print (xunit にんべん))
 
-;            ylen   yokowidth
-; にんべん  2.1275    1.1275
-;    十     2.0       1.0
+;            ylen    region-width   yokowidth     xunit
+; にんべん  2.1275     120           1.1275     106.43015
+;    十     2.0        379           1.0        200.0 (強制設定)
 
 (quit)
