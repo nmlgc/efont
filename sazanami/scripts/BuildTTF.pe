@@ -39,8 +39,9 @@ endif
 ttf = $1; shift
 Open($1); shift
 
-while ($argc > 1 && $1:e == "bdf")
+while ($argc > 1 && $1:e != "bdf")
 	MergeFonts($1); shift
+endloop
 
 "scripts/compose/fixupOutline"()
 "scripts/compose/ComposeGlyphs.pe"()
@@ -48,7 +49,6 @@ while ($argc > 1 && $1:e == "bdf")
 while ($argc > 1)
 	Import($1); shift
 endloop
-
 
 SelectAll();
 foreach;  RemoveATT("Ligature", "*", "*"); endloop

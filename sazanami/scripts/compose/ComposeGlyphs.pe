@@ -72,7 +72,7 @@ setVariables()
 	circle("registered", "uniFF32"); Scale(70, 0,_TOP); centerinhankaku()
 // endif
 // if (!defined("macron"))
-	copy("underscore", "macron"); settop("underscore", _FW)
+	copy("underscore", "macron"); settop("macron", _FW)
 // endif
 # degree plusminus ¢º JIS X 0208
 // if (!defined("uni00B2"))
