@@ -18,7 +18,9 @@ OS2WinAOffset: 0
 OS2WinDescent: 0
 OS2WinDOffset: 0
 ScriptLang: 1
- 1 latn 1 dflt 
+ 1 kana 2 JAN  dflt 
+TableOrder: GSUB 1
+	'vrt2'
 Encoding: unicode
 UnicodeInterp: none
 DisplaySize: -24
