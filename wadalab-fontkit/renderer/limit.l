@@ -199,7 +199,7 @@
     (cond ((and (assq 'reverse param)
 		(setq exp1 (assq exp revtable)))
 	   (setq exp (cdr exp1)))
-	  ((and (memeq exp '(xlimit ylimit))(not (assq exp param)))
+	  ((and (memq exp '(xlimit ylimit))(not (assq exp param)))
 	   (setq exp '(0 . 0)))))
   (match exp
     (('+ a b)
@@ -247,7 +247,7 @@
     (cond ((and (assq 'reverse param)
 		(setq exp1 (assq exp revtable)))
 	   (setq exp (cdr exp1)))
-	  ((and (memeq exp '(xlimit ylimit))(not (assq exp param)))
+	  ((and (memq exp '(xlimit ylimit))(not (assq exp param)))
 	   (setq exp '(0 . 0)))))
   (cond 
    ((listp exp)
@@ -838,5 +838,5 @@
 (defun rm-limit (prim)
   (do ((l (cadr prim) (cdr l))(ret))
     ((atom l)`(,(car prim) ,(nreverse ret).,(cddr prim)))
-    (or (memeq (caar l) '(xlimit ylimit))
+    (or (memq (caar l) '(xlimit ylimit))
 	(push (car l) ret))))

@@ -891,9 +891,9 @@
 	 (lastpoints))
     (do ((l elements (cdr l)))
       ((atom l))
-      (or (and (memeq (caar l) '(hidari tatehidari migiue))
+      (or (and (memq (caar l) '(hidari tatehidari migiue))
 	       (push (car (last (cadar l))) lastpoints))
-	  (and (memeq (caar l) '(ten migi))
+	  (and (memq (caar l) '(ten migi))
 ;	       (print (car (cadar l)))
 	       (push (car (cadar l)) lastpoints))))
     (do ((l elements (cdr l))(newelements)(link))
@@ -904,7 +904,7 @@
 		(push `(,(caar l),(cadar l)
 			(link .,(nreverse ret)).,(cddar l))
 			newelements))
-	       (or (memeq (car ll) lastpoints)(push (car ll) ret))))
+	       (or (memq (car ll) lastpoints)(push (car ll) ret))))
 	    (t
 	     (push (car l) newelements))))))
 ;
@@ -918,8 +918,7 @@
 	 (units (units 
 		 `(,points ,elements 
 			   .,(every #'(lambda (x)
-					(not (memeq (car x) 
-						   '(xunit yunit))))
+					(not (memq (car x) '(xunit yunit))))
 				    alist))))
 	 (xunit (car units))
 	 (yunit (cdr units))

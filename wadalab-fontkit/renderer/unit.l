@@ -155,6 +155,8 @@
 	   (+ xlen (abs (- (car (nth (car ll) points))
 			   (car (nth (cadr ll) points))))))))))))
 ;
+; ストロークの y 方向の移動量の総和の,プリミティブの高さに対する比率 (最低 2.0)
+;
 (defun prim-ylen (prim region)
   (let* ((points (car prim))
 	 (lines (cadr prim))
@@ -376,13 +378,17 @@
 	   (/ width tatekankaku 1.4))
 	  ((< ylen 2.0)1.0)
 	  (t (- ylen 1.0)))))
+;
+; 縦画同士がいちばん接近している箇所の距離を返す
+;
 (defun tatekankaku (prim)
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (tates nil))
     (do ((l lines (cdr l)))
       ((atom l))
-      (cond ((memeq (caar l)'(tate tatehane tatehidari kokoro tsukurihane tasuki))
+      (cond ((memq (caar l)
+		   '(tate tatehane tatehidari kokoro tsukurihane tasuki))
 	     (push (car l) tates))))
     (cond (tates
 	   (do ((l tates (cdr l))

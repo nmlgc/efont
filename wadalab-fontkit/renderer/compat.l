@@ -118,8 +118,8 @@
       (and (consp (car l)) (eq (caar l) key)
 	   (return (car l)))))
 (defun memeq (key lst) (and (listp lst) (member key lst :test #'eq)))
-;(or (fboundp 'memq)
-;    (defmacro memq (key lst) `(member ,key ,lst :test #'eq)))
+(or (fboundp 'memq)
+    (defmacro memq (key lst) `(member ,key ,lst :test #'eq)))
 
 (or (fboundp 'remq)
     (defun remq (key lst) (if (listp lst) (remove key lst :test #'eq) lst)))

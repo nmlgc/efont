@@ -167,5 +167,5 @@
 (defun rmlimit (x)
   (let* ((elements (cadr x))(ret))
     (do ((l elements (cdr l)))
-      ((atom l)`(,(car x) ,(nreverse ret) .,(cddr x)))
-      (or (memeq (caar l) '(xlimit ylimit))(push (car l) ret)))))
+      ((atom l) `(,(car x) ,(nreverse ret) .,(cddr x)))
+      (or (memq (caar l) '(xlimit ylimit)) (push (car l) ret)))))

@@ -370,7 +370,7 @@
        ((eq 4 (length link)) ; 3本のストロークが集まる点
 	(setq part1 (second link) part2 (third link) part3 (fourth link))
 	(setq type1 (cadr part1) type2 (cadr part2) type3 (cadr part3))
-	(and (memeq type1 '(0 1))(memeq type2 '(0 1))(memeq type3 '(0 1))
+	(and (memq type1 '(0 1))(memq type2 '(0 1))(memq type3 '(0 1))
 	     (let* ((ass1 (assq 'lines (cddr part1)))
 		    (lines1 (second ass1))
 		    (line10 (case type1

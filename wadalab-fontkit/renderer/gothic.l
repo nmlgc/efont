@@ -504,12 +504,12 @@
       (and (eq (caar l) 'yoko)
 	   (setq p (cadar l))
 	   (setq yokopoints `(,(car p) ,(cadr p) .,yokopoints)))
-      (or (memeq (caar l) '(tate magaritate))
+      (or (memq (caar l) '(tate magaritate))
 	  (setq linkpoints (append (cadar l) linkpoints))))
     (do ((l elements (cdr l))(epoints)(p1)(lastp)(rp1)(link)(yokolink))
       ((atom l)
        `(,points ,(nreverse newelements) .,(cddr prim)))
-      (cond ((memeq (caar l) '(tate magaritate))
+      (cond ((memq (caar l) '(tate magaritate))
 	     (setq epoints (copy-list (cadar l)))
 	     (setq lastp (last epoints))
 	     (setq rp1 (nth (setq p1 (car lastp)) points))
@@ -548,8 +548,7 @@
 	 (units (units 
 		 `(,points ,elements 
 			   .,(every #'(lambda (x) 
-					(not (memeq (car x) 
-						   '(xunit yunit))))
+					(not (memq (car x) '(xunit yunit))))
 				    alist))))
 	 (width (min gothicwidth
 		     (* 0.16 (min (car origunits)(cdr origunits)(car units)(cdr units))))))
