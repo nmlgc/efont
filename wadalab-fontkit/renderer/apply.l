@@ -563,23 +563,38 @@
 	  ((> (abs t1) 2.0)
 	    (setq ret
 		 `((angle .,c)
-		   (bezier .,(rotscale c p3 p0 p1))
-		   (bezier .,(rotscale c p3 p0 p2))
+		   (bezier .,(rotscale p1 p3 p0 c))
+		   (bezier .,(rotscale p2 p3 p0 c))
 		   (angle .,p3)))
 	    ret)
 	  (t
 	   (let* ((newdp0 (times2 twidth3 (bezierdp p0 p1 p2 p3 t1)))
-		  (newdp3 (times2 twidth3 dp3)))
+		  (newdp3 (times2 twidth3 dp3))
+		  (newp1 (plus2 c newdp0))
+		  (newp2 (diff2 p3 newdp3)))
 	     (setq ret 
-		   `((angle .,c)
-		     (bezier .,(plus2 c newdp0))
-		     (bezier .,(diff2 p3 newdp3))
+		   `((angle .,c) 
+		     (bezier .,newp1)
+		     (bezier .,newp2)
 		     (angle .,p3)))
+	     ; 直線 L(p0,p3) から見た p1, p2 の位置関係が変化していたら
+	     ; 曲線の形を保持する変換に切替える。
+	     (and (or (< (* (mul2 (diff2 p3 p0) (diff2 newp1 p0))
+			    (mul2 (diff2 p3 p0) (diff2 p1 p0)))
+			 0)			 
+		      (< (* (mul2 (diff2 p0 p3) (diff2 newp2 p3))
+			    (mul2 (diff2 p0 p3) (diff2 p2 p3)))
+			 0))
+		  (setq ret
+			`((angle .,c)
+			  (bezier .,(rotscale p1 p3 p0 c))
+			  (bezier .,(rotscale p2 p3 p0 c))
+			  (angle .,p3)))))
 ;	     (pprint `(,t1 ,twidth3 ,ret))
-	     ret)))))
+	     ret))))
 ;
 ;
-; axis 中心の回転と拡大により from が to に移動するような変換を point に適用
+; axis 中心の回転と拡大により from が to に移動するような変換を target に適用
 ;
 (defun rotscale (target axis from to)
   (let* ((d0 (diff2 from axis))
@@ -587,7 +602,7 @@
 	 (th (theta d1 d0))
 	 (mag (/ (length2 d1) (length2 d0)))
 	 (d2 (rot (times2 mag (diff2 target axis)) th)))
-	(plus2 target d2)))
+	(plus2 axis d2)))
 
 ;
 ; メンバーかどうか
