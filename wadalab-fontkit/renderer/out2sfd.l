@@ -207,9 +207,9 @@ EndChar
 	      ((atom ll))
 	      (match (car ll)
 	        (('angle x y)
-	         (setq x1 (_round (* scale x)) 
-		       y1 (- em descent (_round (* scale y))))
-	         (format t " ~A ~A l 1~%" x1 y1))
+	         (setq x3 (_round (* scale x)) 
+		       y3 (- em descent (_round (* scale y))))
+	         (format t " ~A ~A l 1~%" x3 y3))
 		(('bezier x y)
 		 (setq next (cadr ll))
 		 (setq nextnext 
@@ -224,7 +224,8 @@ EndChar
 		       y3 (- em descent 
 			     (_round (* scale (caddr nextnext)))))
 		 (format t " ~A ~A ~A ~A ~A ~A c 1~%" x1 y1 x2 y2 x3 y3))))
-;	  (format t " ~A ~A l 1~%" newx newy)
+	  (and (or (/= x3 newx) (/= y3 newy))
+	       (format t " ~A ~A l 1~%" newx newy))
 	  )
       (format t "EndSplineSet~%")
 )))
