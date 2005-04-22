@@ -50,7 +50,7 @@ eFontName = eFontFamilyName + " " + FontSubfamilyName
 jFontName = jFontFamilyName + FontSubfamilyName
 
 eUniqueFontID = eFontName + " #" + Build
-jUniqueFontID = jFontName + " #" + Build
+#jUniqueFontID = jFontName + " #" + Build
 
 eManufacturerName = "Electronic Font Open Laboratory (/efont/)"
 jManufacturerName = "電子書体オープンラボ(/efont/)"
@@ -60,7 +60,7 @@ jSampleText = "波のように広がっていくことを願って「漣」と�
 
 CopyrightNotice = "(C) 1990-2003 Wada Laboratory, Univ. of Tokyo. 2003-04 /efont/. All rights reserved."
 
-SetFontNames(eFontName, eFontFamilyName, eFontName, FontSubfamilyName, CopyrightNotice)
+SetFontNames(PostScriptName, eFontFamilyName, eFontName, FontSubfamilyName, CopyrightNotice)
 
 # SetTTFName(ja_JP, 0, jCopyrightNotice)
 SetTTFName(en_US, 1, eFontFamilyName)
@@ -68,7 +68,7 @@ SetTTFName(ja_JP, 1, jFontFamilyName)
 SetTTFName(en_US, 2, FontSubfamilyName)
 SetTTFName(ja_JP, 2, FontSubfamilyName)
 SetTTFName(en_US, 3, eUniqueFontID)
-SetTTFName(ja_JP, 3, jUniqueFontID)
+#SetTTFName(ja_JP, 3, jUniqueFontID)
 SetTTFName(en_US, 4, eFontName)
 SetTTFName(ja_JP, 4, jFontName)
 # SetTTFName(ja_JP, 5, jVersionString)
