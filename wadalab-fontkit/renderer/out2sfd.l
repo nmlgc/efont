@@ -1480,3 +1480,27 @@ gsave
 (defun output-skel2eps-frame ()
 ;not yet
 )    
+
+;;; FontForge での取り込み用にレンダリング結果を出力
+;
+(defun print-point (pt)
+  (format t "~A ~A " (* 2.5 (car pt)) (+ 800 (* -2.5 (cadr pt)))))
+
+(defun print-path (path) 
+  (format t "newpath~%")
+  (print-point (cdar path))
+  (format t "moveto~%")
+  (do* ((pth (cdr path) (cdr pth))
+	(pt (car pth) (car pth))
+	(iscurve nil))
+       ((atom pth))
+    (print-point (cdr pt))
+    (and (eq 'ANGLE (car pt))
+	 (format t (if iscurve "curveto~%" "lineto~%")))
+    (setq iscurve (eq 'BEZIER (car pt))))
+  (format t "closepath~%stroke~%~%"))
+
+(defun outline2eps (outline)
+  (format t "0 setlinewidth~%~%")
+  (mapcar #'(lambda (path) (print-path path))
+	  outline))
