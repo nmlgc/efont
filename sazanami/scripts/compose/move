@@ -1,0 +1,3 @@
+// move(from, to)
+
+Select($1); Cut(); Select($2); Paste()
