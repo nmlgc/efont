@@ -1498,7 +1498,7 @@ gsave
     (and (eq 'ANGLE (car pt))
 	 (format t (if iscurve "curveto~%" "lineto~%")))
     (setq iscurve (eq 'BEZIER (car pt))))
-  (format t "closepath~%stroke~%~%"))
+  (format t "closepath~%fill~%~%"))
 
 (defun outline2eps (outline)
   (format t "0 setlinewidth~%~%")
