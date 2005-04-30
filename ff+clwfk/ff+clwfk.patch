@@ -1,0 +1,2982 @@
+--- Makefile.dynamic.in.orig	Wed Jan 26 09:14:40 2005
++++ Makefile.dynamic.in	Tue Mar 29 17:58:15 2005
+@@ -47,8 +47,8 @@
+ 	$(LIBTOOL) $(INSTALL) -c libgunicode.la $(libdir)/libgunicode.la
+ 	#cp .libs/*.so.*.* $(libdir)
+ 	$(LIBTOOL) --finish $(libdir)
+-	mkdir -p $(libdir)/pkgconfig
+-	$(LIBTOOL) $(INSTALL) -c fontforge.pc $(libdir)/pkgconfig
++	mkdir -p ${PREFIX}/libdata/pkgconfig
++	$(LIBTOOL) $(INSTALL) -c fontforge.pc ${PREFIX}/libdata/pkgconfig
+ 
+ install: $(sharedir) all install_libs
+ # You may need to be root to do the install
+--- Unicode/ucharmap.c.orig	Fri Jan  2 01:57:42 2004
++++ Unicode/ucharmap.c	Mon Feb  2 10:44:01 2004
+@@ -121,6 +121,22 @@
+ 		--n;
+ 	    }
+ 	  break;
++	  case e_euc:
++	    while ( *from && n>0 ) {
++	        if ( *from>=0xa1 && from[1]>=0xa1 ) {
++		    *upt++ = unicode_from_jis208[ (*from-0xa1)*94+(from[1]-0xa1) ];
++		    from += 2;
++		} else if ( *from==0x8e && from[1]>=0xa1 ) {
++		    *upt++ = unicode_from_jis201[ from[1] ];
++		    from += 2;
++		} else if ( *from==0x8f && from[1]>=0xa1 && from[2]>=0xa1 ) {
++		    *upt++ = unicode_from_jis212[ (from[1]-0xa1)*94+(from[2]-0xa1) ];
++		    from += 3;
++		} else
++		    *upt++ = *from++;
++		--n;
++	    }
++	  break;
+ 	}
+     } else if ( cs==e_unicode ) {
+ 	unichar_t *ufrom = (unichar_t *) from;
+@@ -287,8 +303,41 @@
+ 		    int j1 = ch>>8, j2 = ch&0xff;
+ 		    int ro = j1<95 ? 112 : 176;
+ 		    int co = (j1&1) ? (j2>95?32:31) : 126;
++		    if ( n<=1 )
++		        break;
+ 		    *pt++ = ((j1+1)>>1)+ro;
+ 		    *pt++ = j2+co;
++		    n -= 2;
++		}
++		++ufrom;
++	    }
++	  break;
++	  case e_euc:
++	    while ( *ufrom && n>0 ) {
++		int highch = *ufrom>>8, ch;
++		if ( highch>=jis201_from_unicode.first && highch<=jis201_from_unicode.last &&
++			(plane1 = jis201_from_unicode.table[highch-jis201_from_unicode.first])!=NULL &&
++			(ch=plane1[*ufrom&0xff])!=0 ) {
++		    if ( n<=1 )
++		        break;
++		    *pt++ = 0x8e;
++		    *pt++ = ch;
++		    n -= 2;
++		} else if ( *ufrom<' ' ) {	/* control chars */
++		    *pt++ = *ufrom;
++		    --n;
++		} else if ( highch>=jis_from_unicode.first && highch<=jis_from_unicode.last &&
++			(plane = jis_from_unicode.table[highch-jis_from_unicode.first])!=NULL &&
++			(ch=plane[*ufrom&0xff])!=0) {
++		    int j1 = ch>>8, j2 = ch&0xff;
++		    if ( ch>=0x8000 ) /* jis212 */
++		        n--;
++		    if ( n<=1 )
++		        break;
++		    if ( ch>=0x8000 )
++		        *pt++ = 0x8f;
++		    *pt++ = j1|0x80;
++		    *pt++ = j2|0x80;
+ 		    n -= 2;
+ 		}
+ 		++ufrom;
+--- fontforge/Makefile.dynamic.in.orig	Fri Jul 30 01:26:29 2004
++++ fontforge/Makefile.dynamic.in	Wed Aug 25 19:48:55 2004
+@@ -42,7 +42,7 @@
+ DIFFOBJS = sfddiff.o sfd.o diffstubs.o stamp.o
+ ACORNOBJS = acorn2sfd.o sfd.o diffstubs.o psunicodenames.o stamp.o
+ 
+-_CFLAGS = -I$(top_srcdir)/inc -I$(srcdir) -I. @WFLAGS@ $(X_CFLAGS) \
++_CFLAGS = -I$(LOCALBASE)/include -I$(LOCALBASE)/include/freetype2 -I$(top_srcdir)/inc -I$(srcdir) -I. @WFLAGS@ $(X_CFLAGS) \
+     @DEFS@ '-DSHAREDIR="$(sharedir)"' -DLIBDIR='"$(libdir)"'
+ CFLAGS = @CFLAGS@ $(_CFLAGS)
+ 
+@@ -50,7 +50,7 @@
+     $(X_PRE_LIBS) $(X_11LIB) $(X_EXTRA_LIBS) @LIBS@ $(STATIC_LIBS) -L/usr/lib -lm
+ DLIBS = -rpath $(libdir) ../libgunicode.la @LIBS@ -lm
+ 
+-all: pfaedit-en.ui fontforge sfddiff
++all: pfaedit-en.ui fontforge sfddiff acorn2sfd
+ 
+ fontforge: nomen.h $(fontforge_OBJECTS)
+ 	$(LIBTOOL) $(CC) -o fontforge $(fontforge_OBJECTS) $(LIBS)
+--- fontforge/autotrace.c.orig	Fri Apr  1 13:51:07 2005
++++ fontforge/autotrace.c	Wed Apr 27 19:47:19 2005
+@@ -199,7 +199,6 @@
+     fd = mkstemp(buffer);
+ #if 0
+     old = copy(buffer);
+-    strcat(buffer,".bmp");
+     if ( rename(old,buffer)==-1 )
+ 	strcpy(buffer,old);
+     free(old);
+@@ -232,6 +231,155 @@
+ return( NULL );
+     }
+ }
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++void SCBuildSkeleton(SplineChar *sc, char *arg) {
++    char *prog = "/home/kanou/clwfk.run";
++    char *arglist[30];
++    int ac;
++    int pid, status;
++
++    ac = 0; 
++    arglist[ac++] = "/bin/sh";
++    arglist[ac++] = prog;
++//    arglist[ac++] = u2utf8_copy(arg);
++   arglist[ac++] = arg;
++    arglist[ac] = NULL;
++    if ( (pid=fork())==0 ) {
++	  /* Child */
++	  exit(execvp("/bin/sh",arglist)==-1);	/* If exec fails, then die */
++//	  exit(execvp(prog,arglist)==-1);	/* If exec fails, then die */
++    } else if ( pid!=-1 ) {
++          waitpid(pid,&status,0);
++    }
++}
++
++static char *lispname = NULL;
++static char *clwfkdirname = NULL;
++static char *clwfk_default_dir = "/home/kanou/fontMaking/efont/wadalab-fontkit";
++static char *default_lisp_name = "/usr/local/bin/lisp";
++
++static char *FindLispName(void) {
++    if ( lispname==NULL )
++	lispname = getenv("LISP");
++    if ( lispname==NULL && eaccess(default_lisp_name, X_OK)==0 )
++	lispname = default_lisp_name;
++return lispname;
++}
++
++
++static char *FindClwfkDirName(void) {
++    DIR *dirp;
++    struct dirent *dp;
++
++    if ( clwfkdirname==NULL )
++	clwfkdirname = getenv("CLWFKDIR");
++    if ( clwfkdirname==NULL ) {
++	dirp = opendir(".");
++	while ((dp = readdir(dirp)) != NULL) {
++	    if (strcmp(dp->d_name, "wadalab-fontkit") == 0)
++		clwfkdirname = "./wadalab-fontkit";
++	    else if (strcmp(dp->d_name, "wadalabkit") == 0)
++		clwfkdirname = "./wadalabkit";
++	    if (clwfkdirname!=NULL)
++	break;
++	}
++	if (dirp!=NULL)
++	    closedir(dirp);
++    }
++    if ( clwfkdirname==NULL )
++	if ((dirp=opendir(clwfk_default_dir)) != NULL) {
++	    clwfkdirname = clwfk_default_dir;
++	    closedir(dirp);
++	}	    
++
++return clwfkdirname;
++}
++
++static void DumpOutlineFlesher(SplineChar *sc, char *face, char *filename, char *clwfkdir, int normkanji) {
++    FILE *prog = fopen(filename, "w");
++
++    fputs("(defvar base-directory)\n"
++	  "(defparameter source-load nil)\n"
++	  "(defun load-directory (dir)\n"
++	  "(let* ((base-directory dir))\n"
++	  "	(load (concatenate 'string base-directory \"/\" \"load.l\"))))\n", prog);
++    fprintf(prog, "(load-directory \"%s/renderer/\")\n", clwfkdir);
++    fputs("(defvar XXX)\n", prog);
++    fprintf(prog, "(setq %swidth 14.0)\n", face);
++    ExportSkeletonAs(prog, sc, "XXX");
++    fprintf(prog, "(outline2eps (makeoutline (skeleton2list \n");
++    if (normkanji) fputs("(normkanji ", prog);
++    fprintf(prog, "(rm-limit (applykanji XXX '%s))\n", face);
++    if (normkanji) fputs(")", prog);
++    fprintf(prog, " '%s)))\n",face);
++    fputs("(quit)\n", prog);
++
++    fclose(prog);
++}
++
++void SCFleshSkeleton(SplineChar *sc, char *face, int normkanji) {
++    char *prog, *arglist[30], tempname[1025];
++    int ac, changed=false;
++    int pid, status, fd;
++    FILE *ps;
++    SplineSet *new, *last;
++    char *dir;
++
++    fd = mytempnam(tempname);
++    if ( (dir=FindClwfkDirName()) == NULL ) {
++	GWidgetErrorR(_STR_ClwfkRendererNotFound, _STR_ClwfkRendererNotFound);
++return;
++    }
++    if ( (prog=FindLispName())==NULL ) {
++	GWidgetErrorR(_STR_LispNotFound, _STR_LispNotFound);
++return;
++    }
++    DumpOutlineFlesher(sc, face, tempname, dir, normkanji);
++    
++    ac = 0;
++    arglist[ac++] = prog;
++    /* cmucl only */
++    arglist[ac++] = "-quiet";
++    arglist[ac++] = "-batch";
++    arglist[ac++] = "-load";
++    arglist[ac++] = tempname;
++    arglist[ac++] = NULL;
++
++    ps = tmpfile();
++    if ( (pid=fork())==0 ) {
++	/* Child */
++	close(1);
++	dup2(fileno(ps),1);
++	exit(execvp(prog,arglist)==-1);	/* If exec fails, then die */
++    } else if ( pid!=-1 ) {
++	waitpid(pid,&status,0);
++	if ( WIFEXITED(status)) {
++	    rewind(ps);
++	    new = localSplinesFromEntities(EntityInterpretPS(ps), 0xffffff, true);
++	    if ( sc->parent->order2 ) {
++		SplineSet *o2 = SplineSetsTTFApprox(new);
++		SplinePointListFree(new);
++		new = o2;
++	    }
++	    if ( new!=NULL ) {
++		sc->parent->onlybitmaps = false;
++		if ( !changed )
++		    SCPreserveState(sc,false);
++		for ( last=new; last->next!=NULL; last=last->next );
++		last->next = sc->layers[ly_back].splines;
++		sc->layers[ly_back].splines = new;
++		changed = true;
++	    }
++	}
++    }
++    close(fd);
++    unlink(tempname);		/* Might not be needed, but probably is*/
++
++    if ( changed )
++	SCCharChangedUpdate(sc);
++}
++#endif
+ 
+ static void _SCAutoTrace(SplineChar *sc, char **args) {
+     ImageList *images;
+--- fontforge/charinfo.c.orig	Thu Mar 24 11:11:28 2005
++++ fontforge/charinfo.c	Sun Apr 24 20:05:24 2005
+@@ -69,6 +69,19 @@
+ #define CID_Copy	1024
+ #define CID_Paste	1025
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++#define CID_PrimName	1030
++#define CID_TateHeight	1031
++#define CID_YokoWidth	1032
++#define CID_PrimWidth	1033
++#define CID_Xunit	1034
++#define CID_Yunit	1035
++#define CID_PrimCenter	1036
++#define CID_Up		1037
++#define CID_Down	1038
++#define CID_Hook	1039
++#endif
++
+ #define CID_PST		1111
+ #define CID_Tag		1112
+ #define CID_Contents	1113
+@@ -4366,6 +4379,9 @@
+     FontView *fvs;
+     int err = false;
+     int tex_height, tex_depth, tex_sub, tex_super;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    PrimParams clwfk;
++#endif
+ 
+     val = ParseUValue(ci->gw,CID_UValue,true,ci->sc->parent);
+     if ( val==-2 )
+@@ -4378,12 +4394,29 @@
+ return( false );
+     if ( !CI_ProcessPosSubs(ci))
+ return( false );
++#ifdef FONTFORGE_CONFIG_CLWFK
++    nm = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_PrimName));
++    if ( nm==NULL || ci->sc->clwfk.glyphname==NULL || u_strcmp(nm, ci->sc->clwfk.glyphname) != 0 )
++       clwfk.glyphname = u_copy(nm);
++    else
++       clwfk.glyphname = ci->sc->clwfk.glyphname;
++    clwfk.tateheight = GetRealR(ci->gw,CID_TateHeight,_STR_TateHeight,&err);
++    clwfk.yokowidth = GetRealR(ci->gw,CID_YokoWidth,_STR_YokoWidth,&err);
++    clwfk.xunit = GetRealR(ci->gw,CID_Xunit,_STR_Xunit,&err);
++    clwfk.yunit = GetRealR(ci->gw,CID_Yunit,_STR_Yunit,&err);
++    clwfk.center = GetRealR(ci->gw,CID_PrimCenter,_STR_PrimCenter,&err);
++    clwfk.width = GetRealR(ci->gw,CID_PrimWidth,_STR_PrimWidth,&err);
++    clwfk.up = GetRealR(ci->gw,CID_Up,_STR_Up,&err);
++    clwfk.down = GetRealR(ci->gw,CID_Down,_STR_Down,&err);
++    if ( err )
++return( false );
++#endif
+     nm = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_UName));
+     if ( !CI_NameCheck(nm) )
+ return( false );
+     name = cu_copy( nm );
+     if ( strcmp(name,ci->sc->name)!=0 || val!=ci->sc->unicodeenc )
+-	refresh_fvdi = 1;
++      refresh_fvdi = 1;
+     comment = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Comment));
+     SCPreserveState(ci->sc,2);
+     ret = SCSetMetaData(ci->sc,name,val,comment);
+@@ -4407,6 +4440,12 @@
+ 	ci->sc->tex_depth  = tex_depth;
+ 	ci->sc->tex_sub_pos   = tex_sub;
+ 	ci->sc->tex_super_pos = tex_super;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( clwfk.glyphname != nm && ci->sc->clwfk.glyphname!=NULL)
++	    gfree( ci->sc->clwfk.glyphname );
++	ci->sc->clwfk = clwfk;
++	GDrawRequestExpose(ci->sc->parent->fv->v,NULL,false);
++#endif
+     }
+     if ( ret )
+ 	ci->sc->parent->changed = true;
+@@ -5581,6 +5620,67 @@
+ 	buffer[0] = '\0';
+     uc_strcpy(ubuf,buffer);
+     GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_TeX_Super),ubuf);
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++    if ( sc->clwfk.glyphname != NULL )
++        GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_PrimName),sc->clwfk.glyphname);
++        
++    if ( sc->clwfk.tateheight != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.tateheight);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_TateHeight),ubuf);
++    
++    if ( sc->clwfk.yokowidth != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.yokowidth);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_YokoWidth),ubuf);
++    
++    if ( sc->clwfk.xunit != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.xunit);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Xunit),ubuf);
++
++    if ( sc->clwfk.yunit != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.yunit);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Yunit),ubuf);
++
++    if ( sc->clwfk.center != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.center);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_PrimCenter),ubuf);
++
++    if ( sc->clwfk.width != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.width);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_PrimWidth),ubuf);
++
++    if ( sc->clwfk.up != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.up);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Up),ubuf);
++
++    if ( sc->clwfk.down != 0.0 )
++        sprintf(buffer,"%.1f", sc->clwfk.down);
++    else
++	buffer[0] = '\0';
++    uc_strcpy(ubuf,buffer);
++    GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_Down),ubuf);
++#endif
+ }
+ 
+ static int CI_NextPrev(GGadget *g, GEvent *e) {
+@@ -5665,6 +5765,10 @@
+     GWindowAttrs wattrs;
+     GGadgetCreateData ugcd[12], cgcd[6], psgcd[7][7], cogcd[3], mgcd[9], tgcd[10];
+     GTextInfo ulabel[12], clabel[6], pslabel[7][6], colabel[3], mlabel[9], tlabel[10];
++#ifdef FONTFORGE_CONFIG_CLWFK
++    GGadgetCreateData clgcd[15];
++    GTextInfo cllabel[15];
++#endif
+     int i;
+     GTabInfo aspects[13];
+     static GBox smallbox = { bt_raised, bs_rect, 2, 1, 0, 0, 0,0,0,0, COLOR_DEFAULT,COLOR_DEFAULT };
+@@ -5740,7 +5844,6 @@
+ 	ugcd[3].gd.cid = CID_UValue;
+ 	ugcd[3].gd.handle_controlevent = CI_UValChanged;
+ 	ugcd[3].creator = GTextFieldCreate;
+-
+ 	ulabel[4].text = (unichar_t *) _STR_UnicodeChar;
+ 	ulabel[4].text_in_resource = true;
+ 	ugcd[4].gd.label = &ulabel[4];
+@@ -5974,6 +6077,97 @@
+ 	tgcd[7].gd.cid = CID_TeX_Super;
+ 	tgcd[7].creator = GTextFieldCreate;
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++	memset(&clgcd,0,sizeof(clgcd));
++	memset(&cllabel,0,sizeof(cllabel));
++
++	cllabel[0].text = (unichar_t *)_STR_PrimName;
++	cllabel[0].text_in_resource = true;
++	clgcd[0].gd.label = &cllabel[0];
++	clgcd[0].gd.pos.x = 5; clgcd[0].gd.pos.y = 5+4;
++	clgcd[0].gd.flags = gg_enabled|gg_visible;
++	clgcd[0].gd.popup_msg = GStringGetResource(_STR_ClwfkPopup,NULL);
++	clgcd[0].creator = GLabelCreate;
++
++	clgcd[1].gd.pos.x = 65; clgcd[1].gd.pos.y = 5; clgcd[1].gd.pos.width = 130; clgcd[1].gd.pos.height = 36;
++	clgcd[1].gd.flags = gg_enabled|gg_visible|gg_text_xim|gg_textarea_wrap;
++	clgcd[1].gd.cid = CID_PrimName;
++	clgcd[1].creator = GTextAreaCreate;
++
++	cllabel[2].text = (unichar_t *) _STR_TateYoko;
++	cllabel[2].text_in_resource = true;
++	clgcd[2].gd.label = &cllabel[2];
++	clgcd[2].gd.pos.x = 5; clgcd[2].gd.pos.y = 49+4; 
++	clgcd[2].gd.flags = gg_enabled|gg_visible;
++	clgcd[2].gd.popup_msg = GStringGetResource(_STR_TateHeightYokoWidth,NULL);
++	clgcd[2].creator = GLabelCreate;
++
++	clgcd[3].gd.pos.x = 85; clgcd[3].gd.pos.y = 49; clgcd[3].gd.pos.width = 50;
++	clgcd[3].gd.flags = gg_enabled|gg_visible;
++	clgcd[3].gd.cid = CID_TateHeight;
++	clgcd[3].creator = GTextFieldCreate;
++
++	clgcd[4].gd.pos.x = 140; clgcd[4].gd.pos.y = 49; clgcd[4].gd.pos.width = 50;
++	clgcd[4].gd.flags = gg_enabled|gg_visible;
++	clgcd[4].gd.cid = CID_YokoWidth;
++	clgcd[4].creator = GTextFieldCreate;
++
++	cllabel[5].text = (unichar_t *) _STR_WidthCenter;
++	cllabel[5].text_in_resource = true;
++	clgcd[5].gd.label = &cllabel[5];
++	clgcd[5].gd.pos.x = 5; clgcd[5].gd.pos.y = 74+4; 
++	clgcd[5].gd.flags = gg_enabled|gg_visible;
++	clgcd[5].gd.popup_msg = clgcd[0].gd.popup_msg;
++	clgcd[5].creator = GLabelCreate;
++
++	clgcd[6].gd.pos.x = 85; clgcd[6].gd.pos.y = 74; clgcd[6].gd.pos.width = 50;
++	clgcd[6].gd.flags = gg_enabled|gg_visible;
++	clgcd[6].gd.cid = CID_PrimWidth;
++	clgcd[6].creator = GTextFieldCreate;
++
++	clgcd[7].gd.pos.x = 140; clgcd[7].gd.pos.y = 74; clgcd[7].gd.pos.width = 50;
++	clgcd[7].gd.flags = gg_enabled|gg_visible;
++	clgcd[7].gd.cid = CID_PrimCenter;
++	clgcd[7].creator = GTextFieldCreate;
++
++	cllabel[8].text = (unichar_t *) _STR_XYunit;
++	cllabel[8].text_in_resource = true;
++	clgcd[8].gd.label = &cllabel[8];
++	clgcd[8].gd.pos.x = 5; clgcd[8].gd.pos.y = 99+4; 
++	clgcd[8].gd.flags = gg_enabled|gg_visible;
++	clgcd[8].gd.popup_msg = clgcd[0].gd.popup_msg;
++	clgcd[8].creator = GLabelCreate;
++
++	clgcd[9].gd.pos.x = 85; clgcd[9].gd.pos.y = 99; clgcd[9].gd.pos.width = 50;
++	clgcd[9].gd.flags = gg_enabled|gg_visible;
++	clgcd[9].gd.cid = CID_Xunit;
++	clgcd[9].creator = GTextFieldCreate;
++
++	clgcd[10].gd.pos.x = 140; clgcd[10].gd.pos.y = 99; clgcd[10].gd.pos.width = 50;
++	clgcd[10].gd.flags = gg_enabled|gg_visible;
++	clgcd[10].gd.cid = CID_Yunit;
++	clgcd[10].creator = GTextFieldCreate;
++
++	cllabel[11].text = (unichar_t *) _STR_UpDown;
++	cllabel[11].text_in_resource = true;
++	clgcd[11].gd.label = &cllabel[11];
++	clgcd[11].gd.pos.x = 5; clgcd[11].gd.pos.y = 124+4; 
++	clgcd[11].gd.flags = gg_enabled|gg_visible;
++	clgcd[11].gd.popup_msg = clgcd[0].gd.popup_msg;
++	clgcd[11].creator = GLabelCreate;
++
++	clgcd[12].gd.pos.x = 85; clgcd[12].gd.pos.y = 124; clgcd[12].gd.pos.width = 50;
++	clgcd[12].gd.flags = gg_enabled|gg_visible;
++	clgcd[12].gd.cid = CID_Up;
++	clgcd[12].creator = GTextFieldCreate;
++
++	clgcd[13].gd.pos.x = 140; clgcd[13].gd.pos.y = 124; clgcd[13].gd.pos.width = 50;
++	clgcd[13].gd.flags = gg_enabled|gg_visible;
++	clgcd[13].gd.cid = CID_Down;
++	clgcd[13].creator = GTextFieldCreate;
++
++#endif
++
+ 
+ 	memset(&mgcd,0,sizeof(mgcd));
+ 	memset(&mlabel,0,sizeof(mlabel));
+@@ -6024,6 +6218,12 @@
+ 	aspects[i].text = (unichar_t *) _STR_TeX;
+ 	aspects[i].text_in_resource = true;
+ 	aspects[i++].gcd = tgcd;
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++	aspects[i].text = (unichar_t *) _STR_CLWFK;
++	aspects[i].text_in_resource = true;
++	aspects[i++].gcd = clgcd;
++#endif
+ 
+ 	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
+ 	mgcd[0].gd.pos.width = CI_Width-10;
+--- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
++++ fontforge/charview.c	Sun May  1 00:07:31 2005
+@@ -105,6 +105,12 @@
+ static Color backimagecol = 0x707070;
+ static Color fillcol = 0x707070;
+ static Color tracecol = 0x008000;
++#ifdef FONTFORGE_CONFIG_CLWFK
++static Color jointcol = 0x40a040;
++static Color lockedpointcol = 0x2020ff;
++static Color lockedfirstpointcol = 0x6090e0;
++static Color lockedselectedpointcol = 0x30ff40;
++#endif
+ 
+ static int cvcolsinited = false;
+ 
+@@ -450,12 +456,20 @@
+     int pnum;
+     char buf[12]; unichar_t ubuf[12];
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++    if ( sp->isopenend )
++	col = sp==spl->first ? lockedfirstpointcol : lockedpointcol;
++#endif
+     if ( cv->markextrema && !sp->nonextcp && !sp->noprevcp &&
+ 	    ((sp->nextcp.x==sp->me.x && sp->prevcp.x==sp->me.x) ||
+ 	     (sp->nextcp.y==sp->me.y && sp->prevcp.y==sp->me.y)) )
+ 	 col = extremepointcol;
+-     if ( sp->selected )
++    if ( sp->selected )
+ 	 col = selectedpointcol;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    if ( sp->selected && sp->isopenend )
++         col = lockedselectedpointcol;
++#endif
+ 
+     x =  cv->xoff + rint(sp->me.x*cv->scale);
+     y = -cv->yoff + cv->height - rint(sp->me.y*cv->scale);
+@@ -542,11 +556,25 @@
+ 	    GDrawDrawElipse(pixmap,&r,col);
+ 	else
+ 	    GDrawFillElipse(pixmap,&r,col);
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( sp->isjoint ) {
++	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
++	    GDrawSetLineWidth(pixmap,1);
++	    GDrawDrawElipse(pixmap,&r,jointcol);
++	}
++#endif
+     } else if ( sp->pointtype==pt_corner ) {
+ 	if ( sp->selected )
+ 	    GDrawDrawRect(pixmap,&r,col);
+ 	else
+ 	    GDrawFillRect(pixmap,&r,col);
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( sp->isjoint ) {
++	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
++	    GDrawSetLineWidth(pixmap,1);
++	    GDrawDrawElipse(pixmap,&r,jointcol);
++	}
++#endif
+     } else {
+ 	GPoint gp[5];
+ 	int dir;
+@@ -593,6 +621,13 @@
+ 	    GDrawDrawPoly(pixmap,gp,4,col);
+ 	else
+ 	    GDrawFillPoly(pixmap,gp,4,col);
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( sp->isjoint ) {
++	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
++	    GDrawSetLineWidth(pixmap,1);
++	    GDrawDrawElipse(pixmap,&r,jointcol);
++	}
++#endif
+     }
+     GDrawSetLineWidth(pixmap,0);
+     if ( (cv->showpointnumbers || cv->show_ft_results|| cv->dv ) && sp->ttfindex!=0xffff ) {
+@@ -600,6 +635,12 @@
+ 	uc_strcpy(ubuf,buf);
+ 	GDrawDrawText(pixmap,x,y-6,ubuf,-1,NULL,col);
+     }
++#ifdef FONTFORGE_CONFIG_CLWFK
++    if ( cv->sc->parent->strokedfont >= 1 && sp==spl->first ) {
++	uc_strcpy(ubuf,stroketypes[spl->stroketype]);
++	GDrawDrawText(pixmap,x,y-6,ubuf,-1,NULL,col);
++    }
++#endif
+     if ((( sp->roundx || sp->roundy ) &&
+ 	     (((cv->showrounds&1) && cv->scale>=.3) || (cv->showrounds&2))) ||
+ 	    (sp->watched && cv->dv!=NULL) ||
+@@ -1900,6 +1941,22 @@
+ static void SVMenuSimplifyMore(GWindow gw,struct gmenuitem *mi,GEvent *e);
+ #endif
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++/* copied from SSIsSelected() in splineoverlap.c */
++static int SplIsSelected(SplinePointList *spl) {
++    SplinePoint *sp;
++
++    for ( sp=spl->first; ; ) {
++        if ( sp->selected )
++return( true );
++        if ( sp->next==NULL )
++return( false );
++        sp = sp->next->to;
++        if ( sp==spl->first )
++return( false );
++    }
++}
++#endif
+ 
+ static void CVFakeMove(CharView *cv, GEvent *event) {
+     GEvent e;
+@@ -2027,6 +2084,35 @@
+ 	    dy = -1;
+ 	  break;
+ 	}
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( event->u.chr.state & ksm_control && 
++	     event->u.chr.state & ksm_shift &&
++	     cv->sc->parent->strokewidth > 0 ) {
++	    SplinePointList *spl;
++	    int dw;
++	    switch ( event->u.chr.keysym ) {
++	    case GK_Left: case GK_KP_Left:
++	    case GK_Up: case GK_KP_Up:
++		dw = 1;
++	    break;
++	    case GK_Right: case GK_KP_Right:
++	    case GK_Down: case GK_KP_Down:
++		dw = -1;
++	    break;
++	    }
++	    for ( spl=cv->sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++		if ( SplIsSelected(spl) ) {
++		    if ( spl->width==0 )
++			spl->width = cv->sc->parent->strokewidth;
++		    spl->width += dw;
++		    if ( spl->width < 0 )
++			spl->width = 0;
++		}
++	    }
++	    SCRegenFills(cv->sc);
++	    CVCharChangedUpdate(cv);
++	} else
++#endif
+ 	if ( event->u.chr.state & (ksm_control|ksm_capslock) ) {
+ 	    struct sbevent sb;
+ 	    sb.type = dy>0 || dx<0 ? et_sb_halfup : et_sb_halfdown;
+@@ -3882,6 +3968,11 @@
+ #define MID_PtsSVG	2024
+ #define MID_Ligatures	2025
+ #define MID_Former	2026
++#ifdef FONTFORGE_CONFIG_CLWFK
++#define MID_ShowMinchoOutline	2031
++#define MID_ShowGothicOutline	2032
++#define MID_NormKanji		2033
++#endif
+ #define MID_Cut		2101
+ #define MID_Copy	2102
+ #define MID_Paste	2103
+@@ -3956,6 +4047,11 @@
+ #define MID_MakeFirst	2304
+ #define MID_MakeLine	2305
+ #define MID_AddAnchor	2310
++#ifdef FONTFORGE_CONFIG_CLWFK
++#define MID_ToggleLocked	2320
++#define MID_ToggleJoint 2321
++#define MID_StrokeInfo 2322
++#endif
+ #define MID_AutoHint	2400
+ #define MID_ClearHStem	2401
+ #define MID_ClearVStem	2402
+@@ -4304,6 +4400,32 @@
+     GDrawRequestExpose(cv->v,NULL,false);
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++void SCClearBackground(SplineChar *);
++
++static void CVMenuShowMinchoOutline(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++
++    SCClearBackground(cv->sc);
++    SCFleshSkeleton(cv->sc, "mincho", CVShows.normkanji);
++    GDrawRequestExpose(cv->v,NULL,false);
++}
++
++static void CVMenuShowGothicOutline(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++
++    SCClearBackground(cv->sc);
++    SCFleshSkeleton(cv->sc, "gothic", CVShows.normkanji);
++    GDrawRequestExpose(cv->v,NULL,false);
++}
++
++static void CVToggleNormKanji(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++
++    CVShows.normkanji = cv->normkanji = !cv->normkanji;
++}
++#endif
++
+ static void CVMenuShowGridFit(GWindow gw,struct gmenuitem *mi,GEvent *e) {
+     CharView *cv = (CharView *) GDrawGetUserData(gw);
+ 
+@@ -5081,6 +5203,275 @@
+     }
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static void _CVMenuToggleLocked(CharView *cv,struct gmenuitem *mi) {
++    int locked = -2;
++    SplinePointList *spl;
++    Spline *spline, *first;
++
++    CVPreserveState(cv);
++    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
++	first = NULL;
++	if ( spl->first->selected ) {
++	    if ( locked==-2 ) locked=spl->first->isopenend;
++	    else if ( spl->first->isopenend!=locked ) locked=-1;
++	}
++	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
++	    if ( spline->to->selected ) {
++		if ( locked==-2 ) locked=spline->to->isopenend;
++		else if ( spline->to->isopenend!=locked ) locked=-1;
++	    }
++	    if ( first==NULL ) first = spline;
++	}
++    }
++    if (locked==-1) locked = 0;
++    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
++	first = NULL;
++	if ( spl->first->selected )
++	    spl->first->isopenend = !locked;
++	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
++	    if ( spline->to->selected )
++		spline->to->isopenend = !locked;
++	    if ( first==NULL ) first = spline;
++	}
++    }
++    CVCharChangedUpdate(cv);
++}
++
++static void CVMenuToggleLocked(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++    _CVMenuToggleLocked(cv,mi);
++}
++
++static void _CVMenuToggleJoint(CharView *cv,struct gmenuitem *mi) {
++    int isjoint = -2;
++    SplinePointList *spl;
++    Spline *spline, *first;
++
++    CVPreserveState(cv);
++    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
++	first = NULL;
++	if ( spl->first->selected ) {
++	    if ( isjoint==-2 ) isjoint=spl->first->isjoint;
++	    else if ( spl->first->isjoint!=isjoint ) isjoint=-1;
++	}
++	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
++	    if ( spline->to->selected ) {
++		if ( isjoint==-2 ) isjoint=spline->to->isjoint;
++		else if ( spline->to->isjoint!=isjoint ) isjoint=-1;
++	    }
++	    if ( first==NULL ) first = spline;
++	}
++    }
++    if (isjoint==-1) isjoint = 0;
++    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
++	first = NULL;
++	if ( spl->first->selected )
++	    spl->first->isjoint = !isjoint;
++	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
++	    if ( spline->to->selected )
++		spline->to->isjoint = !isjoint;
++	    if ( first==NULL ) first = spline;
++	}
++    }
++    CVCharChangedUpdate(cv);
++}
++
++static void CVMenuToggleJoint(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++    _CVMenuToggleJoint(cv,mi);
++}
++
++#define CID_Width 1000
++#define CID_StrokeType 1001
++
++GTextInfo stroketypelist[30] = {
++  { (unichar_t *) "ten", NULL, 0, 0, (void *)0, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tate", NULL, 0, 0, (void *)1, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "yoko", NULL, 0, 0, (void *)2, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "migiue", NULL, 0, 0, (void *)3, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hidari", NULL, 0, 0, (void *)4, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tatehidari", NULL, 0, 0, (void *)5, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "migi", NULL, 0, 0, (void *)6, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kozato", NULL, 0, 0, (void *)7, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tatehane", NULL, 0, 0, (void *)8, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tsukurihane", NULL, 0, 0, (void *)9, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "sanzui", NULL, 0, 0, (void *)10, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kokoro", NULL, 0, 0, (void *)11, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tasuki", NULL, 0, 0, (void *)12, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "shin-nyuu", NULL, 0, 0, (void *)13, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "magaritate", NULL, 0, 0, (void *)14, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kagi", NULL, 0, 0, (void *)15, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira0", NULL, 0, 0, (void *)16, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira1", NULL, 0, 0, (void *)17, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira2", NULL, 0, 0, (void *)18, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira3", NULL, 0, 0, (void *)19, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira_long", NULL, 0, 0, (void *)20, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "frame", NULL, 0, 0, (void *)21, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae", NULL, 0, 0, (void *)22, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae1", NULL, 0, 0, (void *)23, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae2", NULL, 0, 0, (void *)24, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae3", NULL, 0, 0, (void *)25, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae4", NULL, 0, 0, (void *)26, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "nyou", NULL, 0, 0, (void *)27, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tare", NULL, 0, 0, (void *)28, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { NULL }
++};
++
++struct sgid {
++    unsigned int done: 1;
++    struct charview *cv;
++    SplinePointList *spl;
++    GWindow gw;
++};
++
++static int SGID_OK(GGadget *g, GEvent *e) {
++    int err = false;
++
++    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
++	struct sgid *sgid = GDrawGetUserData(GGadgetGetWindow(g));
++	sgid->spl->width = GetRealR(sgid->gw,CID_Width,_STR_Width, &err);
++	sgid->spl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(sgid->gw,CID_StrokeType))->userdata);
++	sgid->cv->sc->parent->default_stroketype = sgid->spl->stroketype;
++	sgid->done = true;
++    }
++return( true );
++}
++
++static int SGID_Cancel(GGadget *g, GEvent *e) {
++    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
++	struct sgid *sgid = GDrawGetUserData(GGadgetGetWindow(g));
++	sgid->done = true;
++    }
++return( true );
++}
++
++static int sgid_e_h(GWindow gw, GEvent *event) {
++  if ( event->type==et_close ) {
++      struct sgid *sgid = GDrawGetUserData(gw);
++      sgid->done = true;
++  } else if ( event->type == et_char ) {
++return( false );
++  } else if ( event->type == et_map ) {
++    /* Above palettes */
++        GDrawRaise(gw);
++  }
++return( true );
++}
++
++void StrokeGetInfo(CharView *cv, SplinePointList *spl) {
++    GWindow gw;
++    GWindowAttrs wattrs;
++    GGadgetCreateData gcd[9];
++    GTextInfo label[9];
++    GRect pos;
++    char buffer[20];
++    int i, j;
++    struct sgid sgid;
++
++    sgid.done = false;
++    sgid.cv = cv;
++    sgid.spl = spl;
++
++    memset(&wattrs,0,sizeof(wattrs));
++    wattrs.mask = wam_events|wam_cursor|wam_wtitle|wam_undercursor|wam_isdlg|wam_restrict;
++    wattrs.event_masks = ~(1<<et_charup);
++    wattrs.restrict_input_to_me = 1;
++    wattrs.undercursor = 1;
++    wattrs.cursor = ct_pointer;
++#if defined(FONTFORGE_CONFIG_GDRAW)
++    wattrs.window_title = GStringGetResource(_STR_StrokeInfo,NULL);
++#elif defined(FONTFORGE_CONFIG_GTK)
++    wattrs.window_title = isinline?_("Stroke Info");
++#endif
++    wattrs.is_dlg = true;
++    pos.x = pos.y = 0;
++    pos.width = GGadgetScale(GDrawPointsToPixels(NULL,200));
++    pos.height = GDrawPointsToPixels(NULL,105);
++    sgid.gw = gw = GDrawCreateTopWindow(NULL,&pos,sgid_e_h,&sgid,&wattrs);
++    
++    memset(&label,0,sizeof(label));
++    memset(&gcd,0,sizeof(gcd));
++
++    i = 0;
++    label[i].text = (unichar_t *) _STR_StrokeType;
++    label[i].text_in_resource = true;
++    gcd[i].gd.label = &label[i];
++    gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = 7+3+5; 
++    gcd[i].gd.flags = gg_enabled|gg_visible;
++    gcd[i++].creator = GLabelCreate;
++
++    gcd[i].gd.pos.x = 80; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-5; gcd[i].gd.pos.width = 100;
++    gcd[i].gd.flags = gg_enabled|gg_visible;
++    gcd[i].gd.cid = CID_StrokeType;
++    gcd[i].gd.u.list = stroketypelist;
++    gcd[i++].creator = GListButtonCreate;
++    for ( j=0; j<sizeof(stroketypelist)/sizeof(stroketypelist[0]); j++) {
++      stroketypelist[j].selected = (j == spl->stroketype);
++      stroketypelist[j].disabled = false;
++    }
++
++    label[i].text = (unichar_t *) _STR_WidthC;
++    label[i].text_in_resource = true;
++    gcd[i].gd.label = &label[i];
++    gcd[i].gd.pos.x = 7; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+32;
++    gcd[i].gd.flags = gg_enabled|gg_visible;
++    gcd[i++].creator = GLabelCreate;
++
++    sprintf( buffer, "%f", spl->width );
++    label[i].text = (unichar_t *) buffer;
++    label[i].text_is_1byte = true;
++    gcd[i].gd.label = &label[i];
++    gcd[i].gd.pos.x = 80; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-5; gcd[i].gd.pos.width = 80;
++    gcd[i].gd.flags = gg_enabled|gg_visible;
++    gcd[i].gd.cid = CID_Width;
++    gcd[i++].creator = GTextFieldCreate;
++
++    gcd[i].gd.pos.x = 30-3; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+32;
++    gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
++    gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_default;
++    label[i].text = (unichar_t *) _STR_OK;
++    label[i].text_in_resource = true;
++    gcd[i].gd.label = &label[i];
++    gcd[i].gd.handle_controlevent = SGID_OK;
++    gcd[i++].creator = GButtonCreate;
++
++    gcd[i].gd.pos.x = -30; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y+3;
++    gcd[i].gd.pos.width = -1; gcd[i].gd.pos.height = 0;
++    gcd[i].gd.flags = gg_visible | gg_enabled | gg_but_cancel;
++    label[i].text = (unichar_t *) _STR_Cancel;
++    label[i].text_in_resource = true;
++    gcd[i].gd.label = &label[i];
++    gcd[i].gd.handle_controlevent = SGID_Cancel;
++    gcd[i++].creator = GButtonCreate;
++
++    gcd[i].gd.pos.x = 2; gcd[i].gd.pos.y = 2;
++    gcd[i].gd.pos.width = pos.width-4; gcd[i].gd.pos.height = pos.height-4;
++    gcd[i].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
++    gcd[i].creator = GGroupCreate;
++
++    GGadgetsCreate(gw,gcd);
++
++    GWidgetHidePalettes();
++    GDrawSetVisible(gw,true);
++    while ( !sgid.done )
++        GDrawProcessOneEvent(NULL);
++    CVCharChangedUpdate(cv);
++    GDrawSetVisible(gw,false);
++}
++
++static void CVMenuStrokeInfo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++    CharView *cv = (CharView *) GDrawGetUserData(gw);
++    SplinePointList *spl;
++    RefChar *r;
++    ImageList *im;
++
++    if ( CVOneContourSel(cv,&spl,&r,&im) ) {
++        StrokeGetInfo(cv, spl);
++    }
++}
++#endif
++
+ static void _CVMenuPointType(CharView *cv,struct gmenuitem *mi) {
+     int pointtype = mi->mid==MID_Corner?pt_corner:mi->mid==MID_Tangent?pt_tangent:pt_curve;
+     SplinePointList *spl;
+@@ -5111,6 +5502,9 @@
+ 
+ static void cv_ptlistcheck(CharView *cv,struct gmenuitem *mi,GEvent *e) {
+     int type = -2, cnt=0;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    int locked = -2, isjoint = -2;
++#endif
+     SplinePointList *spl, *sel=NULL;
+     Spline *spline, *first;
+     SplinePoint *selpt=NULL;
+@@ -5122,11 +5516,23 @@
+ 	    selpt = spl->first; ++cnt;
+ 	    if ( type==-2 ) type = spl->first->pointtype;
+ 	    else if ( type!=spl->first->pointtype ) type = -1;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    if ( locked==-2 ) locked = spl->first->isopenend;
++	    else if ( locked!=spl->first->isopenend ) locked = -1;
++	    if ( isjoint==-2 ) isjoint = spl->first->isjoint;
++	    else if ( locked!=spl->first->isjoint ) isjoint = -1;
++#endif
+ 	}
+ 	for ( spline=spl->first->next; spline!=NULL && spline!=first && type!=-1; spline = spline->to->next ) {
+ 	    if ( spline->to->selected ) {
+ 		if ( type==-2 ) type = spline->to->pointtype;
+ 		else if ( type!=spline->to->pointtype ) type = -1;
++#ifdef FONTFORGE_CONFIG_CLWFK
++		if ( locked==-2 ) locked = spline->to->isopenend;
++		else if ( locked!=spline->to->isopenend ) locked = -1;
++		if ( isjoint==-2 ) isjoint = spline->to->isjoint;
++		else if ( locked!=spline->to->isjoint ) isjoint = -1;
++#endif
+ 		selpt = spline->to;
+ 		sel = spl; ++cnt;
+ 	    }
+@@ -5159,6 +5565,16 @@
+ 	    mi->ti.disabled = AnchorClassUnused(cv->sc,&waslig)==NULL;
+ 	  break;
+ #endif
++#ifdef FONTFORGE_CONFIG_CLWFK
++	  case MID_ToggleLocked:
++	    mi->ti.disabled = locked==-2;
++	    mi->ti.checked = locked==1;
++	  break;
++	  case MID_ToggleJoint:
++	    mi->ti.disabled = isjoint==-2;
++	    mi->ti.checked = isjoint==1;
++	  break;
++#endif
+ 	}
+     }
+ }
+@@ -6806,7 +7222,13 @@
+     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
+     { { (unichar_t *) _STR_AddAnchor, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'A' }, '0', ksm_control, NULL, NULL, CVMenuAddAnchor, MID_AddAnchor },
+     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
+-    { { (unichar_t *) _STR_MakeLine, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'M' }, '\0', ksm_control, NULL, NULL, CVMenuMakeLine, MID_MakeLine },
++    { { (unichar_t *) _STR_MakeLine, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'L' }, '\0', ksm_control, NULL, NULL, CVMenuMakeLine, MID_MakeLine },
++#ifdef FONTFORGE_CONFIG_CLWFK
++    { { (unichar_t *) _STR_StrokeInfo, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'I' }, '\0', ksm_control, NULL, NULL, CVMenuStrokeInfo, MID_StrokeInfo },
++    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
++    { { (unichar_t *) _STR_LockLineEnd, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'E' }, '\0', ksm_control, NULL, NULL, CVMenuToggleLocked, MID_ToggleLocked },
++    { { (unichar_t *) _STR_Joint, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'J' }, '\0', ksm_control, NULL, NULL, CVMenuToggleJoint, MID_ToggleJoint },
++#endif
+     { NULL }
+ };
+ 
+@@ -7045,6 +7467,11 @@
+     { { (unichar_t *) _STR_NumberPoints, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'o' }, '\0', ksm_control, nplist, nplistcheck },
+     { { (unichar_t *) _STR_MarkExtrema, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'M' }, '\0', ksm_control, NULL, NULL, CVMenuMarkExtrema, MID_MarkExtrema },
+     { { (unichar_t *) _STR_Fill, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuFill, MID_Fill },
++#ifdef FONTFORGE_CONFIG_CLWFK
++    { { (unichar_t *) _STR_MinchoOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowMinchoOutline, MID_ShowMinchoOutline },
++    { { (unichar_t *) _STR_GothicOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGothicOutline, MID_ShowGothicOutline },
++    { { (unichar_t *) _STR_NormKanji, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVToggleNormKanji, MID_NormKanji },
++#endif
+     { { (unichar_t *) _STR_ShowGridFitDDD, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGridFit, MID_ShowGridFit },
+     { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, }},
+     { { (unichar_t *) _STR_Combinations, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'b' }, '\0', ksm_shift|ksm_control, cblist, cblistcheck },
+@@ -8002,3 +8429,4 @@
+     _CharViewCreate(&sv->cv_srch, &sv->sc_srch, &sv->dummy_fv);
+ }
+ #endif		/* FONTFORGE_CONFIG_NO_WINDOWING_UI */
++
+--- fontforge/configure-pfaedit.h.orig	Thu Mar 10 05:36:26 2005
++++ fontforge/configure-pfaedit.h	Sun Apr 24 20:05:24 2005
+@@ -73,7 +73,7 @@
+ /* Sometimes I want to create a glyph which is a word, and this command       */
+ /*  makes that easy                                                           */
+ /*									      */
+-/* #define FONTFORGE_CONFIG_PASTEAFTER					      */
++#define FONTFORGE_CONFIG_PASTEAFTER
+ /*									      */
+ /* The paste after command pastes the contents of the clipboard into the      */
+ /*  current glyph, translates that by the advance width of the current glyph  */
+@@ -84,7 +84,7 @@
+ /*  don't include code for it by default, but if you do want it simply define */
+ /*  the following macro							      */
+ /*									      */
+-/* #define FONTFORGE_CONFIG_TILEPATH					      */
++#define FONTFORGE_CONFIG_TILEPATH
+ /*									      */
+ /* The tile path command uses the contents of the clipboard as a tile which is*/
+ /*  applied to any selected paths, replacing them. It could be used to make a */
+@@ -98,7 +98,7 @@
+ /*  this property has been dropped because it was redundant.  If you would    */
+ /*  like FontForge to generate it					      */
+ /*									      */
+-/* #define FONTFORGE_CONFIG_BDF_GLYPH_RANGES				      */
++#define FONTFORGE_CONFIG_BDF_GLYPH_RANGES
+ /*									      */
+ 
+ 
+@@ -113,7 +113,7 @@
+ /*  creating a font along with it. I don't see the need for this, but he pro- */
+ /*  vided a patch. Setting this flag will enable his patch		      */
+ /*									      */
+-/* #define FONTFORGE_CONFIG_WRITE_PFM					      */
++#define FONTFORGE_CONFIG_WRITE_PFM
+ /*									      */
+ 
+ 
+@@ -206,7 +206,7 @@
+ /*  routine. I'm not sure that it's very useful though. It can be used to do  */
+ /*  perspective transformations and such				      */
+ /*									      */
+-/* #define FONTFORGE_CONFIG_NONLINEAR					      */
++#define FONTFORGE_CONFIG_NONLINEAR
+ /*									      */
+ /* This command takes two strings which specify general expressions in x and y*/
+ /*  and applies the specified transformations to the splines.  Note: Each     */
+--- fontforge/cvaddpoints.c.orig	Sun Jan  2 00:05:56 2005
++++ fontforge/cvaddpoints.c	Sun Apr 24 20:05:24 2005
+@@ -207,6 +207,20 @@
+ return( found );
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static int NumberOfPointsAre(SplinePoint *sp, int num) {
++    while (sp != NULL) {
++	if (num-- < 0)
++return false;
++	sp = (sp->prev == NULL) ? NULL : sp->prev->from;
++    }
++    if (num != 0)
++return false;
++    else
++return true;
++}
++#endif
++
+ /* When the user tries to add a point (by doing a mouse down with a point tool
+   selected) there are several cases to be looked at:
+ 	If there is a single point selected and it is at the begining/end of an open spline set
+@@ -362,10 +376,21 @@
+ 	sp->nextcpdef = sp->prevcpdef = 1;
+ 	sp->pointtype = ptype;
+ 	sp->selected = true;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	ss->width = sc->parent->strokewidth;
++	ss->stroketype = sc->parent->default_stroketype;
++#endif
+     }
+ 
+     cv->active_spl = ss;
+     cv->active_sp = sp;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    if (sc->parent->strokedfont) {
++	sp->isopenend = true;
++	if (NumberOfPointsAre(sp, num_points_in_strokes[ss->stroketype]))
++	    sp->selected = false;
++    }
++#endif
+     CVSetCharChanged(cv,true);
+     CVInfoDraw(cv,cv->gw);
+     SCUpdateAll(sc);
+--- fontforge/cvexport.c.orig	Sun Feb 27 12:10:45 2005
++++ fontforge/cvexport.c	Fri Apr 29 22:34:22 2005
+@@ -38,6 +38,150 @@
+ #include <utype.h>
+ #endif
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static int BPIndex(BasePoint bp, BasePoint *array, int arraysize) {
++    int i;
++    for ( i = 0; i < arraysize; i++ ) {
++        if ( array[i].x == bp.x && array[i].y == bp.y )
++return( i );
++    }
++return( -1 );
++}
++
++typedef struct splinepointiterator {
++    SplinePointList *spl;
++    SplinePoint *cur;
++} SPIterator;
++
++static SplinePoint *nextSP(SPIterator *iter) {
++    if (iter->cur == NULL) {
++        iter->cur = iter->spl->first;
++    } else if (iter->cur->next==NULL) {
++        iter->cur = NULL;
++    } else if (iter->cur->next->to==iter->spl->first) {
++        iter->cur = NULL;
++    } else {
++        iter->cur = iter->cur->next->to;
++    }
++return iter->cur;
++}
++
++static void initSPIterator(SPIterator *iter, SplinePointList *spl) {
++    iter->spl = spl;
++    iter->cur = NULL;
++}
++
++int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphname) {
++    int i, ret, numPoints = 0;
++    SplinePointList *spl;
++    SplinePoint *sp;
++    SPIterator iter;
++    BasePoint points[256];
++    int linkok[256], joints[128];
++    PrimParams *fk = &sc->clwfk;
++    char *s = NULL;
++
++    for (i = 0; i < 256; i++) linkok[i] = false;
++    SCRound2Int(sc,1.0);
++    if (glyphname!=NULL)
++        s = copy(glyphname);
++    else if (fk->glyphname!=NULL)
++        s = u2utf8_copy(fk->glyphname);
++    fprintf(skel, "(setq %s\n      '((", s!=NULL ? s : "UNKNOWN");
++    if (s!=NULL)
++        gfree(s);
++
++    for ( spl=sc->layers[1].splines; spl!=NULL; spl=spl->next )
++        if ( spl->stroketype < frame )
++	    for ( initSPIterator(&iter, spl); (sp=nextSP(&iter)) != NULL; ) {
++		i = BPIndex(sp->me, points, numPoints);
++		if ( i < 0 )
++		    points[i = numPoints++] = sp->me;
++		if ( sp->isjoint )
++		  linkok[i] = true;
++	    }
++
++    for (i = 0; i < numPoints; i++) {
++        fprintf(skel, "%s(%d %d", i==0?"":"        ", 
++		(int)(points[i].x*0.4), (int)((points[i].y-800)*-0.4));
++        if ( linkok[i] ) 
++	    fprintf(skel, " (link-ok t)");
++        fprintf(skel, "%s", i==numPoints-1?"))\n":")\n");
++    }
++
++    fprintf(skel, "%s", "       (");
++    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++        int nJoints=0;
++	if (spl->stroketype >= frame)
++    continue;
++        fprintf(skel, "%s(%s (", spl==sc->layers[ly_fore].splines?"":"        ",
++		                stroketypes[spl->stroketype]);
++	for ( initSPIterator(&iter, spl); (sp=nextSP(&iter)) != NULL; ) {
++            BasePoint me = sp->me;
++	    if ( sp->isjoint && sp->prev!=NULL && sp->next!=NULL && sp->next->to!=spl->first ) {
++	        joints[nJoints++] = BPIndex(me,points,numPoints);
++	    } else {
++	        fprintf(skel, "%d", BPIndex(me,points,numPoints));
++		if ( sp->next!=NULL && sp->next->to!=spl->first )
++		    fputc(' ', skel);
++	    }
++	}
++	fprintf(skel, ")");
++	if (nJoints > 0) {
++	    fprintf(skel, " (link ");
++	    for ( i=0; i<nJoints; i++ ) {
++		fprintf(skel, "%d", joints[i]);
++		if (i < nJoints-1) fprintf(skel, " ");
++	    }
++	    fprintf(skel, ")");
++	}
++	if ( spl->width != 0 && sc->parent->strokewidth != 0 &&
++	     spl->width != sc->parent->strokewidth )
++	    fprintf(skel, " (widthratio . %.3f)", spl->width / sc->parent->strokewidth);
++	fprintf(skel, spl->next==NULL?")":")\n");
++    }
++    if ( fk->xlimit_min!=0 || (fk->xlimit_max!=0 && fk->xlimit_max!=1000 ))
++        fprintf(skel, "\n       (xlimit %g %g)", fk->xlimit_min, fk->xlimit_max);
++    if ( fk->ylimit_min!=0 || (fk->ylimit_max!=0 && fk->ylimit_max!=1000 ))
++        fprintf(skel, "\n       (ylimit %g %g)", fk->ylimit_min, fk->ylimit_max);
++    fprintf(skel, ")\n");
++
++    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++        if ( spl->stroketype >= frame )
++	    fprintf(skel, "      (%s %.1f %.1f %.1f %.1f)\n", stroketypes[spl->stroketype],
++		    spl->first->me.x, spl->first->me.y,
++		    spl->first->next->to->next->to->me.x, spl->first->next->to->next->to->me.y);
++    }
++    if ( fk->tateheight != 0 ) fprintf(skel, "       (tateheight . %f)\n", fk->tateheight);
++    if ( fk->yokowidth != 0 ) fprintf(skel, "       (yokowidth . %f)\n", fk->yokowidth);
++    if ( fk->xunit != 0 ) fprintf(skel, "       (xunit . %f)\n", fk->xunit);
++    if ( fk->yunit != 0 ) fprintf(skel, "       (yunit . %f)\n", fk->yunit);
++    if ( fk->center == 200 ) fprintf(skel, "       (center)\n");
++    else if ( fk->center != 0 ) fprintf(skel, " (center . %f)\n",fk->center);
++    if ( fk->up!=0 || fk->down!=0 ) 
++        fprintf(skel, "       (updown %f . %f)\n", fk->up, fk->down);
++    if ( fk->hook!=NULL)
++        fprintf(skel, "       (hook  %s)\n", fk->hook);
++    fprintf(skel, "))\n");
++    
++    ret = !ferror(skel);
++return( ret );
++}
++
++int ExportSkeleton(char *filename,SplineChar *sc) {
++    FILE *skel;
++    int ret;
++
++    skel = fopen(filename,"w");
++    if ( skel==NULL ) {
++return(0);
++    }
++    ret = ExportSkeletonAs(skel,sc,NULL);
++    fclose(skel);
++return( ret );
++}
++#endif
++
+ static void EpsGeneratePreview(FILE *eps,SplineChar *sc,DBounds *b) {
+     double scale, temp;
+     int pixelsize, depth;
+@@ -743,6 +887,10 @@
+ 	good = ExportSVG(buffer,sc);
+     else if ( format==3 )
+ 	good = ExportPDF(buffer,sc);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    else if ( format==4 )
++	good = ExportSkeleton(buffer,sc);
++#endif
+     else if ( bc!=NULL )
+ 	good = BCExportXBM(buffer,bc,format-3);
+     if ( !good )
+@@ -777,6 +925,9 @@
+     { (unichar_t *) "XFig", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "SVG", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "PDF", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
++#ifdef FONTFORGE_CONFIG_CLWFK
++    { (unichar_t *) "Skeleton", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
++#endif
+     { (unichar_t *) "X Bitmap", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "BMP", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+ #ifndef _NO_LIBPNG
+@@ -803,6 +954,10 @@
+ 	good = ExportSVG(temp,d->sc);
+     else if ( format==3 )
+ 	good = ExportPDF(temp,d->sc);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    else if ( format==4 )
++	good = ExportSkeleton(temp,d->sc);
++#endif
+     else
+ 	good = ExportXBM(temp,d->sc,format-4);
+     if ( !good )
+@@ -906,8 +1061,14 @@
+ 			 format==1?".fig":
+ 			 format==2?".svg":
+ 			 format==3?".pdf":
++#ifdef FONTFORGE_CONFIG_CLWFK
++			 format==4?".l":
++			 format==5?".xbm":
++			 format==6?".bmp":
++#else
+ 			 format==4?".xbm":
+ 			 format==5?".bmp":
++#endif
+ 				   ".png");
+ 	GGadgetSetTitle(d->gfc,f2);
+ 	free(f2);
+@@ -1097,7 +1258,11 @@
+ 	ext = _format==0 ? "xbm" : _format==1 ? "bmp" : "png";
+     else
+ 	ext = _format==0?"eps":_format==1?"fig":_format==2?"svg":
++#ifdef FONTFORGE_CONFIG_CLWFK
++		_format==3?"pdf":_format==4?"l":_format==5?"xbm":_format==6?"bmp":"png";
++#else
+ 		_format==3?"pdf":_format==4?"xbm":_format==5?"bmp":"png";
++#endif
+ #if defined( __CygWin ) || defined(__Mac)
+     /* Windows file systems are not case conscious */
+     { char *pt, *bpt, *end;
+--- fontforge/cvfreehand.c.orig	Mon Jan 31 11:11:19 2005
++++ fontforge/cvfreehand.c	Sun Apr 24 20:05:24 2005
+@@ -559,6 +559,10 @@
+     /* Splice things together */
+     spl = chunkalloc(sizeof(SplineSet));
+     spl->first = last = SplinePointCreate(head->here.x,head->here.y);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    spl->width = cv->sc->parent->strokewidth;
++    spl->stroketype = hira1;
++#endif
+     last->ptindex = 0;
+ 
+     for ( base=head; base!=NULL && base->next!=NULL; base = pt ) {
+--- fontforge/cvgetinfo.c.orig	Sat Apr  2 07:07:37 2005
++++ fontforge/cvgetinfo.c	Wed Apr 27 19:47:19 2005
+@@ -73,6 +73,11 @@
+ #define CID_PrevC	2042
+ #define CID_TabSet	2100
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++#define CID_StrokeType  1001
++#define CID_Width	1002
++#endif
++
+ #define CID_X		3001
+ #define CID_Y		3002
+ #define CID_NameList	3003
+@@ -1304,6 +1309,7 @@
+     PI_ShowHints(ci->cv->sc,GWidgetGetControl(ci->gw,CID_HintMask),set);
+ }
+ 
++
+ static void PI_DoCancel(GIData *ci) {
+     CharView *cv = ci->cv;
+     ci->done = true;
+@@ -1409,7 +1415,13 @@
+ return( true );
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++extern GTextInfo stroketypelist[30];
++#endif
++
+ static int PI_Ok(GGadget *g, GEvent *e) {
++    int err=false;
++
+     if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
+ 	GIData *ci = GDrawGetUserData(GGadgetGetWindow(g));
+ 
+@@ -1419,6 +1431,11 @@
+ 	PI_FigureNext(ci);
+ 	PI_FigurePrev(ci);
+ 
++	ci->curspl->width = GetRealR(ci->gw,CID_Width,_STR_Width, &err);
++	ci->curspl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(ci->gw,CID_StrokeType))->userdata);
++	ci->cv->sc->parent->default_stroketype = ci->curspl->stroketype;
++
++
+ 	ci->done = true;
+ 	/* All the work has been done as we've gone along */
+     }
+@@ -1970,13 +1987,20 @@
+     GWindowAttrs wattrs;
+     GGadgetCreateData gcd[39], hgcd[2], h2gcd[2], mgcd[11];
+     GTextInfo label[39], mlabel[11];
++#ifdef FONTFORGE_CONFIG_CLWFK
++    GGadgetCreateData sgcd[6];
++    GTextInfo slabel[6];
++    GTabInfo aspects[5];
++    char buffer[30];
++#else
+     GTabInfo aspects[4];
++#endif
+     static GBox cur, nextcp, prevcp;
+     extern Color nextcpcol, prevcpcol;
+     GWindow root;
+     GRect screensize;
+     GPoint pt;
+-    int j, defxpos, nextstarty;
++    int j, k, defxpos, nextstarty;
+ 
+     cur.main_background = nextcp.main_background = prevcp.main_background = COLOR_DEFAULT;
+     cur.main_foreground = 0xff0000;
+@@ -2025,6 +2049,10 @@
+ 	memset(&hgcd,0,sizeof(hgcd));
+ 	memset(&h2gcd,0,sizeof(h2gcd));
+ 	memset(&mgcd,0,sizeof(mgcd));
++#ifdef FONTFORGE_CONFIG_CLWFK
++	memset(&sgcd,0,sizeof(sgcd));
++	memset(&slabel,0,sizeof(slabel));
++#endif
+ 	memset(&mlabel,0,sizeof(mlabel));
+ 	memset(&aspects,0,sizeof(aspects));
+ 
+@@ -2277,6 +2305,12 @@
+ 	aspects[j].text_in_resource = true;
+ 	aspects[j++].gcd = gcd;
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++	aspects[j].text = (unichar_t *) _STR_CLWFK;
++	aspects[j].text_in_resource = true;
++	aspects[j++].gcd = sgcd;
++#endif
++
+ 	aspects[j].text = (unichar_t *) _STR_HintMask;
+ 	aspects[j].text_in_resource = true;
+ 	aspects[j++].gcd = hgcd;
+@@ -2374,6 +2408,52 @@
+ 	mgcd[j].gd.flags = gg_enabled | gg_visible | gg_pos_in_pixels;
+ 	mgcd[j].creator = GGroupCreate;
+ 	++j;
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++	j = 0;
++
++	slabel[j].text = (unichar_t *) _STR_StrokeType;
++	slabel[j].text_in_resource = true;
++	sgcd[j].gd.label = &slabel[j];
++	sgcd[j].gd.pos.x = 7; sgcd[j].gd.pos.y = 7+3+5; 
++	sgcd[j].gd.flags = gg_enabled|gg_visible;
++	sgcd[j++].creator = GLabelCreate;
++
++	sgcd[j].gd.pos.x = 80; sgcd[j].gd.pos.y = gcd[j-1].gd.pos.y-5;
++	sgcd[j].gd.pos.width = 100;
++	sgcd[j].gd.flags = gg_enabled|gg_visible;
++	sgcd[j].gd.cid = CID_StrokeType;
++	sgcd[j].gd.u.list = stroketypelist;
++	for ( k=0; ; k++) {
++	    if (stroketypelist[k].text == NULL)
++	break;
++	    stroketypelist[k].selected = (k == spl->stroketype);
++	    stroketypelist[k].disabled = false;
++	}
++	sgcd[j++].creator = GListButtonCreate;
++
++	slabel[j].text = (unichar_t *) _STR_WidthC;
++	slabel[j].text_in_resource = true;
++	sgcd[j].gd.label = &slabel[j];
++	sgcd[j].gd.pos.x = 7; sgcd[j].gd.pos.y = sgcd[j-1].gd.pos.y+32;
++	sgcd[j].gd.flags = gg_enabled|gg_visible;
++	sgcd[j++].creator = GLabelCreate;
++
++	sprintf( buffer, "%f", spl->width );
++	slabel[j].text = (unichar_t *) buffer;
++	slabel[j].text_is_1byte = true;
++	sgcd[j].gd.label = &slabel[j];
++	sgcd[j].gd.pos.x = 80; sgcd[j].gd.pos.y = sgcd[j-1].gd.pos.y-5;
++	sgcd[j].gd.pos.width = 80;
++	sgcd[j].gd.flags = gg_enabled|gg_visible;
++	sgcd[j].gd.cid = CID_Width;
++	sgcd[j++].creator = GTextFieldCreate;
++
++	sgcd[j].gd.pos.x = 2; sgcd[j].gd.pos.y = 2;
++	sgcd[j].gd.pos.width = pos.width-4; sgcd[j].gd.pos.height = pos.height-4;
++	sgcd[j].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
++	sgcd[j].creator = GGroupCreate;
++#endif
+ 
+ 	GGadgetsCreate(gi.gw,mgcd);
+ 	GTextInfoListFree(hgcd[0].gd.u.list);
+--- fontforge/cvknife.c.orig	Sun Jan  2 00:05:56 2005
++++ fontforge/cvknife.c	Sun Apr 24 20:05:24 2005
+@@ -44,7 +44,7 @@
+ return;					/* Nothing to cut */
+ 
+     if ( p->spline!=NULL )
+-	p->sp = SplineBisect(p->spline,p->t,cv->sc->parent->order2);
++	p->sp = SplineBisect(p->spline,p->t);
+     if ( p->spl==NULL )		/* Kanou says this can happen. It doesn't hurt to check for it */
+ return;
+     if ( p->spl->first!=p->spl->last )
+@@ -67,6 +67,10 @@
+ 	nspl->first = n;
+ 	nspl->last = p->spl->last;
+ 	p->spl->last = p->sp;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	nspl->width = p->spl->width;
++	nspl->stroketype = p->spl->stroketype;
++#endif
+     }
+     
+     cv->lastknife.x = cv->info.x;
+@@ -159,6 +163,10 @@
+ 			    spl2->first = mid2;
+ 			    spl2->last = spl->last;
+ 			    spl->last = mid;
++#ifdef FONTFORGE_CONFIG_CLWFK
++			    spl2->width = spl->width;
++			    spl2->stroketype = spl->stroketype;
++#endif
+ 			}
+ 		    }
+ 		}
+--- fontforge/cvpalettes.c.orig	Sat Feb 26 06:47:34 2005
++++ fontforge/cvpalettes.c	Sun Apr 24 20:05:24 2005
+@@ -864,6 +864,14 @@
+ 	if ( event->u.mouse.clicks>=2 &&
+ 		(pos/2 == cvt_scale/2 || pos/2 == cvt_rotate/2 || pos == cvt_3d_rotate ))
+ 	    CVDoTransform(cv,pos);
++#ifdef FONTFORGE_CONFIG_CLWFK
++{
++        SplinePointList *spl; RefChar *r; ImageList *im;
++	if ( event->u.mouse.clicks>=2 && CVOneContourSel(cv,&spl,&r,&im) &&
++		(pos == cvt_curve || pos == cvt_corner || pos == cvt_tangent ))
++	    StrokeGetInfo(cv, spl);
++}
++#endif
+     } else if ( event->type == et_mousemove ) {
+ 	if ( cv->pressed_tool==cvt_none && pos!=cvt_none )
+ 	    /* Not pressed */
+@@ -1322,7 +1330,7 @@
+       break;
+       case et_mousedown: {
+ 	int layer = (event->u.mouse.y-CV_LAYERS2_HEADER_HEIGHT)/CV_LAYERS2_LINE_HEIGHT;
+-	if ( event->u.mouse.y>CV_LAYERS2_HEADER_HEIGHT ) {
++	if ( event->u.mouse.y>CV_LAYERS2_HEADER_HEIGHT && layer<=cv->sc->layer_cnt ) {
+ 	    if ( layer<2 ) {
+ 		cv->drawmode = layer==0 ? dm_grid : dm_back;
+ 		layer2.active = layer;
+--- fontforge/cvpointer.c.orig	Thu Jan  6 11:33:39 2005
++++ fontforge/cvpointer.c	Sun Apr 24 20:05:24 2005
+@@ -869,6 +869,9 @@
+ 		if ( mergess->first->prev==NULL && (!mergess->first->selected ||
+ 			!mergess->last->selected)) {
+ 		    if ( !mergess->first->selected && activess->first->selected &&
++#ifdef FONTFORGE_CONFIG_CLWFK
++			    !mergess->first->isopenend && !activess->first->isopenend &&
++#endif
+ 			    Nearish(mergess->first->me.x-activess->first->me.x,fudge) &&
+ 			    Nearish(mergess->first->me.y-activess->first->me.y,fudge)) {
+ 			CVMergeSplineSets(cv,activess->first,activess,
+@@ -876,6 +879,9 @@
+   goto restart;
+ 		    }
+ 		    if ( !mergess->last->selected && activess->first->selected &&
++#ifdef FONTFORGE_CONFIG_CLWFK
++			    !mergess->last->isopenend && !activess->first->isopenend &&
++#endif
+ 			    Nearish(mergess->last->me.x-activess->first->me.x,fudge) &&
+ 			    Nearish(mergess->last->me.y-activess->first->me.y,fudge)) {
+ 			CVMergeSplineSets(cv,activess->first,activess,
+@@ -883,6 +889,9 @@
+   goto restart;
+ 		    }
+ 		    if ( !mergess->first->selected && activess->last->selected &&
++#ifdef FONTFORGE_CONFIG_CLWFK
++			    !mergess->first->isopenend && !activess->last->isopenend &&
++#endif
+ 			    Nearish(mergess->first->me.x-activess->last->me.x,fudge) &&
+ 			    Nearish(mergess->first->me.y-activess->last->me.y,fudge)) {
+ 			CVMergeSplineSets(cv,activess->last,activess,
+@@ -890,6 +899,9 @@
+   goto restart;
+ 		    }
+ 		    if ( !mergess->last->selected && activess->last->selected &&
++#ifdef FONTFORGE_CONFIG_CLWFK
++			    !mergess->last->isopenend && !activess->last->isopenend &&
++#endif
+ 			    Nearish(mergess->last->me.x-activess->last->me.x,fudge) &&
+ 			    Nearish(mergess->last->me.y-activess->last->me.y,fudge)) {
+ 			CVMergeSplineSets(cv,activess->last,activess,
+--- fontforge/cvshapes.c.orig	Sun Jan  2 00:05:56 2005
++++ fontforge/cvshapes.c	Wed Apr 27 19:47:19 2005
+@@ -85,6 +85,10 @@
+     cv->active_shape->next = cv->layerheads[cv->drawmode]->splines;
+     cv->layerheads[cv->drawmode]->splines = cv->active_shape;
+     cv->active_shape->first = last = SPMake(&cv->info,pt_corner);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    cv->active_shape->width = cv->sc->parent->strokewidth;
++    cv->active_shape->stroketype = frame;
++#endif
+ 
+     switch ( cv->active_tool ) {
+       case cvt_rect:
+--- fontforge/diffstubs.c.orig	Sat Mar 12 13:44:38 2005
++++ fontforge/diffstubs.c	Sun Apr 24 20:05:24 2005
+@@ -967,3 +967,8 @@
+ void SFSplinesFromLayers(SplineFont *sf,int flag) {
+ }
+ #endif
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++SplineFont *SplineFontBlank(Encoding *encoding_name, int charcnt) {
++}
++#endif
+--- fontforge/fontview.c.orig	Wed Apr 20 14:35:52 2005
++++ fontforge/fontview.c	Sun Apr 24 20:05:24 2005
+@@ -26,6 +26,7 @@
+  */
+ #include "pfaeditui.h"
+ #include "psfont.h"
++#include "splinefont.h"
+ #ifndef FONTFORGE_CONFIG_GTK
+ #include <ustring.h>
+ #include <gkeysym.h>
+@@ -1033,6 +1034,9 @@
+ 	   "dfont,"
+ 	   "mf,"
+ 	   "ik,"
++#ifdef FONTFORGE_CONFIG_CLWFK
++           "l,"
++#endif
+ 	   "fon,"
+ 	   "fnt"
+ 	   "}"
+@@ -1098,6 +1102,9 @@
+ 			                       'd','f','o','n','t',',',
+ 			                       'm','f',',',
+ 			                       'i','k',',',
++#ifdef FONTFORGE_CONFIG_CLWFK
++					       'l',',',
++#endif
+ 			                       'p','d','b',',',
+ 			                       'f','o','n',',',
+ 			                       'f','n','t','}', 
+@@ -3309,7 +3316,7 @@
+ 	    if ( GWidgetAskR(_STR_Replacearing,buts,0,1,_STR_Areyousurearing)==1 )
+ #elif defined(FONTFORGE_CONFIG_GTK)
+     static char *buts[] = { GTK_STOCK_YES, GTK_STOCK_NO, NULL };
+-	    if ( gwwv_ask(_("Replace Ã…"),buts,0,1,_("Are you sure you want to replace Ã…?\nThe ring will not join to the A."))==1 )
++	    if ( gwwv_ask(_("Replace "),buts,0,1,_("Are you sure you want to replace ?\nThe ring will not join to the A."))==1 )
+ #endif
+     continue;
+ 	}
+@@ -9212,6 +9219,10 @@
+ 	sf = SFFromMF(fullname);
+     } else if ( strmatch(fullname+strlen(fullname)-3, ".ik")==0 ) {
+ 	sf = SFReadIkarus(fullname);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    } else if ( strmatch(fullname+strlen(fullname)-2, ".l")==0 ) {
++      sf = SFReadClwfkSkeleton(fullname);
++#endif
+     } else {
+ 	sf = SFReadMacBinary(fullname,0);
+     }
+@@ -9317,7 +9328,11 @@
+     FontView *fv;
+     SplineFont *sf;
+     char *pt, *ept, *tobefreed1=NULL, *tobefreed2=NULL;
+-    static char *extens[] = { ".sfd", ".pfa", ".pfb", ".ttf", ".otf", ".ps", ".cid", ".bin", ".dfont", ".PFA", ".PFB", ".TTF", ".OTF", ".PS", ".CID", ".BIN", ".DFONT", NULL };
++    static char *extens[] = { ".sfd", ".pfa", ".pfb", ".ttf", ".otf", ".ps", ".cid", ".bin", ".dfont", ".PFA", ".PFB", ".TTF", ".OTF", ".PS", ".CID", ".BIN", ".DFONT", 
++#ifdef FONTFORGE_CONFIG_CLWFK
++			      ".l", ".L",
++#endif
++			      NULL };
+     int i;
+ 
+     if ( filename==NULL )
+--- fontforge/nomen-en.c.orig	Tue Mar 29 04:33:49 2005
++++ fontforge/nomen-en.c	Mon Apr 25 20:21:58 2005
+@@ -1720,7 +1720,7 @@
+ static char str_guru = "Gurmukhi";
+ static char str_jamo = "Hangul Jamo";
+ static char str_hang = "Hangul";
+-static char str_Hanunoo = "Hanunóo";
++static char str_Hanunoo = "Hanun";
+ static char str_hebr = "Hebrew";
+ static char str_HmongPahawh = "Pahawh Hmong";
+ static char str_Indus = "Indus (Harappan)";
+@@ -1734,7 +1734,7 @@
+ static char str_khmr = "Khmer";
+ static char str_lao = "Lao";
+ static char str_latn = "Latin";
+-static char str_Lepcha = "Lepcha (Róng)";
++static char str_Lepcha = "Lepcha (Rg)";
+ static char str_Limbu = "Limbu";
+ static char str_LinearA = "Linear A";
+ static char str_LinearB = "Linear B";
+@@ -3731,3 +3731,34 @@
+ 
+ static int num_buttonsize = 55;
+ static int num_ScaleFactor = 100;
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++static char *str_LockLineEnd = "Lock/Unlock Line End";
++static char mnemonic_LockLineEnd = 'E';
++static char *str_Joint = "Set/Unset Joint";
++static char mnemonic_Joint = 'J';
++static char *str_StrokeInfo = "Stroke Info";
++static char mnemonic_StrokeInfo = 'I';
++static char *str_StrokeType = "Stroke Type:";
++static char *str_CLWFK = "CLWFK";
++static char *str_ClwfkPopup = "This dialog sets information about a CLWFK primitive";
++static char *str_PrimName = "Prim Name:";
++static char *str_TateHeight = "tateheight:";
++static char *str_YokoWidth = "yokowidth:";
++static char *str_TateYoko = "TateH/YokoW:";
++static char *str_TateHeightYokoWidth = "'tateheight' and 'yokowidth'.";
++static char *str_PrimWidth = "width:";
++static char *str_PrimCenter = "center";
++static char *str_WidthCenter = "width/center:";
++static char *str_Xunit = "xunit:";
++static char *str_Yunit = "yunit:";
++static char *str_XYunit = "xunit/yunit:";
++static char *str_UpDown = "updown:";
++static char *str_Hook = "hook:";
++static char *str_MinchoOutline = "Show Mincho Outline";
++static char *str_GothicOutline = "Show Gothic Outline";
++static char *str_NormKanji = "'Normalize Kanji Size";
++static char *str_ClwfkRendererNotFound = "CLWFK renderer not found";
++static char *str_LispNotFound = "Lisp interpreter (CMUCL) not found";
++static char *str_RenderingError = "Rendering error happend";
++#endif
+--- fontforge/savefontdlg.c.orig	Tue Mar  8 03:52:03 2005
++++ fontforge/savefontdlg.c	Wed Apr 27 19:47:19 2005
+@@ -89,7 +89,11 @@
+ 	".cid", ".cff", ".cid.cff",
+ 	".t42", ".cid.t42",
+ 	".ttf", ".ttf", ".suit", ".dfont", ".otf", ".otf.dfont", ".otf",
++#ifdef FONTFORGE_CONFIG_CLWFK
++	".otf.dfont", ".svg", ".l", NULL };
++#else
+ 	".otf.dfont", ".svg", NULL };
++#endif
+ # ifndef FONTFORGE_CONFIG_NO_WINDOWING_UI
+ static char *bitmapextensions[] = { ".*bdf", ".ttf", ".dfont", ".bmap", ".dfont", ".*fnt", ".otb", ".pdb", ".none", NULL };
+ # endif
+@@ -98,7 +102,11 @@
+ 	".cid", ".cff", ".cid.cff",
+ 	".t42", ".cid.t42",
+ 	".ttf", ".ttf", ".ttf.bin", ".dfont", ".otf", ".otf.dfont", ".otf",
++#ifdef FONTFORGE_CONFIG_CLWFK
++	".otf.dfont", ".svg", ".l", NULL };
++#else
+ 	".otf.dfont", ".svg", NULL };
++#endif
+ # ifndef FONTFORGE_CONFIG_NO_WINDOWING_UI
+ static char *bitmapextensions[] = { ".*bdf", ".ttf", ".dfont", ".bmap.bin", ".*fnt", ".otb", ".pdb", ".none", NULL };
+ # endif
+@@ -135,6 +143,9 @@
+     { (unichar_t *) "Open Type CID", NULL, 0, 0, NULL, NULL, 1, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "Open Type CID (dfont)", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "SVG font", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1 },
++#ifdef FONTFORGE_CONFIG_CLWFK
++    { (unichar_t *) "CLWFK Skeleton", NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 1 },
++#endif
+     { (unichar_t *) _STR_Nooutlinefont, NULL, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { NULL }
+ };
+@@ -1171,6 +1182,28 @@
+ }
+ #endif
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static int WriteCLWFKSkeleton(char *fontname,SplineFont *sf,enum fontformat format,int flags) {
++    FILE *file;
++    int i, ret;
++
++    if (( file=fopen(fontname,"w"))==NULL )
++return( 0 );
++    ret = true;
++    for ( i = 0; i < sf->charcnt; i++ ) {
++	if (sf->chars[i]!=NULL) {
++	    ret &= ExportSkeletonAs(file, sf->chars[i], NULL);
++	    fputc('\n', stderr);
++        }
++    }
++    if ( ferror(file))
++	ret = false;
++    if ( fclose(file)==-1 )
++return( false );
++return( ret );
++}
++#endif
++
+ static char *SearchDirForWernerFile(char *dir,char *filename) {
+     char buffer[1025], buf2[200];
+     FILE *file;
+@@ -1774,6 +1807,11 @@
+ #endif
+ 	    oerr = !WriteSVGFont(newname,sf,oldformatstate,flags);
+ 	  break;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	  case ff_clwfk:
++	    oerr = !WriteCLWFKSkeleton(newname,sf,oldformatstate,flags);
++	  break;
++#endif
+ 	  case ff_none:		/* only if bitmaps, an sfnt wrapper for bitmaps */
+ 	    if ( bmap==bf_sfnt_dfont )
+ 		oerr = !WriteMacTTFFont(newname,sf,oldformatstate,sizes,
+@@ -2893,6 +2931,9 @@
+ 	formattypes[ff_cff].disabled = true;
+ 	formattypes[ff_cffcid].disabled = true;
+ 	formattypes[ff_svg].disabled = true;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	formattypes[ff_clwfk].disabled = true;
++#endif
+     }
+     for ( i=0; i<sizeof(formattypes)/sizeof(formattypes[0]); ++i )
+ 	formattypes[i].selected = false;
+--- fontforge/scripting.c.orig	Sat Apr 16 05:28:33 2005
++++ fontforge/scripting.c	Wed Apr 27 19:47:19 2005
+@@ -3427,6 +3427,12 @@
+     FVAutoTrace(c->curfv,false);
+ }
+ 
++static void bBuildSkeleton(Context *c) {
++    if ( c->a.argc!=2 || c->a.vals[1].type!=v_str )
++	error( c, "Bad type for argument");
++    SCBuildSkeleton(c->curfv, c->a.vals[1].u.sval);
++}
++
+ static void bCorrectDirection(Context *c) {
+     int i;
+     SplineFont *sf = c->curfv->sf;
+@@ -5092,6 +5098,7 @@
+     { "RoundToCluster", bRoundToCluster },
+     { "Autotrace", bAutotrace },
+     { "AutoTrace", bAutotrace },	/* Oops. docs say upperT, old scripts expect lowert */
++    { "BuildSkeleton", bBuildSkeleton },
+     { "CorrectDirection", bCorrectDirection },
+     { "AddATT", bAddATT },
+     { "DefaultATT", bDefaultATT },
+--- fontforge/sfd.c.orig	Fri Apr 15 07:46:41 2005
++++ fontforge/sfd.c	Thu Apr 28 09:46:24 2005
+@@ -81,6 +81,82 @@
+     putc(base64[ch&0x3f],sfd);
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static void utf7_enc(char *buf,long ch) {
++static char base64[64] = {
++ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
++ 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
++ 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
++ 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
++
++    *buf++ = base64[(ch>>18)&0x3f];
++    *buf++ = base64[(ch>>12)&0x3f];
++    *buf++ = base64[(ch>>6)&0x3f];
++    *buf   = base64[ch&0x3f];
++}
++
++static void utf7_u_strcpy(char *buf, const unichar_t *ubuf) {
++    int prev_cnt = 0, prev = 0, in = 0;
++    unichar_t ch;
++
++    if ( ubuf!=NULL ) while ( (ch = *ubuf++)!='\0' ) {
++	if ( ch<127 && ch!='\n' && ch!='\r' && ch!='\\' && ch!='~' &&
++		ch!='+' && ch!='=' && ch!='"' ) {
++	    if ( prev_cnt!=0 ) {
++		prev<<= (prev_cnt==1?16:8);
++		utf7_enc(buf,prev); buf+=4;
++		prev_cnt=prev=0;
++	    }
++	    if ( in ) {
++		if ( inbase64[ch]!=-1 || ch=='-' )
++		    *buf++ = '-';
++		in = 0;
++	    }
++	    *buf++ = ch;
++	} else if ( ch=='+' && !in ) {
++	    *buf++ = '+';
++	    *buf++ = '-';
++	} else if ( prev_cnt== 0 ) {
++	    if ( !in ) {
++		*buf++ = '+';
++		in = 1;
++	    }
++	    prev = ch;
++	    prev_cnt = 2;		/* 2 bytes */
++	} else if ( prev_cnt==2 ) {
++	    prev<<=8;
++	    prev += (ch>>8)&0xff;
++	    utf7_enc(buf,prev);; buf+=4;
++	    prev = (ch&0xff);
++	    prev_cnt=1;
++	} else {
++	    prev<<=16;
++	    prev |= ch;
++	    utf7_enc(buf,prev);; buf+=4;
++	    prev_cnt = prev = 0;
++	}
++    }
++    if ( prev_cnt==2 ) {
++	prev<<=8;
++	utf7_enc(buf,prev);; buf+=4;
++    } else if ( prev_cnt==1 ) {
++	prev<<=16;
++	utf7_enc(buf,prev);; buf+=4;
++    }
++    *buf = '\0';
++}
++
++static char *u2utf7_copy(const unichar_t *ubuf) {
++    int len = u_strlen(ubuf);
++    char *buf;;
++
++    if ((buf=galloc(len*sizeof(unichar_t)))==NULL)
++return NULL;
++    utf7_u_strcpy(buf,ubuf);
++    return buf;
++}
++#endif
++
+ #if defined(FONTFORGE_CONFIG_GTK)	/* GTK unicode strings are stored in utf8 rather than ucs2 */
+ static void SFDDumpUTF7Str(FILE *sfd, const char *str) {
+ #else
+@@ -384,6 +460,9 @@
+ 	    fprintf(sfd, "%d", sp->pointtype|(sp->selected<<2)|
+ 			(sp->nextcpdef<<3)|(sp->prevcpdef<<4)|
+ 			(sp->roundx<<5)|(sp->roundy<<6)|
++#ifdef FONTFORGE_CONFIG_CLWFK
++			(sp->isopenend<<8)|(sp->isjoint<<9)|
++#endif
+ 			(sp->ttfindex==0xffff?(1<<7):0) );
+ 	    if ( order2 ) {
+ 		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
+@@ -2110,6 +2189,10 @@
+ 		pt->ttfindex = 0xffff;
+ 	    else
+ 		pt->ttfindex = ttfindex++;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    pt->isopenend = val&0x100?1:0;
++	    pt->isjoint = val&0x200?1:0;
++#endif
+ 	    pt->nextcpindex = 0xfffe;
+ 	    ch = getc(sfd);
+ 	    if ( ch=='x' ) {
+@@ -4739,3 +4822,752 @@
+     fclose(sfd);
+ return( ret );
+ }
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++const char *stroketypes[] = {
++    "ten", "tate", "yoko",
++    "migiue", "hidari", "tatehidari", "migi", "kozato", "tatehane",
++    "tsukurihane", "sanzui", "kokoro", "tasuki", "shin-nyuu", "magaritate",
++    "kagi",
++    "hira0", "hira1", "hira2", "hira3", "hira-long",
++    "frame", "kamae", "kamae1", "kamae2", "kamae3", "kamae4",
++    "nyou", "tare",
++    NULL
++};
++const int num_points_in_strokes[] = {
++    2, 2, 2, 
++    3, 3, 4, 3, 3, 3,
++    4, 2, 4, 4, 3, 3,
++    3,
++    0, 0, 0, 0, 0, 0,
++    -4, -4, -4, -4, -4, -4, -4, -4,
++    0
++};
++
++enum skeltype { skel_prim, skel_combo, skel_stroke_template, };
++
++typedef struct skelpoint {
++    real x, y;
++    unsigned int link_ok:1;
++} SkelPoint;
++
++typedef struct skelstroke {
++    enum stroke stroke_type;
++    int num_points;
++    short point_index[32];
++    unsigned int is_link;	/* bit (1<<n) correspoinds to point_index[n]  */
++    real width;
++} SkelStroke;
++
++typedef struct skelchar {
++    enum skeltype type;
++    int num_points;
++    SkelPoint *points;
++    int num_strokes;
++    SkelStroke *strokes;
++    PrimParams extra;
++    DBounds kamaes[7];
++} SkelChar;
++
++typedef struct skelchars {
++    SkelChar *skel[256];
++    struct skelchars *next;
++} SkelChars;
++
++typedef struct skelinfo {
++    int num_skel;
++//    real gothicwidth;
++//    real minchowidth;
++    SkelChars *chars;
++} SkelInfo;
++
++#undef LISP_OUTPUT_LOG
++
++static void skipLine(FILE *file) {
++    int c;
++
++    while ( (c=getc(file)) != EOF && c!='\n' )
++	;
++}
++
++static void skipComment(FILE *file) {
++    int c;
++
++    while ((c=getc(file)) == ';') {
++	skipLine(file);
++    }
++    if (c != EOF)
++	ungetc(c,file);
++}
++
++static void skipSpaces(FILE *file) {
++    int c;
++
++    for (skipComment(file); isspace(c=getc(file)); )
++	skipComment(file);
++    if (c != EOF)
++	ungetc(c,file);
++}
++
++static int charExists(FILE *file, int expected) {
++    int c = getc(file);
++
++#ifdef LISP_OUTPUT_LOG
++    fprintf(stderr,"charExists: '%c' (expected '%c')\n", c, expected);
++#endif
++    if (c==expected)
++return true;
++    if (c!=EOF)
++	ungetc(c,file);
++return false;
++}
++
++static int tokCharExists(FILE *file, int expected) {
++    skipSpaces(file);
++return charExists(file, expected);
++}
++
++
++static int openParenExists(FILE *file) {
++    return tokCharExists(file, '(');
++}
++
++static int closeParenExists(FILE *file) {
++    return tokCharExists(file, ')');
++}
++
++enum lisptoktype { lisp_open_paren, lisp_close_paren, lisp_quote, lisp_igeta, lisp_dot, 
++		   lisp_name, lisp_numeral, lisp_string, lisp_none };
++
++static enum lisptoktype lispTokenType(char *buf) {
++    switch (*buf) {
++    case '(':
++return lisp_open_paren;
++    case ')':
++return lisp_close_paren;
++    case '\'':
++return lisp_quote;
++    case '#':
++return lisp_igeta;
++    case '\"':
++return lisp_string;
++    case '0': case '1': case '2': case '3': case '4':
++    case '5': case '6': case '7': case '8': case '9':
++return lisp_numeral;
++    case '+': case '-':
++	if (isdigit(buf[1]))
++return lisp_numeral;
++	else
++return lisp_name;
++    case '.': 
++	if (isdigit(buf[1]))
++return lisp_numeral;
++	else
++return lisp_dot;
++    case '\0':
++return lisp_none;
++    default:
++return lisp_name;
++    }
++}
++
++static int isLispNameToken(char *buf) {
++    return (lispTokenType(buf)==lisp_name);
++}
++
++#ifdef LISP_OUTPUT_LOG
++static char *_getToken(FILE *file, char *buf, int bufsize) {
++#else
++static char *getToken(FILE *file, char *buf, int bufsize) {
++#endif
++    int c;
++    char *p = buf;
++    enum lisptoktype type = lisp_none;
++
++    bzero(buf,bufsize);
++    while ( (c=getc(file)) != EOF ) {
++	*p = c;
++	if ( type==lisp_none ) {
++	    if ( c == ';' ) {
++		skipLine(file);
++continue;
++	    } else if ( isspace(c) ) {
++continue;
++	    }
++	    if ( c=='(' || c==')' || c=='\'' )
++return buf;
++
++	}
++	type = lispTokenType(buf);
++
++	if ( type==lisp_string) {
++	    if (c == '\"') {
++		p++;
++break;
++	    }
++	} else if (type==lisp_numeral) {
++	    if (!isdigit(c) && c!= '.' && c!='+' && c!='-' && c!='e') {
++		ungetc(c, file);
++		*p = '\0';
++return buf;
++	    }
++	} else if ( (c<128&&isspace(c)) || c=='(' || c==')' || c=='\'' || c=='\"' ) {
++	    ungetc(c, file);
++	    *p = '\0';
++return buf;
++	}
++	p++;
++    }
++    if (type == lisp_name)
++	ungetc(*p, file);
++    *p = '\0';
++    return buf;
++}
++
++#ifdef LISP_OUTPUT_LOG
++static char *getToken(FILE *file, char *buf, int bufsize) {
++    static char *p;
++    p = _getToken(file,buf,bufsize);
++    if (p)
++      fprintf(stderr, "gettoken: %s\n",p);
++    return p;
++}
++#endif
++
++static char *getNumeral(FILE *file, char *buf, int bufsize) {
++    if (getToken(file,buf,bufsize)==NULL || lispTokenType(buf)!=lisp_numeral)
++return NULL;
++    else
++return buf;
++}
++
++static int nameExists(FILE *file, char *buf,int bufsize, char *name) {
++    if (getToken(file,buf,bufsize)==NULL || lispTokenType(buf)!=lisp_name ||
++	strcmp(buf,name)!=0)
++return false;
++    else
++return true;
++}
++
++static int someNameExists(FILE *file, char *buf,int bufsize) {
++    if (getToken(file,buf,bufsize)==NULL || lispTokenType(buf)!=lisp_name)
++return false;
++    else
++return true;
++}
++
++static SkelChar *SkelCharReadPoints(FILE *file,SkelChar *sc,char *buf,int bufsize) {
++    static SkelPoint pbuf[512];
++    int i = 0;
++
++    if (!openParenExists(file))
++return NULL;
++    while (openParenExists(file)) {
++	if (i >= 512 || getNumeral(file,buf,bufsize) == NULL)
++return NULL;
++	pbuf[i].x = strtod(buf,NULL);
++	if (getNumeral(file,buf,bufsize) == NULL)
++return NULL;
++	pbuf[i].y = strtod(buf,NULL);
++	pbuf[i].link_ok = openParenExists(file);
++	if (pbuf[i].link_ok)
++	    if (!nameExists(file,buf,bufsize,"link-ok") || !nameExists(file,buf,bufsize,"t") ||
++		!closeParenExists(file))
++return NULL;
++	if (!closeParenExists(file))
++return NULL;
++	i++;
++    }
++    if (!closeParenExists(file))
++return NULL;
++
++    sc->num_points = i;
++    if ((sc->points=gcalloc(i,sizeof(SkelPoint))) == NULL)
++return NULL;
++    memcpy(sc->points,pbuf,i*sizeof(SkelPoint));
++return sc;
++}
++
++static int primType(const char *buf) {
++    int i;
++
++    for (i = 0; stroketypes[i]!=NULL; i++)
++        if (strcasecmp(buf, stroketypes[i])==0)
++return i;
++return -1;
++}
++
++
++static SkelChar *SkelCharReadStrokes(FILE *file,SkelChar *sc,char *buf,int bufsize) {
++    static SkelStroke sbuf[256];
++    int s = 0, p;	/* count of stroke and point (in the stroke) */
++    int type;
++
++    if (!openParenExists(file))
++return NULL;
++    while (openParenExists(file)) {
++	if (getToken(file,buf,bufsize) == NULL)
++return NULL;
++	type = primType(buf);
++	if (type < 0)
++return NULL;
++	else if (type < frame) {
++	    sbuf[s].stroke_type = type;
++	    if (!openParenExists(file))
++return NULL;
++	    for (p = 0; !closeParenExists(file); p++) {
++		if (getNumeral(file,buf,bufsize) == NULL)
++return NULL;
++		sbuf[s].point_index[p] = strtod(buf,NULL);
++	    }
++	    sbuf[s].num_points = p;
++	    sbuf[s].is_link = 0;
++	    while (openParenExists(file)) {
++		if (getToken(file,buf,bufsize) == NULL)
++return NULL;
++		if (strcasecmp(buf, "link")==0) {
++		    for (; !closeParenExists(file); p++) {
++			if (getNumeral(file,buf,bufsize) == NULL)
++return NULL;
++			sbuf[s].point_index[p] = strtod(buf,NULL);
++			sbuf[s].num_points = p + 1;
++			sbuf[s].is_link |= (1<<p);
++		    }
++		} else if (strcasecmp(buf,"width") ==0) {
++		    if (getNumeral(file,buf,bufsize) == NULL)
++return NULL;
++		    sbuf[s].width = strtof(buf,NULL);
++		    if (!closeParenExists(file))
++return NULL;
++		} else {
++return NULL;
++		}
++	    }
++	}
++	if (!closeParenExists(file))
++return NULL;
++	s++;
++    }
++    if (!closeParenExists(file))
++return NULL;
++
++    sc->num_strokes = s;
++    if ((sc->strokes = gcalloc(s,sizeof(SkelStroke))) == NULL)
++return NULL;
++    memcpy(sc->strokes,sbuf,s*sizeof(SkelStroke));
++return sc;
++}
++
++static int kamaetype(const char *str) {
++    switch (tolower(*str)) {
++    case 'k':
++	if (strcasecmp("kamae",str) == 0)
++return kamae;
++	else if (strcasecmp("kamae1",str) == 0)
++return kamae1;
++	else if (strcasecmp("kamae2",str) == 0)
++return kamae2;
++	else if (strcasecmp("kamae3",str) == 0)
++return kamae3;
++	else if (strcasecmp("kamae4",str) == 0)
++return kamae4;
++	else
++return -1;
++    case 'n':
++	if (strcasecmp("nyou",str) == 0)
++return nyou;
++	else
++return -1;
++    case 't':
++	if (strcasecmp("tare",str) == 0)
++return tare;
++    default:
++return -1;
++    }
++}
++
++static SkelChar *SkelCharReadExtraPrimInfo(FILE *file,SkelChar *sc,char *buf,int bufsize) {
++    int type;
++
++    while (openParenExists(file)) {
++	if (getToken(file,buf,sizeof(buf))==NULL || lispTokenType(buf)!=lisp_name)
++return NULL;
++	if (strcasecmp("tateheight",buf)==0) {
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.tateheight = strtod(buf,NULL);
++	} else if (strcasecmp("yokowidth",buf)==0) {
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.yokowidth = strtod(buf,NULL);
++	} else if (strcasecmp("xunit",buf)==0) {
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.xunit = strtod(buf,NULL);
++	} else if (strcasecmp("yunit",buf)==0) {
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.yunit = strtod(buf,NULL);
++	} else if (strcasecmp("center",buf)==0) {
++	    if (closeParenExists(file)) {
++		ungetc(')',file);
++		sc->extra.center = 200.0;
++	    } else if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL) {
++return NULL;
++	    } else
++		sc->extra.center = strtod(buf,NULL);
++	} else if (strcasecmp("width",buf)==0) {
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.width = strtod(buf,NULL);
++	} else if (strcasecmp("updown",buf)==0) {
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.up = strtod(buf,NULL);
++	    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->extra.down = strtod(buf,NULL);
++	} else if ((type = kamaetype(buf)) > 0) {
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->kamaes[type-kamae].minx = strtof(buf,NULL);
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->kamaes[type-kamae].miny = strtof(buf,NULL);
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->kamaes[type-kamae].maxx = strtof(buf,NULL);
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    sc->kamaes[type-kamae].maxy = strtof(buf,NULL);
++	} else
++return NULL;
++	if (!closeParenExists(file))
++return NULL;
++    }
++return sc;
++}
++
++static unichar_t *u_utf8_strcpy(unichar_t *ubuf, const char *utf8buf) {
++    unichar_t *upt=ubuf;
++    const uint8 *pt = (const uint8 *) utf8buf;
++    int w;
++
++    while ( *pt!='\0' ) {
++	if ( *pt<=127 )
++	    *upt = *pt++;
++	else if ( *pt<=0xdf ) {
++	    *upt = ((*pt&0x1f)<<6) | (pt[1]&0x3f);
++	    pt += 2;
++	} else if ( *pt<=0xef ) {
++	    *upt = ((*pt&0xf)<<12) | ((pt[1]&0x3f)<<6) | (pt[2]&0x3f);
++	    pt += 3;
++	} else {
++	    /* Um... I don't support surrogates */
++	    w = ( ((*pt&0x7)<<2) | ((pt[1]&0x30)>>4) )-1;
++	    *upt++ = 0xd800 | (w<<6) | ((pt[1]&0xf)<<2) | ((pt[2]&0x30)>>4);
++	    *upt   = 0xdc00 | ((pt[2]&0xf)<<6) | (pt[3]&0x3f);
++	    pt += 4;
++	}
++	++upt;
++    }
++    *upt = '\0';
++return( ubuf );
++}
++
++static void *fileError(FILE *file, char *msg) {
++    fprintf(stderr, "%sfile error at byte %ld\n", msg, ftell(file));
++    return NULL;
++}
++
++static SkelChar *getSkeleton(FILE *file, int *err) {
++    char buf[256];
++    SkelChar *sc = gcalloc(1,sizeof(SkelChar));
++
++    if ( sc==NULL || getToken(file,buf,sizeof(buf))==NULL || *buf=='\0') {
++*err=false;
++return NULL;
++    }
++    else if (strcasecmp(buf,"(")!=0 )
++goto err;
++    if (!nameExists(file,buf,sizeof(buf),"setq") || !someNameExists(file,buf,sizeof(buf)) ||
++	(sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
++goto err;
++    u_utf8_strcpy(sc->extra.glyphname, buf);
++    if (!tokCharExists(file, '\'') || !openParenExists(file) ||
++	getToken(file,buf,sizeof(buf))==NULL) 
++goto err;
++
++    if (*buf == '(') {
++        ungetc('(',file);
++	if (SkelCharReadPoints(file,sc,buf,sizeof(buf)) == NULL ||
++	    SkelCharReadStrokes(file,sc,buf,sizeof(buf)) == NULL)
++goto err;
++	if (openParenExists(file)) {
++	    ungetc('(',file);
++	    if (SkelCharReadExtraPrimInfo(file,sc,buf,sizeof(buf))==NULL)
++goto err;
++	}
++	if (!closeParenExists(file))
++goto err;
++    } else if (isLispNameToken(buf))
++goto err;	/* combination editor not implemented yet */
++    else
++goto err;
++
++    if (!closeParenExists(file)){
++goto err;}
++    else{
++return sc; }
++
++err:
++    *err = true;
++return fileError(file, "Error in getSkeleton(): ");
++return NULL;
++}
++
++/* If foot of perpendicular does not fall on the segment, penalty (= 1em) is added to
++   the distance from bp to nearer end of the segment */
++#include <math.h>
++#define PENALTY 1000.0
++static real distance_to_line_segment(Spline *spline, BasePoint bp) {
++    BasePoint from, to;
++    BasePoint lvec;	/* vector from->to */
++    BasePoint pvec;	/* position vector of from->bp */
++    real inner_product, square_of_line_length;
++
++    from = spline->from->me; 
++    to = spline->to->me;
++
++    lvec.x = to.x-from.x;  lvec.y = to.y-from.y;
++    pvec.x = bp.x-from.x;  pvec.y = bp.y-from.y;
++    square_of_line_length = lvec.x*lvec.x+lvec.y*lvec.y;
++    inner_product = lvec.x*pvec.x+lvec.y*pvec.y;
++
++    if ( inner_product < 0.0 )
++return sqrt((bp.x-from.x)*(bp.x-from.x)+(bp.y-from.y)*(bp.y-from.y)) + PENALTY;
++    else if ( inner_product > square_of_line_length )
++return sqrt((bp.x-to.x)*(bp.x-to.x)+(bp.y-to.y)*(bp.y-to.y)) + PENALTY;
++    else {
++        BasePoint perp;
++	perp.x = pvec.x-inner_product*lvec.x;
++	perp.y = pvec.y-inner_product*lvec.y;
++return sqrt(perp.x*perp.x+perp.y*perp.y);
++    }
++}
++
++static void insert_linkpoint_into(Spline *spline, BasePoint bp) {
++    Spline *after = chunkalloc(sizeof(Spline));
++    SplinePoint *pt = chunkalloc(sizeof(SplinePoint));
++    pt->isopenend = pt->isjoint = true;
++    pt->me = bp;
++    pt->noprevcp = pt->nonextcp = true;
++    pt->next = after;
++    pt->prev = spline;
++    after->from = pt; after->to = spline->to;
++    spline->to->prev = after;
++    spline->to = pt;
++    after->to->noprevcp = true; 
++    after->islinear = after->isquadratic = true;
++    SplineRefigure2(spline);
++    SplineRefigure2(after);
++return;
++}
++
++static void insert_linkpoint(SplinePointList *spl, BasePoint bp) {
++    real min_dist = 99999.9;
++    SplinePoint *sp = spl->first;
++    Spline *nearest;
++
++    if (sp == NULL)
++return;
++    nearest = sp->next;
++    while (sp->next!=NULL) {
++	real dist = distance_to_line_segment(sp->next, bp);
++	if (min_dist < dist) {
++	    min_dist = dist;
++	    nearest = sp->next;
++	}
++	if ((sp=sp->next->to) == spl->first)
++break;
++    }
++    insert_linkpoint_into(nearest, bp);
++}
++
++static SplinePoint *LineTo(BasePoint *base, SplinePoint *from) {
++    SplinePoint *to;
++    to = chunkalloc(sizeof(SplinePoint));
++    to->me.x = base->x; to->me.y = base->y;
++    to->nextcp = to->prevcp = to->me;
++    to->nonextcp = to->noprevcp = true;
++    to->nextcpdef = to->prevcpdef = false;
++    to->ttfindex = to->nextcpindex = 0xfffe;
++    to->pointtype = pt_corner;
++    to->isopenend = true;
++    SplineMake2(from,to);
++return( to );
++}
++
++static SplineSet *SplineSetFromSkelChar(SkelChar *skel) {
++    SplineSet *cur=NULL, *head=NULL;
++    SplinePoint *pt, *last;
++    int i, s, p, pt_index;
++    BasePoint bp;
++
++    for (s = 0; s < skel->num_strokes; s++) {
++	SkelStroke *stroke = &skel->strokes[s];
++	SplineSet *tmp = chunkalloc(sizeof(SplineSet));
++	if (cur!=NULL) cur->next = tmp;
++	cur = tmp;
++	if (head == NULL) head = cur;
++	cur->first = cur->last = NULL;
++	cur->stroketype = stroke->stroke_type;
++	cur->width = stroke->width;
++	for (p = 0; p<stroke->num_points ; p++) {
++	    if ( stroke->is_link&(1<<p))
++continue;
++	    pt_index = stroke->point_index[p];
++	    bp.x = skel->points[pt_index].x * 2.5;
++	    bp.y = skel->points[pt_index].y * -2.5 + 800;
++	    pt = chunkalloc(sizeof(SplinePoint));
++	    pt->isopenend = 1;
++	    pt->isjoint = skel->points[pt_index].link_ok;
++	    pt->me = bp;
++	    pt->nextcp = pt->prevcp = pt->me;
++	    pt->noprevcp = pt->nonextcp = true;
++	    pt->nextcpdef = pt->prevcpdef = false;
++	    pt->ttfindex = pt->nextcpindex = 0xfffe;	    
++	    if (cur->first == NULL) cur->first = pt;
++	    if (cur->last != NULL)
++		SplineMake2(cur->last, pt);
++	    cur->last = pt;
++	}
++	for (p = 0; p<stroke->num_points ; p++) {
++	    if ( stroke->is_link&(1<<p) ) {
++		pt_index = stroke->point_index[p];
++		bp.x = skel->points[pt_index].x * 2.5;
++		bp.y = skel->points[pt_index].y * -2.5 + 800;
++		insert_linkpoint(cur, bp);
++	    }	
++	}
++    }
++    for (i=0; i<7; i++) {
++	DBounds *k = &skel->kamaes[i];
++	if (k->minx!=0 || k->miny!=0 || k->maxx!=0 || k->maxy!=0) {
++	    SplineSet *tmp = chunkalloc(sizeof(SplineSet));
++	    k->minx *= 2.5; k->miny = -2.5 * k->miny + 800;
++	    k->maxx *= 2.5; k->maxy = -2.5 * k->maxy + 800;
++	    if (cur!=NULL) cur->next = tmp;
++	    cur = tmp;
++	    if (head == NULL) head = cur;
++	    cur->stroketype = kamae + i;
++	    cur->first = chunkalloc(sizeof(SplinePoint));
++	    cur->first->me.x = k->minx;
++	    cur->first->me.y = k->maxy;
++	    bp.x = k->minx; bp.y = k->miny;
++	    last = LineTo(&bp,cur->first);
++	    bp.x = k->maxx, bp.y = k->miny;
++	    last = LineTo(&bp,last);
++	    bp.x = k->maxx, bp.y = k->maxy;
++	    last = LineTo(&bp,last);
++	    bp.x = k->minx, bp.y = k->maxy;
++	    SplineMake(last,cur->first,true);
++	    cur->last = last;
++	}
++    }
++return head;
++}
++
++static SplineChar *SplineCharFromSkelChar(SkelChar *skel, SplineFont *sf, int enc) {
++    SplineChar *sc;
++    char buf[20];
++
++    sc = SplineCharCreate();
++    sc->parent=sf;
++    if ( skel->extra.glyphname!=NULL  )
++	sc->name = u2utf7_copy(skel->extra.glyphname);
++    else {
++        sprintf(buf, "unknown_%d", enc);
++	sc->name = copy(buf);
++    }
++    sc->enc = enc;
++    sc->width = 1000;
++    sc->vwidth=sf->ascent+sf->descent;
++    sc->layers[ly_back].splines=NULL;
++    sc->layers[ly_fore].splines = SplineSetFromSkelChar(skel);
++    sc->clwfk = skel->extra;
++return sc;
++}
++
++static void FreeSkelInfo(SkelInfo *si) {
++    const int chunksize = sizeof(((SkelChars*)NULL)->skel)/sizeof(((SkelChars*)NULL)->skel[0]);
++    SkelChars *sks = si->chars, *next;
++    int i;
++
++    for (sks=si->chars; si->num_skel>0; si->num_skel-=chunksize) {
++	for (i=0; i<si->num_skel && i<chunksize; i++) {
++	    free(sks->skel[i]->points);
++	    free(sks->skel[i]->strokes);
++	}
++	next=sks->next;
++	free(sks);
++	sks = next;
++    }
++}
++
++static SplineFont *NewFontFromSkelChars(SkelInfo *si) {
++    SplineFont *sf;
++    SplineChar *sc;
++    SkelChars *sks = si->chars;
++    const int chunksize = sizeof(((SkelChars*)NULL)->skel)/sizeof(((SkelChars*)NULL)->skel[0]);
++    int i = 0;
++
++    sf = SplineFontBlank(&custom, si->num_skel + 1);
++    sf->strokedfont = true;
++    sf->order2 = true;
++
++    while ( i < si->num_skel ) {
++	sc = SplineCharFromSkelChar(sks->skel[i%chunksize], sf, i+1);
++	sf->chars[i + 1] = sc;
++	if (++i % chunksize == 0)
++	    sks = sks->next;
++    }
++    SFDCleanupFont(sf);
++    FreeSkelInfo(si);
++
++return sf;
++}
++
++SplineFont *SFReadClwfkSkeleton(char *fontname) {
++    FILE *file = fopen(fontname,"rb");
++    int err=false;
++    SkelChar *sk;
++    SkelChars *sks;
++    SkelInfo si;
++    const int chunksize = sizeof(((SkelChars*)NULL)->skel)/sizeof(((SkelChars*)NULL)->skel[0]);
++
++    si.num_skel = 0;
++//  si.minchowidth = si.gothicwidth = 0.0;
++    if (file==NULL || (si.chars = gcalloc(1,sizeof(SkelChars))) == NULL)
++return NULL;
++    sks = si.chars;
++
++    while ((sk = getSkeleton(file, &err)) != NULL) {
++	if (si.num_skel > 0 && si.num_skel % chunksize == 0) {
++	    if ((sks->next = gcalloc(1,sizeof(SkelChars))) == NULL) {
++	        fprintf(stderr, "memory allocation failed in %s\n", __FILE__);
++		FreeSkelInfo(&si);
++return NULL;
++	    }
++	    sks = sks->next;
++	}
++	sks->skel[si.num_skel % chunksize] = sk;
++	si.num_skel++;
++    }
++    if (err)
++return NULL;
++
++return NewFontFromSkelChars(&si);
++}
++
++#endif
+--- fontforge/splinefill.c.orig	Fri Feb 25 14:32:26 2005
++++ fontforge/splinefill.c	Sun Apr 24 20:05:24 2005
+@@ -972,13 +972,17 @@
+ 	Bresenham(bytemap,es,x1,x2,y1,y2,grey);
+ }
+ 
+-static void StrokeSS(uint8 *bytemap,EdgeList *es,int width,int grey,SplineSet *ss) {
++static void StrokeSS(uint8 *bytemap,EdgeList *es,int defaultwidth,int grey,SplineSet *ss) {
+     LinearApprox *lap;
+     LineList *line, *prev;
+     Spline *spline, *first;
++    int width = defaultwidth;
+ 
+     for ( ; ss!=NULL; ss=ss->next ) {
+ 	first = NULL;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	width = (ss->width > 0.0) ? rint(ss->width*es->scale) : defaultwidth;
++#endif
+ 	for ( spline = ss->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
+ 	    lap = SplineApproximate(spline,es->scale);
+ 	    if ( lap->lines!=NULL ) {
+--- fontforge/splinefont.h.orig	Mon Mar 14 00:21:06 2005
++++ fontforge/splinefont.h	Wed Apr 27 19:47:19 2005
+@@ -27,6 +27,8 @@
+ #ifndef _SPLINEFONT_H
+ #define _SPLINEFONT_H
+ 
++#define FONTFORGE_CONFIG_CLWFK 1
++
+ #include "basics.h"
+ #include "configure-pfaedit.h"
+ #ifdef HAVE_ICONV_H
+@@ -590,6 +592,10 @@
+     unsigned int ticked: 1;
+     unsigned int watched: 1;
+ 	/* 1 bits left... */
++#ifdef FONTFORGE_CONFIG_CLWFK
++    unsigned int isopenend: 1;	/* don't join to other open path */
++    unsigned int isjoint: 1;	/* move all snapped points simultaneously */
++#endif
+     uint16 ptindex;		/* Temporary value used by metafont routine */
+     uint16 ttfindex;		/* Truetype point index */
+ 	/* Special values 0xffff => point implied by averaging control points */
+@@ -650,9 +656,24 @@
+     */
+ } Spline;
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++enum stroke {
++     ten, tate, yoko, migiue, hidari, tatehidari, migi, kozato, tatehane,
++     tsukurihane, sanzui, kokoro, tasuki, shin_nyuu, magaritate, kagi, 
++     hira0, hira1, hira2, hira3, hira_long,
++     frame, kamae, kamae1, kamae2, kamae3, kamae4, nyou, tare,
++};
++extern const char *stroketypes[];
++extern const int num_points_in_strokes[];
++#endif
++
+ typedef struct splinepointlist {
+     SplinePoint *first, *last;
+     struct splinepointlist *next;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    real width;
++    enum stroke stroketype;
++#endif
+ } SplinePointList, SplineSet;
+ 
+ typedef struct imagelist {
+@@ -818,7 +839,24 @@
+ } Layer;
+ 
+ enum layer_type { ly_grid= -1, ly_back=0, ly_fore=1 /* Possibly other foreground layers for multi-layered things */ };
+-    
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++typedef struct prim_params {
++    unichar_t *glyphname;
++    real xlimit_min, xlimit_max;
++    real ylimit_min, ylimit_max;
++    real tateheight;
++    real yokowidth;
++    real xunit;
++    real yunit;
++    real center;
++    real width;
++    real up;
++    real down;
++    char *hook;
++} PrimParams;
++#endif
++
+ typedef struct splinechar {
+     char *name;
+     int enc, unicodeenc, old_enc;
+@@ -887,7 +925,10 @@
+     HintMask *countermasks;
+     int16 tex_height, tex_depth;
+     int16 tex_sub_pos, tex_super_pos;	/* Only for math fonts */
+-} SplineChar;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    PrimParams clwfk;
++#endif
++}  SplineChar;
+ 
+ #define TEX_UNDEF 0x7fff
+ 
+@@ -1045,6 +1086,9 @@
+     struct otfname *fontstyle_name;
+     uint16 design_range_bottom, design_range_top;
+     real strokewidth;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    real default_stroketype;
++#endif
+ } SplineFont;
+ 
+ /* I am going to simplify my life and not encourage intermediate designs */
+@@ -1146,7 +1190,11 @@
+ 	ff_ptype3, ff_ptype0, ff_cid, ff_cff, ff_cffcid,
+ 	ff_type42, ff_type42cid,
+ 	ff_ttf, ff_ttfsym, ff_ttfmacbin, ff_ttfdfont, ff_otf, ff_otfdfont,
++#ifdef FONTFORGE_CONFIG_CLWFK
++	ff_otfcid, ff_otfciddfont, ff_svg, ff_clwfk, ff_none };
++#else
+ 	ff_otfcid, ff_otfciddfont, ff_svg, ff_none };
++#endif
+ extern struct pschars *SplineFont2Chrs(SplineFont *sf, int iscjk,
+ 	struct pschars *subrs,int flags,enum fontformat format);
+ struct cidbytes;
+@@ -1831,3 +1879,13 @@
+ extern void DefaultOtherSubrs(void);
+ extern int ReadOtherSubrsFile(char *filename);
+ #endif
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++extern SplineFont *SFReadClwfkSkeleton(char *fontname);
++extern void SCBuildSkeleton(SplineChar *sc, char *name);
++extern void SCFleshSkeleton(SplineChar *sc, char *face, int normkanji);
++extern void StrokeGetInfo(struct charview *cv, SplinePointList *spl);
++extern int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphnmne);
++extern int ExportSkeleton(char *filename,SplineChar *sc);
++#endif
++
+--- fontforge/splineorder2.c.orig	Sat Mar 12 13:44:39 2005
++++ fontforge/splineorder2.c	Sun Apr 24 20:05:24 2005
+@@ -550,6 +550,10 @@
+     *ret->first = *ss->first;
+     ret->first->hintmask = NULL;
+     ret->last = ret->first;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    ret->width = ss->width;
++    ret->stroketype = ret->stroketype;
++#endif
+ 
+     first = NULL;
+     for ( spline=ss->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
+@@ -595,6 +599,10 @@
+     *ret->first = *ss->first;
+     ret->first->hintmask = NULL;
+     ret->last = ret->first;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    ret->width = ss->width;
++    ret->stroketype = ret->stroketype;
++#endif
+ 
+     first = NULL;
+     for ( spline=ss->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
+--- fontforge/splineutil.c.orig	Mon Apr 18 12:47:30 2005
++++ fontforge/splineutil.c	Tue Apr 26 10:31:09 2005
+@@ -1103,6 +1103,10 @@
+     Spline *spline;
+ 
+     cur = chunkalloc(sizeof(SplinePointList));
++#ifdef FONTFORGE_CONFIG_CLWFK
++    cur->width = spl->width;
++    cur->stroketype = spl->stroketype;
++#endif
+ 
+     first = NULL;
+     for ( pt=spl->first; pt!=NULL && pt!=first; pt = pt->next->to ) {
+--- fontforge/views.h.orig	Tue Mar 29 04:33:51 2005
++++ fontforge/views.h	Sun Apr 24 20:05:24 2005
+@@ -50,6 +50,9 @@
+     int markextrema;
+     int showblues, showfamilyblues;
+     int showanchor;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    int normkanji;
++#endif
+ } CVShows;
+ 
+ extern struct bvshows {
+@@ -238,6 +241,9 @@
+     unsigned int show_ft_results: 1;	/* 32 */
+     unsigned int coderange: 2;			/* For the debugger */
+     unsigned int autonomous_ruler_w: 1;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    unsigned int normkanji: 1;
++#endif
+     Layer *layerheads[dm_max];
+     real scale;
+ #if defined(FONTFORGE_CONFIG_GTK)
