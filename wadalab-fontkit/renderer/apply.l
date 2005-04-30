@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2005
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
