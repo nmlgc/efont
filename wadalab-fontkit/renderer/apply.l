@@ -296,7 +296,10 @@
   (reverse (change-head (reverse ll) c)))
 
 ;
+; スケルトンへの肉付けを行う
 ;
+;   l: (展開済みの)スケルトン定義
+;   tag: 書体名 ('mincho, 'gothic, 'maru)
 ;
 (defun skeleton2list (l tag)
   ; 仮想的なエレメント xlimit, ylimitを取り除く
@@ -309,7 +312,7 @@
 	(outline nil)
 	(points (floatlist(car l)))
 	(part nil)(type nil)(cpoint nil)(lpoint nil)(partpoint nil)
-	(tmppoint nil)(flag nil)(link nil)(part1 nil)(part2 nil)
+	(widthratio nil)(flag nil)(link nil)(part1 nil)(part2 nil)
 	(tmpline nil)(type3 nil)
 	(type1 nil)(type2 nil)(cross nil)(kazari nil)(part3 nil)
 	(lines (cadr l)))
@@ -319,21 +322,30 @@
 	 (linkcount 0 (1+ linkcount)))
       ((atom ll))
       (push (list linkcount (list 'link)) linkpoints))
-    (do ((ll lines (cdr ll)))
+    (do ((ll lines (cdr ll)))	; まだ肉付けしていないストローク全部
       ((atom ll))
-      (setq part (car ll))
-      (setq type (car part))
+      (setq part (car ll))	; 1 本のストローク
+      (setq type (car part))	; ストロークのタイプ (ten, yoko, tate, ...)
 ;      (setq npoint (get type 'npoint))
-      (setq cpoint (cadr part))
-      (setq lpoint (assq 'link (cddr part)))
+      (setq cpoint (cadr part)) ; ストローク(折れ線)を構成する点番号のリスト
+      (setq lpoint (assq 'link (cddr part))) ; リンク点の点番号のリスト
       (setq lpoint (cond (lpoint (cdr lpoint))))
       (setq partpoint nil)
+      ; ストロークを可変幅にするための変更 (2005-04-30)。
+      ; 各ストロークの肉付け結果を得る前にグローバル変数 local_gothicwidth,
+      ; local_minchowidth を一時的に書き換えるという ad hoc な対処法による。
+      (setq widthratio (cdr (or (assq 'widthratio (cddr part))
+				'(widthratio . 1.0))))
+      (setq local_gothicwidth (* gothicwidth widthratio))
+      (setq local_minchcwidth (* minchowidth widthratio))
 
+      ; partpoint に、ストロークを構成する点の座標を順に並べたリストを格納
       (do ((lll cpoint (cdr lll)))
 	((atom lll))
 ;	(push (point-n  (car lll) points) partpoint)
 	(push (nth (car lll) points) partpoint))
       (setq partpoint (nreverse partpoint))
+      ; ストロークに (defelement で定義された) 肉付け関数を適用する
 ;; tag に対するプロパティが未定義のときのため(石井)
 ;; if を使わないように直す(田中)
       (setq tmpline 
