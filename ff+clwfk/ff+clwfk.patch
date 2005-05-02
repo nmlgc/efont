@@ -542,7 +542,7 @@
  	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
  	mgcd[0].gd.pos.width = CI_Width-10;
 --- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
-+++ fontforge/charview.c	Sun May  1 00:57:59 2005
++++ fontforge/charview.c	Mon May  2 14:02:06 2005
 @@ -105,6 +105,12 @@
  static Color backimagecol = 0x707070;
  static Color fillcol = 0x707070;
@@ -654,7 +654,23 @@
  
  static void CVFakeMove(CharView *cv, GEvent *event) {
      GEvent e;
-@@ -2027,6 +2084,35 @@
+@@ -2004,6 +2061,15 @@
+ #endif
+ 	if ( pos>=0 && pos<cv->sc->parent->charcnt )
+ 	    CVChangeChar(cv,pos);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    } else if ( event->u.chr.keysym == '$' &&
++		(event->u.chr.state&(ksm_control))==(ksm_control)) {
++	SCClearBackground(cv->sc);
++	SCFleshSkeleton(cv->sc, "mincho", CVShows.normkanji);
++    } else if ( event->u.chr.keysym == '%' && (event->u.chr.state&ksm_control) ) {
++	SCClearBackground(cv->sc);
++	SCFleshSkeleton(cv->sc, "gothic", CVShows.normkanji);
++#endif
+     } else if ( event->u.chr.keysym == GK_Left ||
+ 	    event->u.chr.keysym == GK_Up ||
+ 	    event->u.chr.keysym == GK_Right ||
+@@ -2027,6 +2093,35 @@
  	    dy = -1;
  	  break;
  	}
@@ -690,7 +706,7 @@
  	if ( event->u.chr.state & (ksm_control|ksm_capslock) ) {
  	    struct sbevent sb;
  	    sb.type = dy>0 || dx<0 ? et_sb_halfup : et_sb_halfdown;
-@@ -3882,6 +3968,11 @@
+@@ -3882,6 +3977,11 @@
  #define MID_PtsSVG	2024
  #define MID_Ligatures	2025
  #define MID_Former	2026
@@ -702,7 +718,7 @@
  #define MID_Cut		2101
  #define MID_Copy	2102
  #define MID_Paste	2103
-@@ -3956,6 +4047,11 @@
+@@ -3956,6 +4056,11 @@
  #define MID_MakeFirst	2304
  #define MID_MakeLine	2305
  #define MID_AddAnchor	2310
@@ -714,7 +730,7 @@
  #define MID_AutoHint	2400
  #define MID_ClearHStem	2401
  #define MID_ClearVStem	2402
-@@ -4304,6 +4400,32 @@
+@@ -4304,6 +4409,32 @@
      GDrawRequestExpose(cv->v,NULL,false);
  }
  
@@ -747,7 +763,7 @@
  static void CVMenuShowGridFit(GWindow gw,struct gmenuitem *mi,GEvent *e) {
      CharView *cv = (CharView *) GDrawGetUserData(gw);
  
-@@ -5081,6 +5203,268 @@
+@@ -5081,6 +5212,268 @@
      }
  }
  
@@ -833,7 +849,7 @@
 +#define CID_Width 1000
 +#define CID_StrokeType 1001
 +
-+GTextInfo stroketypelist[num_enum_stroke] = {
++GTextInfo stroketypelist[num_enum_stroke+1] = {
 +  { (unichar_t *) "ten", NULL, 0, 0, (void *)0, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "tate", NULL, 0, 0, (void *)1, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "yoko", NULL, 0, 0, (void *)2, NULL, 0, 0, 0, 0, 0, 0, 1},
@@ -1016,7 +1032,7 @@
  static void _CVMenuPointType(CharView *cv,struct gmenuitem *mi) {
      int pointtype = mi->mid==MID_Corner?pt_corner:mi->mid==MID_Tangent?pt_tangent:pt_curve;
      SplinePointList *spl;
-@@ -5111,6 +5495,9 @@
+@@ -5111,6 +5504,9 @@
  
  static void cv_ptlistcheck(CharView *cv,struct gmenuitem *mi,GEvent *e) {
      int type = -2, cnt=0;
@@ -1026,7 +1042,7 @@
      SplinePointList *spl, *sel=NULL;
      Spline *spline, *first;
      SplinePoint *selpt=NULL;
-@@ -5122,11 +5509,23 @@
+@@ -5122,11 +5518,23 @@
  	    selpt = spl->first; ++cnt;
  	    if ( type==-2 ) type = spl->first->pointtype;
  	    else if ( type!=spl->first->pointtype ) type = -1;
@@ -1050,7 +1066,7 @@
  		selpt = spline->to;
  		sel = spl; ++cnt;
  	    }
-@@ -5159,6 +5558,16 @@
+@@ -5159,6 +5567,16 @@
  	    mi->ti.disabled = AnchorClassUnused(cv->sc,&waslig)==NULL;
  	  break;
  #endif
@@ -1067,7 +1083,7 @@
  	}
      }
  }
-@@ -6806,7 +7215,13 @@
+@@ -6806,7 +7224,13 @@
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
      { { (unichar_t *) _STR_AddAnchor, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'A' }, '0', ksm_control, NULL, NULL, CVMenuAddAnchor, MID_AddAnchor },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
@@ -1082,19 +1098,19 @@
      { NULL }
  };
  
-@@ -7045,6 +7460,11 @@
+@@ -7045,6 +7469,11 @@
      { { (unichar_t *) _STR_NumberPoints, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'o' }, '\0', ksm_control, nplist, nplistcheck },
      { { (unichar_t *) _STR_MarkExtrema, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'M' }, '\0', ksm_control, NULL, NULL, CVMenuMarkExtrema, MID_MarkExtrema },
      { { (unichar_t *) _STR_Fill, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuFill, MID_Fill },
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    { { (unichar_t *) _STR_MinchoOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowMinchoOutline, MID_ShowMinchoOutline },
-+    { { (unichar_t *) _STR_GothicOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGothicOutline, MID_ShowGothicOutline },
++    { { (unichar_t *) _STR_MinchoOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'x' }, '$', ksm_control, NULL, NULL, CVMenuShowMinchoOutline, MID_ShowMinchoOutline },
++    { { (unichar_t *) _STR_GothicOutline, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'y' }, '%', ksm_control, NULL, NULL, CVMenuShowGothicOutline, MID_ShowGothicOutline },
 +    { { (unichar_t *) _STR_NormKanji, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVToggleNormKanji, MID_NormKanji },
 +#endif
      { { (unichar_t *) _STR_ShowGridFitDDD, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGridFit, MID_ShowGridFit },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, }},
      { { (unichar_t *) _STR_Combinations, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'b' }, '\0', ksm_shift|ksm_control, cblist, cblistcheck },
-@@ -8002,3 +8422,4 @@
+@@ -8002,3 +8431,4 @@
      _CharViewCreate(&sv->cv_srch, &sv->sc_srch, &sv->dummy_fv);
  }
  #endif		/* FONTFORGE_CONFIG_NO_WINDOWING_UI */
