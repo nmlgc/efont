@@ -1970,7 +1970,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Fri Apr 15 07:46:41 2005
-+++ fontforge/sfd.c	Sun May  1 12:01:44 2005
++++ fontforge/sfd.c	Mon May  2 19:34:25 2005
 @@ -81,6 +81,81 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2089,7 +2089,7 @@
 +};
 +const int num_points_in_strokes[num_enum_stroke] = {
 +    2, 2, 2, 3, 3, 4, 3,
-+    3, 3, 4, 2, 4, 4, 
++    4, 3, 4, 2, 4, 4, 
 +    3, 3, 3,
 +    0,
 +    -4, -4, -4, -4, -4,
