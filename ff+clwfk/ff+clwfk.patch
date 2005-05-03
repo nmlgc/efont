@@ -1639,8 +1639,84 @@
  		cv->drawmode = layer==0 ? dm_grid : dm_back;
  		layer2.active = layer;
 --- fontforge/cvpointer.c.orig	Thu Jan  6 11:33:39 2005
-+++ fontforge/cvpointer.c	Sun May  1 00:57:59 2005
-@@ -869,6 +869,9 @@
++++ fontforge/cvpointer.c	Tue May  3 18:16:03 2005
+@@ -488,6 +488,34 @@
+ return( false );
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++static void SetSelectedAt(CharView *cv, BasePoint bp, int selected) {
++    SplinePointList *spl;
++    SplinePoint *sp;
++
++    for ( spl=cv->sc->layers[CVLayer(cv)].splines; spl!=NULL; spl=spl->next ) {
++	    sp = spl->first;
++	    if ( sp->me.x==bp.x && sp->me.y==bp.y )
++		sp->selected = selected;
++	    sp = ( sp->next==NULL ) ? NULL : sp->next->to;
++	    while ( sp!=NULL && sp!= spl->first ) {
++		if ( sp->me.x==bp.x && sp->me.y==bp.y )
++		    sp->selected = selected;
++		sp = ( sp->next==NULL ) ? NULL : sp->next->to;
++	    }
++    }
++}
++
++static void SelectOtherPointsOnJointPoint(CharView *cv, FindSel *fs) {
++    if ( fs->p->sp!=NULL && fs->p->sp->isjoint )
++	SetSelectedAt(cv, fs->p->sp->me, fs->p->sp->selected);
++    else if (fs->p->spline != NULL) {
++	SetSelectedAt(cv, fs->p->spline->to->me, fs->p->spline->to->selected);
++	SetSelectedAt(cv, fs->p->spline->from->me, fs->p->spline->from->selected);
++    }
++}
++#endif
++
+ void CVMouseDownPointer(CharView *cv, FindSel *fs, GEvent *event) {
+     int needsupdate = false;
+     int dowidth, dovwidth, nearcaret;
+@@ -575,6 +603,10 @@
+ 	    if ( !fs->p->ap->selected ) needsupdate = true;
+ 	    fs->p->ap->selected = true;
+ 	}
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( needsupdate )
++	    SelectOtherPointsOnJointPoint(cv, fs);
++#endif
+     } else if ( event->u.mouse.clicks<=1 ) {
+ 	if ( fs->p->nextcp || fs->p->prevcp )
+ 	    /* Nothing to do */;
+@@ -595,16 +627,28 @@
+ 	    needsupdate = true;
+ 	    fs->p->ap->selected = !fs->p->ap->selected;
+ 	}
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( needsupdate )
++	    SelectOtherPointsOnJointPoint(cv, fs);
++#endif
+     } else if ( event->u.mouse.clicks==2 ) {
+ 	if ( fs->p->spl!=NULL ) {
+ 	    Spline *spline, *first;
+ 	    if ( !fs->p->spl->first->selected ) { needsupdate = true; fs->p->spl->first->selected = true; }
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    if ( needsupdate )
++		SetSelectedAt(cv, fs->p->spl->first->me, fs->p->spl->first->selected);
++#endif
+ 	    first = NULL;
+ 	    for ( spline = fs->p->spl->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
+ 		if ( !spline->to->selected )
+ 		    { needsupdate = true; spline->to->selected = true; }
+ 		if ( first==NULL ) first = spline;
+-	    }
++#ifdef FONTFORGE_CONFIG_CLWFK
++		if ( needsupdate )
++		    SetSelectedAt(cv, spline->to->me, spline->to->selected);
++#endif
++		    }
+ 	} else if ( fs->p->ref!=NULL || fs->p->img!=NULL ) {
+ 	    /* Double clicking on a referenced character doesn't do much */
+ 	} else if ( fs->p->ap!=NULL ) {
+@@ -869,6 +913,9 @@
  		if ( mergess->first->prev==NULL && (!mergess->first->selected ||
  			!mergess->last->selected)) {
  		    if ( !mergess->first->selected && activess->first->selected &&
@@ -1650,7 +1726,7 @@
  			    Nearish(mergess->first->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -876,6 +879,9 @@
+@@ -876,6 +923,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->first->selected &&
@@ -1660,7 +1736,7 @@
  			    Nearish(mergess->last->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->last->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -883,6 +889,9 @@
+@@ -883,6 +933,9 @@
    goto restart;
  		    }
  		    if ( !mergess->first->selected && activess->last->selected &&
@@ -1670,7 +1746,7 @@
  			    Nearish(mergess->first->me.x-activess->last->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->last->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->last,activess,
-@@ -890,6 +899,9 @@
+@@ -890,6 +943,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->last->selected &&
