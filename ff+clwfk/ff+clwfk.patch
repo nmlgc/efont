@@ -542,7 +542,7 @@
  	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
  	mgcd[0].gd.pos.width = CI_Width-10;
 --- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
-+++ fontforge/charview.c	Mon May  2 14:02:06 2005
++++ fontforge/charview.c	Tue May  3 08:24:22 2005
 @@ -105,6 +105,12 @@
  static Color backimagecol = 0x707070;
  static Color fillcol = 0x707070;
@@ -850,28 +850,28 @@
 +#define CID_StrokeType 1001
 +
 +GTextInfo stroketypelist[num_enum_stroke+1] = {
-+  { (unichar_t *) "ten", NULL, 0, 0, (void *)0, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tate", NULL, 0, 0, (void *)1, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "yoko", NULL, 0, 0, (void *)2, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "migiue", NULL, 0, 0, (void *)3, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "hidari", NULL, 0, 0, (void *)4, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tatehidari", NULL, 0, 0, (void *)5, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "migi", NULL, 0, 0, (void *)6, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kozato", NULL, 0, 0, (void *)7, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tatehane", NULL, 0, 0, (void *)8, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tsukurihane", NULL, 0, 0, (void *)9, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "sanzui", NULL, 0, 0, (void *)10, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kokoro", NULL, 0, 0, (void *)11, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tasuki", NULL, 0, 0, (void *)12, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "shin-nyuu", NULL, 0, 0, (void *)13, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "magaritate", NULL, 0, 0, (void *)14, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kagi", NULL, 0, 0, (void *)15, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "hira_long", NULL, 0, 0, (void *)20, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kamae", NULL, 0, 0, (void *)22, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kamae1", NULL, 0, 0, (void *)23, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "kamae2", NULL, 0, 0, (void *)24, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "nyou", NULL, 0, 0, (void *)27, NULL, 0, 0, 0, 0, 0, 0, 1},
-+  { (unichar_t *) "tare", NULL, 0, 0, (void *)28, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "ten", NULL, 0, 0, (void *)sk_ten, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tate", NULL, 0, 0, (void *)sk_tate, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "yoko", NULL, 0, 0, (void *)sk_yoko, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "migiue", NULL, 0, 0, (void *)sk_migiue, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hidari", NULL, 0, 0, (void *)sk_hidari, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tatehidari", NULL, 0, 0, (void *)sk_tatehidari, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "migi", NULL, 0, 0, (void *)sk_migi, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kozato", NULL, 0, 0, (void *)sk_kozato, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tatehane", NULL, 0, 0, (void *)sk_tatehane, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tsukurihane", NULL, 0, 0, (void *)sk_tsukurihane, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "sanzui", NULL, 0, 0, (void *)sk_sanzui, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kokoro", NULL, 0, 0, (void *)sk_kokoro, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tasuki", NULL, 0, 0, (void *)sk_tasuki, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "shin-nyuu", NULL, 0, 0, (void *)sk_shin_nyuu, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "magaritate", NULL, 0, 0, (void *)sk_magaritate, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kagi", NULL, 0, 0, (void *)sk_kagi, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "hira_long", NULL, 0, 0, (void *)sk_hira_long, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae", NULL, 0, 0, (void *)sk_kamae, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae1", NULL, 0, 0, (void *)sk_kamae1, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "kamae2", NULL, 0, 0, (void *)sk_kamae2, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "nyou", NULL, 0, 0, (void *)sk_nyou, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "tare", NULL, 0, 0, (void *)sk_tare, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { NULL }
 +};
 +
@@ -1970,8 +1970,8 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Fri Apr 15 07:46:41 2005
-+++ fontforge/sfd.c	Mon May  2 19:34:25 2005
-@@ -81,6 +81,81 @@
++++ fontforge/sfd.c	Tue May  3 09:53:19 2005
+@@ -81,6 +81,82 @@
      putc(base64[ch&0x3f],sfd);
  }
  
@@ -2040,10 +2040,11 @@
 +    *buf = '\0';
 +}
 +
-+static char *u2utf7_copy(const unichar_t *ubuf) {
++char *u2utf7_copy(const unichar_t *ubuf) {
 +    char *buf;
++    int size = sizeof((char)'+') + u_strlen(ubuf)*4 + sizeof((char)'\0');
 +
-+    if ( (buf=galloc(u_strlen(ubuf)*4))==NULL )
++    if ( (buf=galloc(size))==NULL )
 +return NULL;
 +    utf7_u_strcpy(buf,ubuf);
 +    return buf;
@@ -2053,7 +2054,7 @@
  #if defined(FONTFORGE_CONFIG_GTK)	/* GTK unicode strings are stored in utf8 rather than ucs2 */
  static void SFDDumpUTF7Str(FILE *sfd, const char *str) {
  #else
-@@ -384,6 +459,9 @@
+@@ -384,6 +460,9 @@
  	    fprintf(sfd, "%d", sp->pointtype|(sp->selected<<2)|
  			(sp->nextcpdef<<3)|(sp->prevcpdef<<4)|
  			(sp->roundx<<5)|(sp->roundy<<6)|
@@ -2063,7 +2064,7 @@
  			(sp->ttfindex==0xffff?(1<<7):0) );
  	    if ( order2 ) {
  		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
-@@ -2110,6 +2188,10 @@
+@@ -2110,6 +2189,10 @@
  		pt->ttfindex = 0xffff;
  	    else
  		pt->ttfindex = ttfindex++;
@@ -2074,7 +2075,7 @@
  	    pt->nextcpindex = 0xfffe;
  	    ch = getc(sfd);
  	    if ( ch=='x' ) {
-@@ -4739,3 +4821,743 @@
+@@ -4739,3 +4822,743 @@
      fclose(sfd);
  return( ret );
  }
@@ -2840,7 +2841,7 @@
  	    lap = SplineApproximate(spline,es->scale);
  	    if ( lap->lines!=NULL ) {
 --- fontforge/splinefont.h.orig	Mon Mar 14 00:21:06 2005
-+++ fontforge/splinefont.h	Sun May  1 00:57:59 2005
++++ fontforge/splinefont.h	Tue May  3 09:53:30 2005
 @@ -27,6 +27,8 @@
  #ifndef _SPLINEFONT_H
  #define _SPLINEFONT_H
@@ -2949,7 +2950,7 @@
  extern struct pschars *SplineFont2Chrs(SplineFont *sf, int iscjk,
  	struct pschars *subrs,int flags,enum fontformat format);
  struct cidbytes;
-@@ -1831,3 +1882,13 @@
+@@ -1831,3 +1882,14 @@
  extern void DefaultOtherSubrs(void);
  extern int ReadOtherSubrsFile(char *filename);
  #endif
@@ -2961,6 +2962,7 @@
 +extern void StrokeGetInfo(struct charview *cv, SplinePointList *spl);
 +extern int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphnmne);
 +extern int ExportSkeleton(char *filename,SplineChar *sc);
++extern char *u2utf7_copy(const unichar_t *ubuf);
 +#endif
 +
 --- fontforge/splineorder2.c.orig	Sat Mar 12 13:44:39 2005
