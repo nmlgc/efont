@@ -889,7 +889,7 @@
 +	struct sgid *sgid = GDrawGetUserData(GGadgetGetWindow(g));
 +	sgid->spl->width = GetRealR(sgid->gw,CID_Width,_STR_Width, &err);
 +	sgid->spl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(sgid->gw,CID_StrokeType))->userdata);
-+	sgid->cv->sc->parent->default_stroketype = sgid->spl->stroketype;
++	sgid->cv->sc->parent->last_stroketype = sgid->spl->stroketype;
 +	sgid->done = true;
 +    }
 +return( true );
@@ -1191,7 +1191,7 @@
  	sp->selected = true;
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	ss->width = sc->parent->strokewidth;
-+	ss->stroketype = sc->parent->default_stroketype;
++	ss->stroketype = sc->parent->last_stroketype;
 +#endif
      }
  
@@ -1474,7 +1474,7 @@
  
 +	ci->curspl->width = GetRealR(ci->gw,CID_Width,_STR_Width, &err);
 +	ci->curspl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(ci->gw,CID_StrokeType))->userdata);
-+	ci->cv->sc->parent->default_stroketype = ci->curspl->stroketype;
++	ci->cv->sc->parent->last_stroketype = ci->curspl->stroketype;
 +
 +
  	ci->done = true;
@@ -2916,8 +2916,8 @@
  	for ( spline = ss->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
  	    lap = SplineApproximate(spline,es->scale);
  	    if ( lap->lines!=NULL ) {
---- fontforge/splinefont.h.orig	Mon Mar 14 00:21:06 2005
-+++ fontforge/splinefont.h	Tue May  3 09:53:30 2005
+--- fontforge/splinefont.h.orig	Wed May  4 15:33:24 2005
++++ fontforge/splinefont.h	Wed May  4 15:45:38 2005
 @@ -27,6 +27,8 @@
  #ifndef _SPLINEFONT_H
  #define _SPLINEFONT_H
@@ -3009,12 +3009,12 @@
      uint16 design_range_bottom, design_range_top;
      real strokewidth;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    real default_stroketype;
++    enum stroke last_stroketype;
 +#endif
- } SplineFont;
- 
- /* I am going to simplify my life and not encourage intermediate designs */
-@@ -1146,7 +1193,11 @@
+ /* For GDEF Mark Attachment Class -- used in lookup flags */
+ /* As usual, class 0 is unused */
+     int mark_class_cnt;
+@@ -1151,7 +1198,11 @@
  	ff_ptype3, ff_ptype0, ff_cid, ff_cff, ff_cffcid,
  	ff_type42, ff_type42cid,
  	ff_ttf, ff_ttfsym, ff_ttfmacbin, ff_ttfdfont, ff_otf, ff_otfdfont,
@@ -3026,7 +3026,7 @@
  extern struct pschars *SplineFont2Chrs(SplineFont *sf, int iscjk,
  	struct pschars *subrs,int flags,enum fontformat format);
  struct cidbytes;
-@@ -1831,3 +1882,14 @@
+@@ -1836,3 +1887,14 @@
  extern void DefaultOtherSubrs(void);
  extern int ReadOtherSubrsFile(char *filename);
  #endif
