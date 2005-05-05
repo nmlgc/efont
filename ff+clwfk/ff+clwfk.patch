@@ -1680,7 +1680,7 @@
  		cv->drawmode = layer==0 ? dm_grid : dm_back;
  		layer2.active = layer;
 --- fontforge/cvpointer.c.orig	Thu Jan  6 11:33:39 2005
-+++ fontforge/cvpointer.c	Tue May  3 18:16:03 2005
++++ fontforge/cvpointer.c	Thu May  5 11:42:26 2005
 @@ -488,6 +488,34 @@
  return( false );
  }
@@ -1721,7 +1721,7 @@
  	    fs->p->ap->selected = true;
  	}
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	if ( needsupdate )
++	if ( needsupdate && !(event->u.mouse.state&ksm_control))
 +	    SelectOtherPointsOnJointPoint(cv, fs);
 +#endif
      } else if ( event->u.mouse.clicks<=1 ) {
@@ -1732,7 +1732,7 @@
  	    fs->p->ap->selected = !fs->p->ap->selected;
  	}
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	if ( needsupdate )
++	if ( needsupdate && !(event->u.mouse.state&ksm_control))
 +	    SelectOtherPointsOnJointPoint(cv, fs);
 +#endif
      } else if ( event->u.mouse.clicks==2 ) {
@@ -1740,7 +1740,7 @@
  	    Spline *spline, *first;
  	    if ( !fs->p->spl->first->selected ) { needsupdate = true; fs->p->spl->first->selected = true; }
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	    if ( needsupdate )
++	    if ( needsupdate && !(event->u.mouse.state&ksm_control))
 +		SetSelectedAt(cv, fs->p->spl->first->me, fs->p->spl->first->selected);
 +#endif
  	    first = NULL;
@@ -1750,7 +1750,7 @@
  		if ( first==NULL ) first = spline;
 -	    }
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+		if ( needsupdate )
++		if ( needsupdate && !(event->u.mouse.state&ksm_control))
 +		    SetSelectedAt(cv, spline->to->me, spline->to->selected);
 +#endif
 +		    }
@@ -1981,7 +1981,7 @@
 +static char *str_SkelExportFailedPopup = "スケルトンの書き出しに失敗しました.\n%sは %d 個の点が必要ですが,\n%d個しかありません";
 +#endif
 --- fontforge/savefontdlg.c.orig	Wed Mar  9 10:15:09 2005
-+++ fontforge/savefontdlg.c	Wed May  4 21:16:34 2005
++++ fontforge/savefontdlg.c	Thu May  5 11:25:06 2005
 @@ -89,7 +89,11 @@
  	".cid", ".cff", ".cid.cff",
  	".t42", ".cid.t42",
@@ -2031,7 +2031,7 @@
 +    for ( i = 0; i < sf->charcnt; i++ ) {
 +	if (sf->chars[i]!=NULL) {
 +	    ret &= ExportSkeletonAs(file, sf->chars[i], NULL, NULL);
-+	    fputc('\n', stderr);
++	    fputc('\n', file);
 +        }
 +    }
 +    if ( ferror(file))
