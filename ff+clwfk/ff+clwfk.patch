@@ -1342,7 +1342,7 @@
 +    fprintf(skel, ")\n");
 +
 +    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
-+        if ( spl->stroketype >= frame )
++        if ( spl->stroketype >= sk_kamae )
 +	    fprintf(skel, "      (%s %.1f %.1f %.1f %.1f)\n", stroketypes[spl->stroketype],
 +		    spl->first->me.x, spl->first->me.y,
 +		    spl->first->next->to->next->to->me.x, spl->first->next->to->next->to->me.y);
