@@ -1211,68 +1211,158 @@
      CVSetCharChanged(cv,true);
      CVInfoDraw(cv,cv->gw);
      SCUpdateAll(sc);
---- fontforge/cvexport.c.orig	Wed May  4 20:25:50 2005
-+++ fontforge/cvexport.c	Wed May  4 22:34:55 2005
-@@ -71,7 +71,7 @@
-     iter->cur = NULL;
- }
+--- fontforge/cvexport.c.orig	Sun Feb 27 12:10:45 2005
++++ fontforge/cvexport.c	Thu May  5 09:36:39 2005
+@@ -38,6 +38,187 @@
+ #include <utype.h>
+ #endif
  
--int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphname) {
-+int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphname, SplinePointList **spl_error) {
-     int i, ret, numPoints = 0;
-     SplinePointList *spl;
-     SplinePoint *sp;
-@@ -81,8 +81,10 @@
-     PrimParams *fk = &sc->clwfk;
-     char *s = NULL;
- 
--    *error = NULL;
--   for (i = 0; i < 256; i++) linkok[i] = false;
-+    if ( spl_error!=NULL )
-+	*spl_error = NULL;
++#ifdef FONTFORGE_CONFIG_CLWFK
++static int BPIndex(BasePoint bp, BasePoint *array, int arraysize) {
++    int i;
++    for ( i = 0; i < arraysize; i++ ) {
++        if ( array[i].x == bp.x && array[i].y == bp.y )
++return( i );
++    }
++return( -1 );
++}
++
++typedef struct splinepointiterator {
++    SplinePointList *spl;
++    SplinePoint *cur;
++} SPIterator;
++
++static SplinePoint *nextSP(SPIterator *iter) {
++    if (iter->cur == NULL) {
++        iter->cur = iter->spl->first;
++    } else if (iter->cur->next==NULL) {
++        iter->cur = NULL;
++    } else if (iter->cur->next->to==iter->spl->first) {
++        iter->cur = NULL;
++    } else {
++        iter->cur = iter->cur->next->to;
++    }
++return iter->cur;
++}
++
++static void initSPIterator(SPIterator *iter, SplinePointList *spl) {
++    iter->spl = spl;
++    iter->cur = NULL;
++}
++
++int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphname, SplinePointList **sk_error) {
++    int i, ret, numPoints = 0;
++    SplinePointList *spl;
++    SplinePoint *sp;
++    SPIterator iter;
++    BasePoint points[256];
++    int linkok[256], joints[128];
++    PrimParams *fk = &sc->clwfk;
++    char *s = NULL;
++
++    if ( sk_error!=NULL )
++	*sk_error = NULL;
 +    for (i = 0; i < 256; i++)
 +	linkok[i] = false;
-     SCRound2Int(sc,1.0);
-     if (glyphname!=NULL)
-         s = copy(glyphname);
-@@ -112,7 +114,7 @@
- 
-     fprintf(skel, "%s", "       (");
-     for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
--        int nJoints=0;
-+        int nJoints=0, nPoints = 0;
- 	if ( spl->stroketype>=sk_kamae )
-     continue;
-         fprintf(skel, "%s(%s (", spl==sc->layers[ly_fore].splines?"":"        ",
-@@ -123,11 +125,24 @@
- 	        joints[nJoints++] = BPIndex(me,points,numPoints);
- 	    } else {
- 	        fprintf(skel, "%d", BPIndex(me,points,numPoints));
++    SCRound2Int(sc,1.0);
++    if (glyphname!=NULL)
++        s = copy(glyphname);
++    else if (fk->glyphname!=NULL)
++        s = u2utf8_copy(fk->glyphname);
++    fprintf(skel, "(setq %s\n      '((", s!=NULL ? s : "UNKNOWN");
++    if (s!=NULL)
++        gfree(s);
++
++    for ( spl=sc->layers[1].splines; spl!=NULL; spl=spl->next )
++        if ( spl->stroketype < sk_kamae )
++	    for ( initSPIterator(&iter, spl); (sp=nextSP(&iter)) != NULL; ) {
++		i = BPIndex(sp->me, points, numPoints);
++		if ( i < 0 )
++		    points[i = numPoints++] = sp->me;
++		if ( sp->isjoint )
++		  linkok[i] = true;
++	    }
++
++    for ( i=0; i<numPoints; i++ ) {
++        fprintf(skel, "%s(%d %d", i==0?"":"        ", 
++		(int)(points[i].x*0.4), (int)((points[i].y-800)*-0.4));
++        if ( linkok[i] ) 
++	    fprintf(skel, " (link-ok t)");
++        fprintf(skel, "%s", i==numPoints-1?"))\n":")\n");
++    }
++
++    fprintf(skel, "%s", "       (");
++    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++        int nJoints=0, nPoints=0;
++	if ( spl->stroketype >= sk_kamae )
++    continue;
++        fprintf(skel, "%s(%s (", spl==sc->layers[ly_fore].splines?"":"        ",
++		                stroketypes[spl->stroketype]);
++	for ( initSPIterator(&iter, spl); (sp=nextSP(&iter)) != NULL; ) {
++            BasePoint me = sp->me;
++	    if ( sp->isjoint && sp->prev!=NULL && sp->next!=NULL && sp->next->to!=spl->first ) {
++	        joints[nJoints++] = BPIndex(me,points,numPoints);
++	    } else {
++	        fprintf(skel, "%d", BPIndex(me,points,numPoints));
 +		nPoints++;
- 		if ( sp->next!=NULL && sp->next->to!=spl->first )
- 		    fputc(' ', skel);
- 	    }
- 	}
- 	fprintf(skel, ")");
++		if ( sp->next!=NULL && sp->next->to!=spl->first )
++		    fputc(' ', skel);
++	    }
++	}
++	fprintf(skel, ")");
 +
 +	if ( nPoints<num_points_in_strokes[spl->stroketype] ) {
-+	    if ( spl_error!=NULL ) {
++	    if ( sk_error!=NULL ) {
 +		fprintf(stderr, 
 +			"Failed to export skeleton, because %s needs %d points but there are %d points\n",
 +			stroketypes[spl->stroketype],
 +			num_points_in_strokes[spl->stroketype],
 +			nPoints);
-+		*spl_error = spl;
++		*sk_error = spl;
 +return( 0 );
 +	    }
 +	}
- 	if (nJoints > 0) {
- 	    fprintf(skel, " (link ");
- 	    for ( i=0; i<nJoints; i++ ) {
-@@ -169,15 +184,36 @@
- return( ret );
- }
- 
++	if (nJoints > 0) {
++	    fprintf(skel, " (link ");
++	    for ( i=0; i<nJoints; i++ ) {
++		fprintf(skel, "%d", joints[i]);
++		if (i < nJoints-1) fprintf(skel, " ");
++	    }
++	    fprintf(skel, ")");
++	}
++	if ( spl->width != 0 && sc->parent->strokewidth != 0 &&
++	     spl->width != sc->parent->strokewidth )
++	    fprintf(skel, " (widthratio . %.3f)", spl->width / sc->parent->strokewidth);
++	fprintf(skel, spl->next==NULL?")":")\n");
++    }
++    if ( fk->xlimit_min!=0 || (fk->xlimit_max!=0 && fk->xlimit_max!=1000 ))
++        fprintf(skel, "\n       (xlimit %g %g)", fk->xlimit_min, fk->xlimit_max);
++    if ( fk->ylimit_min!=0 || (fk->ylimit_max!=0 && fk->ylimit_max!=1000 ))
++        fprintf(skel, "\n       (ylimit %g %g)", fk->ylimit_min, fk->ylimit_max);
++    fprintf(skel, ")\n");
++
++    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++        if ( spl->stroketype >= frame )
++	    fprintf(skel, "      (%s %.1f %.1f %.1f %.1f)\n", stroketypes[spl->stroketype],
++		    spl->first->me.x, spl->first->me.y,
++		    spl->first->next->to->next->to->me.x, spl->first->next->to->next->to->me.y);
++    }
++    if ( fk->tateheight != 0 ) fprintf(skel, "       (tateheight . %f)\n", fk->tateheight);
++    if ( fk->yokowidth != 0 ) fprintf(skel, "       (yokowidth . %f)\n", fk->yokowidth);
++    if ( fk->xunit != 0 ) fprintf(skel, "       (xunit . %f)\n", fk->xunit);
++    if ( fk->yunit != 0 ) fprintf(skel, "       (yunit . %f)\n", fk->yunit);
++    if ( fk->center == 200 ) fprintf(skel, "       (center)\n");
++    else if ( fk->center != 0 ) fprintf(skel, " (center . %f)\n",fk->center);
++    if ( fk->up!=0 || fk->down!=0 ) 
++        fprintf(skel, "       (updown %f . %f)\n", fk->up, fk->down);
++    if ( fk->hook!=NULL)
++        fprintf(skel, "       (hook  %s)\n", fk->hook);
++    fprintf(skel, "))\n");
++    
++    ret = !ferror(skel);
++return( ret );
++}
++
 +static int SKPointCount(SplinePointList *sk) {
 +    int cnt;
 +    SplinePoint *first = sk->first;
@@ -1290,24 +1380,86 @@
 +return( cnt );
 +}
 +
- int ExportSkeleton(char *filename,SplineChar *sc) {
-     FILE *skel;
-     int ret;
++int ExportSkeleton(char *filename,SplineChar *sc) {
++    FILE *skel;
++    int ret;
 +    SplinePointList *error;
- 
-     skel = fopen(filename,"w");
-     if ( skel==NULL ) {
--return(0);
++
++    skel = fopen(filename,"w");
++    if ( skel==NULL ) {
 +return( 0 );
-     }
--    ret = ExportSkeletonAs(skel,sc,NULL);
++    }
 +    ret = ExportSkeletonAs(skel,sc,NULL,&error);
 +    if ( ret==0 && error!=NULL )
 +	GWidgetErrorR(_STR_BadSkel, _STR_SkelExportFailedPopup, u_stroketypes[error->stroketype],
 +		      num_points_in_strokes[error->stroketype], SKPointCount(error));
-     fclose(skel);
- return( ret );
- }
++    fclose(skel);
++return( ret );
++}
++#endif
++
+ static void EpsGeneratePreview(FILE *eps,SplineChar *sc,DBounds *b) {
+     double scale, temp;
+     int pixelsize, depth;
+@@ -743,6 +924,10 @@
+ 	good = ExportSVG(buffer,sc);
+     else if ( format==3 )
+ 	good = ExportPDF(buffer,sc);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    else if ( format==4 )
++	good = ExportSkeleton(buffer,sc);
++#endif
+     else if ( bc!=NULL )
+ 	good = BCExportXBM(buffer,bc,format-3);
+     if ( !good )
+@@ -777,6 +962,9 @@
+     { (unichar_t *) "XFig", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "SVG", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "PDF", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
++#ifdef FONTFORGE_CONFIG_CLWFK
++    { (unichar_t *) "Skeleton", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
++#endif
+     { (unichar_t *) "X Bitmap", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+     { (unichar_t *) "BMP", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
+ #ifndef _NO_LIBPNG
+@@ -803,6 +991,10 @@
+ 	good = ExportSVG(temp,d->sc);
+     else if ( format==3 )
+ 	good = ExportPDF(temp,d->sc);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    else if ( format==4 )
++	good = ExportSkeleton(temp,d->sc);
++#endif
+     else
+ 	good = ExportXBM(temp,d->sc,format-4);
+     if ( !good )
+@@ -906,8 +1098,14 @@
+ 			 format==1?".fig":
+ 			 format==2?".svg":
+ 			 format==3?".pdf":
++#ifdef FONTFORGE_CONFIG_CLWFK
++			 format==4?".l":
++			 format==5?".xbm":
++			 format==6?".bmp":
++#else
+ 			 format==4?".xbm":
+ 			 format==5?".bmp":
++#endif
+ 				   ".png");
+ 	GGadgetSetTitle(d->gfc,f2);
+ 	free(f2);
+@@ -1097,7 +1295,11 @@
+ 	ext = _format==0 ? "xbm" : _format==1 ? "bmp" : "png";
+     else
+ 	ext = _format==0?"eps":_format==1?"fig":_format==2?"svg":
++#ifdef FONTFORGE_CONFIG_CLWFK
++		_format==3?"pdf":_format==4?"l":_format==5?"xbm":_format==6?"bmp":"png";
++#else
+ 		_format==3?"pdf":_format==4?"xbm":_format==5?"bmp":"png";
++#endif
+ #if defined( __CygWin ) || defined(__Mac)
+     /* Windows file systems are not case conscious */
+     { char *pt, *bpt, *end;
 --- fontforge/cvfreehand.c.orig	Mon Jan 31 11:11:19 2005
 +++ fontforge/cvfreehand.c	Sun May  1 00:57:59 2005
 @@ -559,6 +559,10 @@
