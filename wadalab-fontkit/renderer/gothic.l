@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2005
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -40,13 +40,19 @@
       ((angle .,(diff2 p1 l1))
        (angle .,(diff2 p2 l1))))))
 ;
-(defun gothic3 (p1 p2 p3 w &optional (ratio 0.6666666666))
+; flection : カーブ中間部の折れ曲がりのきつさを表すパラメータ。METAFONT の tension の逆とも言える。
+; flare : (払いの先端が) 末広がりになる度合のパラメータ。1.0 より大きいと先端部がラッパ状になる。
+; right-curvature: カーブの中間部で、進行方向右側 (左払いではカーブの内側、右払いでは外側) の
+;                  曲がりが反対側よりきつくなる度合のパラメータ。
+;                  この値が 1.0 より大きいと左払いでは中間部が細くなり、右払いでは太くなる。
+;
+(defun gothic3 (p1 p2 p3 w &optional (flection 0.6666666666) (flare 1.0) (right-curvature 1.0))
   (let* ((p12 (diff2 p2 p1))
 	 (l1 (normlen2 w (rot270 p12)))
 	 (p23 (diff2 p3 p2))
-	 (l3 (normlen2 w (rot270 p23)))
-	 (dp1 (times2 (* 3 ratio) p12))
-	 (dp2 (times2 (* 3 ratio) p23))
+	 (l3 (normlen2 (* w flare) (rot270 p23)))
+	 (dp1 (times2 (* 3 flection) p12))
+	 (dp2 (times2 (* 3 flection) p23))
 	 (ddp1 (plus2
 		(times2 6.0 (diff2 p3 p1))
 		(times2 -4.0 dp1)
@@ -84,15 +90,15 @@
 	 )
 ;    (break)
     `(((angle .,a1)
-       (bezier .,(plus2 a1 (times2 0.33333333 da1)))
-       (bezier .,(plus2 a2 (times2 -0.33333333 da2)))
+       (bezier .,(plus2 a1 (times2 (* right-curvature 0.33333333) da1)))
+       (bezier .,(plus2 a2 (times2 (* right-curvature -0.33333333) da2)))
        (angle .,a2))
       ((angle .,b1)
        (bezier .,(plus2 b1 (times2 0.33333333 db1)))
        (bezier .,(plus2 b2 (times2 -0.33333333 db2)))
        (angle .,b2)))))
 
-(defun gothiccurve (p1 p2 p3 w &optional (ratio 0.6666666666))
+(defun gothiccurve (p1 p2 p3 w &optional (flection 0.6666666666))
   (let* ((p12 (diff2 p2 p1))
 	 (l1 (normlen2 w (rot270 p12)))
 	 (p23 (diff2 p3 p2))
@@ -108,12 +114,12 @@
 ;    (break)
 ;    (setq test 'bezier)
     `(((angle .,a1)
-       (bezier .,(inter2 a1 a2 ratio))
-       (bezier .,(inter2 a3 a2 ratio))
+       (bezier .,(inter2 a1 a2 flection))
+       (bezier .,(inter2 a3 a2 flection))
        (angle .,a3))
       ((angle .,b1)
-       (bezier .,(inter2 b1 b2 ratio))
-       (bezier .,(inter2 b3 b2 ratio))
+       (bezier .,(inter2 b1 b2 flection))
+       (bezier .,(inter2 b3 b2 flection))
        (angle .,b3)))))
 
 ;
@@ -219,10 +225,10 @@
       (angle .,(diff2 p0 l0)))))
 ;
 (defkazari gothic 
-;  ((hidari tatehidari migi tatehane tsukurihane shin-nyuu kozato) 2
-;   (hidari tatehidari migi tatehane tsukurihane shin-nyuu kozato) 3)
-  ((hidari tatehidari migi shin-nyuu) 2
-   (hidari tatehidari migi shin-nyuu) 3)
+;  ((hidari tatehidari migi shin-nyuu) 2
+;   (hidari tatehidari migi shin-nyuu) 3)
+  ((hidari tatehidari shin-nyuu) 2
+   (hidari tatehidari shin-nyuu) 3)
   (let* ((p1 (svref cross 0))
 	 (p0 (svref cross 1))
 	 (p3 (svref cross 2))
@@ -233,6 +239,19 @@
 	 )
     `((angle .,(diff2 p1 l0))
       (angle .,(plus2 p0 l0)))))
+;
+(defkazari gothic (migi 2 migi 3)
+  (let* ((p1 (svref cross 0))
+	 (p0 (svref cross 1))
+	 (p3 (svref cross 2))
+	 (p2 (svref cross 3))
+	 (d0 (norm2 (diff2 p3 p1)))
+	 (costheta (* 0.2 (car d0)))
+	 (l0 (normlen2 (* costheta (metric2 p0 p1)) d0))
+	 (l1 (times2 1.25 l0))
+	 )
+    `((angle .,(diff2 p1 l0)) (angle .,(diff2 p1 l1)) (angle .,(plus2 p0 l1))
+      (angle .,(plus2 p0 l1)))))
 ;	 
 (defkazari gothic ((magaritate tsukurihane hidari) 1 yoko 3)
   (let* ((p0 (svref cross 0))
@@ -303,9 +322,9 @@
   (let* ((p0 (car points))
 	(p1 (cadr points))
 	(p2 (caddr points))
-	(w local_gothicwidth)
+	(w (* 1.15 local_gothicwidth)) ; flare < 1 なので補正のため太くする
 	)
-    (gothic3 p0 p1 p2 w)))
+    (gothic3 p0 p1 p2 w 0.75 0.9 0.95)))
 ;
 ; 縦左はらいの定義
 ;
@@ -328,7 +347,7 @@
 	(z (caddr points))
 	(w local_gothicwidth))
 ;    (niku3 x y z 0.3 0.3 w w w w)
-    (gothic3 x y z w)
+    (gothic3 x y z w 0.75 1.2 1.05)
     ))
 ;
 ; こざと偏の一部
