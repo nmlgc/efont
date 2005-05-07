@@ -1826,8 +1826,8 @@
 +SplineFont *SplineFontBlank(Encoding *encoding_name, int charcnt) {
 +}
 +#endif
---- fontforge/fontview.c.orig	Wed Apr 20 14:35:52 2005
-+++ fontforge/fontview.c	Sun May  1 00:57:59 2005
+--- fontforge/fontview.c.orig	Wed May  4 15:33:23 2005
++++ fontforge/fontview.c	Sat May  7 11:16:26 2005
 @@ -26,6 +26,7 @@
   */
  #include "pfaeditui.h"
@@ -1865,7 +1865,32 @@
  #endif
      continue;
  	}
-@@ -9212,6 +9219,10 @@
+@@ -8049,6 +8056,24 @@
+ 	if ( index<0 ) index = 9;
+ 	if ( script_filenames[index]!=NULL )
+ 	    ExecuteScriptFile(fv,script_filenames[index]);
++#ifdef FONTFORGE_CONFIG_CLWFK
++    } else if ( (event->u.chr.keysym=='$' || event->u.chr.keysym=='%') &&
++		(event->u.chr.state&ksm_control) ) {
++        int pos = FVAnyCharSelected(fv);
++	if ( pos>=0 ) {
++	    SCClearBackground(fv->sf->chars[pos]);
++	    SCFleshSkeleton(fv->sf->chars[pos], (event->u.chr.keysym=='$')?"mincho":"gothic",
++			    CVShows.normkanji);
++	} else if ( pos==-2 ) {
++	    for ( i=0; i<fv->sf->charcnt; i++ ) {
++		if (fv->selected[i]) {
++		    SCClearBackground(fv->sf->chars[i]);
++		    SCFleshSkeleton(fv->sf->chars[i], (event->u.chr.keysym=='$'?"mincho":"gothic"),
++				    CVShows.normkanji);
++		}
++	    }
++	}
++#endif
+     } else if ( event->u.chr.keysym == GK_Left ||
+ 	    event->u.chr.keysym == GK_Tab ||
+ 	    event->u.chr.keysym == GK_BackTab ||
+@@ -9212,6 +9237,10 @@
  	sf = SFFromMF(fullname);
      } else if ( strmatch(fullname+strlen(fullname)-3, ".ik")==0 ) {
  	sf = SFReadIkarus(fullname);
@@ -1876,7 +1901,7 @@
      } else {
  	sf = SFReadMacBinary(fullname,0);
      }
-@@ -9317,7 +9328,11 @@
+@@ -9317,7 +9346,11 @@
      FontView *fv;
      SplineFont *sf;
      char *pt, *ept, *tobefreed1=NULL, *tobefreed2=NULL;
