@@ -2123,7 +2123,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 15:33:24 2005
-+++ fontforge/sfd.c	Thu May  5 23:02:33 2005
++++ fontforge/sfd.c	Sat May  7 10:50:25 2005
 @@ -81,6 +81,82 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2207,7 +2207,7 @@
  #if defined(FONTFORGE_CONFIG_GTK)	/* GTK unicode strings are stored in utf8 rather than ucs2 */
  static void SFDDumpUTF7Str(FILE *sfd, const char *str) {
  #else
-@@ -384,6 +460,9 @@
+@@ -384,7 +460,15 @@
  	    fprintf(sfd, "%d", sp->pointtype|(sp->selected<<2)|
  			(sp->nextcpdef<<3)|(sp->prevcpdef<<4)|
  			(sp->roundx<<5)|(sp->roundy<<6)|
@@ -2215,9 +2215,15 @@
 +			(sp->islockedend<<8)|(sp->isjoint<<9)|
 +#endif
  			(sp->ttfindex==0xffff?(1<<7):0) );
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    /* this makes SFD file incompatible. to open with regular FF, apply 'sed s%#[a-z0-9-]*##' */
++	    if ( first==NULL )
++		fprintf( sfd, "#%s", stroketypes[spl->stroketype] );
++#endif
  	    if ( order2 ) {
  		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
-@@ -2121,6 +2200,10 @@
+ 		    putc(',',sfd);
+@@ -2121,11 +2205,23 @@
  		pt->ttfindex = 0xffff;
  	    else
  		pt->ttfindex = ttfindex++;
@@ -2228,7 +2234,20 @@
  	    pt->nextcpindex = 0xfffe;
  	    ch = getc(sfd);
  	    if ( ch=='x' ) {
-@@ -4767,3 +4850,810 @@
+ 		pt->hintmask = chunkalloc(sizeof(HintMask));
+ 		SFDGetHintMask(sfd,pt->hintmask);
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    } else if ( ch=='#' ) {
++		int type;
++		getname(sfd,tok);
++		for (type=0; type<num_enum_stroke; type++)
++		    if (strcmp(stroketypes[type],tok)==0)
++			cur->stroketype = type;
++#endif
+ 	    } else if ( ch!=',' )
+ 		ungetc(ch,sfd);
+ 	    else {
+@@ -4767,3 +4863,810 @@
      fclose(sfd);
  return( ret );
  }
