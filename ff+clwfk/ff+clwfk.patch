@@ -2123,7 +2123,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 15:33:24 2005
-+++ fontforge/sfd.c	Sat May  7 10:50:25 2005
++++ fontforge/sfd.c	Sun May  8 00:54:29 2005
 @@ -81,6 +81,82 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2588,8 +2588,8 @@
 +			sbuf[s].num_points = p + 1;
 +			sbuf[s].is_link |= (1<<p);
 +		    }
-+		} else if (strcasecmp(buf,"width") ==0) {
-+		    if (getNumeral(file,buf,bufsize) == NULL)
++		} else if (strcasecmp(buf,"widthratio") ==0) {
++		    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize) == NULL)
 +return NULL;
 +		    sbuf[s].width = strtof(buf,NULL);
 +		    if (!closeParenExists(file))
@@ -2891,7 +2891,7 @@
 +return( to );
 +}
 +
-+static SplineSet *SplineSetFromSkelChar(SkelChar *skel) {
++static SplineSet *SplineSetFromSkelChar(SkelChar *skel, real defaultwidth) {
 +    SplineSet *cur=NULL, *head=NULL;
 +    SplinePoint *pt, *last;
 +    int i, s, p, pt_index;
@@ -2905,7 +2905,7 @@
 +	if (head == NULL) head = cur;
 +	cur->first = cur->last = NULL;
 +	cur->stroketype = stroke->stroke_type;
-+	cur->width = stroke->width;
++	cur->width = stroke->width * defaultwidth;
 +	for (p = 0; p<stroke->num_points ; p++) {
 +	    if ( stroke->is_link&(1<<p))
 +continue;
@@ -2977,7 +2977,7 @@
 +    sc->width = 1000;
 +    sc->vwidth=sf->ascent+sf->descent;
 +    sc->layers[ly_back].splines=NULL;
-+    sc->layers[ly_fore].splines = SplineSetFromSkelChar(skel);
++    sc->layers[ly_fore].splines = SplineSetFromSkelChar(skel,sf->strokewidth);
 +    sc->clwfk = skel->extra;
 +return sc;
 +}
