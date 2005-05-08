@@ -45,8 +45,13 @@
 ; right-curvature: カーブの中間部で、進行方向右側 (左払いではカーブの内側、右払いでは外側) の
 ;                  曲がりが反対側よりきつくなる度合のパラメータ。
 ;                  この値が 1.0 より大きいと左払いでは中間部が細くなり、右払いでは太くなる。
+; rightside-head-flare: カーブの進行方向右側の先頭部を太める度合。
+;                      「人」などで 1 より小さい値に設定して、交点の黒ずみを抑える予定。
+; rightside-tail-flare: カーブの進行方向右側の末端を太める度合。
+;                       右払いは左下側に伸びる量を大きくしたほうが整合性があるため。
 ;
-(defun gothic3 (p1 p2 p3 w &optional (flection 0.6666666666) (flare 1.0) (right-curvature 1.0))
+(defun gothic3 (p1 p2 p3 w &optional (flection 0.6666666666) (flare 1.0) (right-curvature 1.0)
+		   (rightside-head-flare 1.0) (rightside-tail-flare 1.0))
   (let* ((p12 (diff2 p2 p1))
 	 (l1 (normlen2 w (rot270 p12)))
 	 (p23 (diff2 p3 p2))
@@ -70,7 +75,7 @@
 	 (a1 (plus2 p1 l1))
 	 (a2 (plus2 p3 l3))
 	 (b1 (diff2 p1 l1))
-	 (b2 (diff2 p3 l3))
+	 (b2 (diff2 p3 (times2 rightside-tail-flare l3)))
 	 (da1 (plus2 
 	       dp1
 	       (times2 (/ w lendp1) (rot270 ddp1))
@@ -322,9 +327,10 @@
   (let* ((p0 (car points))
 	(p1 (cadr points))
 	(p2 (caddr points))
-	(w (* 1.15 local_gothicwidth)) ; flare < 1 なので補正のため太くする
+	(w (* 1.05 local_gothicwidth)) ; flare < 1 なので補正のため太くする
 	)
-    (gothic3 p0 p1 p2 w 0.75 0.9 0.95)))
+    (gothic3 p0 p1 p2 w 0.75 0.9 0.95 1.0 1.0)
+))
 ;
 ; 縦左はらいの定義
 ;
@@ -345,9 +351,9 @@
   (let ((x (car points))
 	(y (cadr points))
 	(z (caddr points))
-	(w local_gothicwidth))
+	(w (* 0.88 local_gothicwidth)))
 ;    (niku3 x y z 0.3 0.3 w w w w)
-    (gothic3 x y z w 0.75 1.2 1.05)
+    (gothic3 x y z w 0.7 1.15 1.05 1.0 1.2)
     ))
 ;
 ; こざと偏の一部
