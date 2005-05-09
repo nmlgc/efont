@@ -3243,15 +3243,15 @@
 +extern char *u2utf7_copy(const unichar_t *ubuf);
 +#endif
 +
---- fontforge/splineorder2.c.orig	Sat Mar 12 13:44:39 2005
-+++ fontforge/splineorder2.c	Sun May  1 00:57:59 2005
+--- fontforge/splineorder2.c.orig	Mon Mar 14 10:00:47 2005
++++ fontforge/splineorder2.c	Mon May  9 12:08:13 2005
 @@ -550,6 +550,10 @@
      *ret->first = *ss->first;
      ret->first->hintmask = NULL;
      ret->last = ret->first;
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    ret->width = ss->width;
-+    ret->stroketype = ret->stroketype;
++    ret->stroketype = ss->stroketype;
 +#endif
  
      first = NULL;
@@ -3262,7 +3262,7 @@
      ret->last = ret->first;
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    ret->width = ss->width;
-+    ret->stroketype = ret->stroketype;
++    ret->stroketype = ss->stroketype;
 +#endif
  
      first = NULL;
