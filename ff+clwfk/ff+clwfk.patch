@@ -99,7 +99,7 @@
  fontforge: nomen.h $(fontforge_OBJECTS)
  	$(LIBTOOL) $(CC) -o fontforge $(fontforge_OBJECTS) $(LIBS)
 --- fontforge/autotrace.c.orig	Sun Apr  3 02:14:09 2005
-+++ fontforge/autotrace.c	Wed May  4 22:35:07 2005
++++ fontforge/autotrace.c	Wed May 11 04:52:07 2005
 @@ -199,7 +199,6 @@
      fd = mkstemp(buffer);
  #if 0
@@ -137,7 +137,7 @@
 +
 +static char *lispname = NULL;
 +static char *clwfkdirname = NULL;
-+static char *clwfk_default_dir = "/home/kanou/fontMaking/efont/wadalab-fontkit";
++static char *clwfk_default_dir = "/usr/local/share/wadalab-fontkit";
 +static char *default_lisp_name = "/usr/local/bin/lisp";
 +
 +static char *FindLispName(void) {
