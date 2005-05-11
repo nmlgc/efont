@@ -98,8 +98,8 @@
  
  fontforge: nomen.h $(fontforge_OBJECTS)
  	$(LIBTOOL) $(CC) -o fontforge $(fontforge_OBJECTS) $(LIBS)
---- fontforge/autotrace.c.orig	Sun Apr  3 02:14:09 2005
-+++ fontforge/autotrace.c	Wed May 11 04:52:07 2005
+--- fontforge/autotrace.c.orig	Fri Apr  1 13:51:07 2005
++++ fontforge/autotrace.c	Wed May 11 19:41:38 2005
 @@ -199,7 +199,6 @@
      fd = mkstemp(buffer);
  #if 0
@@ -108,7 +108,7 @@
      if ( rename(old,buffer)==-1 )
  	strcpy(buffer,old);
      free(old);
-@@ -232,6 +231,162 @@
+@@ -232,6 +231,170 @@
  return( NULL );
      }
  }
@@ -180,23 +180,31 @@
 +static int DumpOutlineFlesher(SplineChar *sc, char *face, char *filename, char *clwfkdir, int normkanji) {
 +    FILE *prog = fopen(filename, "w");
 +    real strokewidth = 70.0;
-+    SplinePointList *spl_error;
++    char *glyphname;
 +
 +    if ( sc->parent->strokewidth != 0 )
 +        strokewidth = sc->parent->strokewidth;
-+    fputs("(defvar base-directory)\n"
++    fputs("(setq *top-level-auto-declare* t)\n"
++	  "(defvar base-directory)\n"
 +	  "(defparameter source-load nil)\n"
 +	  "(defun load-directory (dir)\n"
 +	  "(let* ((base-directory dir))\n"
 +	  "	(load (concatenate 'string base-directory \"/\" \"load.l\"))))\n", prog);
 +    fprintf(prog, "(load-directory \"%s/renderer/\")\n", clwfkdir);
++#if 0
++    fputs("(defmacro defjoint (face char body) `(setq ,char ,body))\n", prog);
 +    fputs("(defvar XXX)\n", prog);
++#endif
 +    fprintf(prog, "(setq %swidth %.2f)\n", face, strokewidth / 5.0);
-+    if (ExportSkeletonAs(prog, sc, "XXX", &spl_error) == 0)
++    if ( SkeletonCheck(sc) == 0 )
++return ( -1 );
++    if (ExportSkeletonAndDepends(prog, sc) == 0)
 +return( -1 );
 +    fprintf(prog, "(outline2eps (makeoutline (skeleton2list \n");
 +    if (normkanji) fputs("(normkanji ", prog);
-+    fprintf(prog, "(rm-limit (applykanji XXX '%s))\n", face);
++    glyphname = u2utf8_copy(sc->clwfk.glyphname);
++    fprintf(prog, "(rm-limit (applykanji %s '%s))\n", glyphname, face);
++    free(glyphname);
 +    if (normkanji) fputs(")", prog);
 +    fprintf(prog, " '%s)))\n",face);
 +    fputs("(quit)\n", prog);
@@ -227,7 +235,7 @@
 +    
 +    ac = 0;
 +    arglist[ac++] = prog;
-+    /* cmucl only */
++    /* currently CMUCL only */
 +    arglist[ac++] = "-quiet";
 +    arglist[ac++] = "-batch";
 +    arglist[ac++] = "-load";
@@ -262,7 +270,7 @@
 +	}
 +    }
 +    close(fd);
-+    unlink(tempname);		/* Might not be needed, but probably is*/
++    unlink(tempname);
 +
 +    if ( changed )
 +	SCCharChangedUpdate(sc);
@@ -271,8 +279,8 @@
  
  static void _SCAutoTrace(SplineChar *sc, char **args) {
      ImageList *images;
---- fontforge/charinfo.c.orig	Thu Mar 24 11:11:28 2005
-+++ fontforge/charinfo.c	Sun May  1 00:57:59 2005
+--- fontforge/charinfo.c.orig	Mon May  9 23:33:50 2005
++++ fontforge/charinfo.c	Wed May 11 19:37:47 2005
 @@ -69,6 +69,19 @@
  #define CID_Copy	1024
  #define CID_Paste	1025
@@ -293,17 +301,17 @@
  #define CID_PST		1111
  #define CID_Tag		1112
  #define CID_Contents	1113
-@@ -4366,6 +4379,9 @@
+@@ -4469,6 +4482,9 @@
      FontView *fvs;
      int err = false;
      int tex_height, tex_depth, tex_sub, tex_super;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    PrimParams clwfk;
++    SkelParams clwfk;
 +#endif
  
      val = ParseUValue(ci->gw,CID_UValue,true,ci->sc->parent);
      if ( val==-2 )
-@@ -4378,12 +4394,29 @@
+@@ -4481,12 +4497,29 @@
  return( false );
      if ( !CI_ProcessPosSubs(ci))
  return( false );
@@ -334,7 +342,7 @@
      comment = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Comment));
      SCPreserveState(ci->sc,2);
      ret = SCSetMetaData(ci->sc,name,val,comment);
-@@ -4407,6 +4440,12 @@
+@@ -4510,6 +4543,12 @@
  	ci->sc->tex_depth  = tex_depth;
  	ci->sc->tex_sub_pos   = tex_sub;
  	ci->sc->tex_super_pos = tex_super;
@@ -347,7 +355,7 @@
      }
      if ( ret )
  	ci->sc->parent->changed = true;
-@@ -5581,6 +5620,67 @@
+@@ -5684,6 +5723,67 @@
  	buffer[0] = '\0';
      uc_strcpy(ubuf,buffer);
      GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_TeX_Super),ubuf);
@@ -415,7 +423,7 @@
  }
  
  static int CI_NextPrev(GGadget *g, GEvent *e) {
-@@ -5665,6 +5765,10 @@
+@@ -5768,6 +5868,10 @@
      GWindowAttrs wattrs;
      GGadgetCreateData ugcd[12], cgcd[6], psgcd[7][7], cogcd[3], mgcd[9], tgcd[10];
      GTextInfo ulabel[12], clabel[6], pslabel[7][6], colabel[3], mlabel[9], tlabel[10];
@@ -426,7 +434,7 @@
      int i;
      GTabInfo aspects[13];
      static GBox smallbox = { bt_raised, bs_rect, 2, 1, 0, 0, 0,0,0,0, COLOR_DEFAULT,COLOR_DEFAULT };
-@@ -5740,7 +5844,6 @@
+@@ -5843,7 +5947,6 @@
  	ugcd[3].gd.cid = CID_UValue;
  	ugcd[3].gd.handle_controlevent = CI_UValChanged;
  	ugcd[3].creator = GTextFieldCreate;
@@ -434,7 +442,7 @@
  	ulabel[4].text = (unichar_t *) _STR_UnicodeChar;
  	ulabel[4].text_in_resource = true;
  	ugcd[4].gd.label = &ulabel[4];
-@@ -5974,6 +6077,97 @@
+@@ -6077,6 +6180,97 @@
  	tgcd[7].gd.cid = CID_TeX_Super;
  	tgcd[7].creator = GTextFieldCreate;
  
@@ -532,7 +540,7 @@
  
  	memset(&mgcd,0,sizeof(mgcd));
  	memset(&mlabel,0,sizeof(mlabel));
-@@ -6024,6 +6218,12 @@
+@@ -6127,6 +6321,12 @@
  	aspects[i].text = (unichar_t *) _STR_TeX;
  	aspects[i].text_in_resource = true;
  	aspects[i++].gcd = tgcd;
@@ -546,13 +554,13 @@
  	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
  	mgcd[0].gd.pos.width = CI_Width-10;
 --- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
-+++ fontforge/charview.c	Tue May  3 08:24:22 2005
++++ fontforge/charview.c	Wed May 11 19:17:14 2005
 @@ -105,6 +105,12 @@
  static Color backimagecol = 0x707070;
  static Color fillcol = 0x707070;
  static Color tracecol = 0x008000;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+static Color jointcol = 0x40a040;
++static Color linkpointcol = 0x40a040;
 +static Color lockedpointcol = 0x2020ff;
 +static Color lockedfirstpointcol = 0x6090e0;
 +static Color lockedselectedpointcol = 0x30ff40;
@@ -565,7 +573,7 @@
      char buf[12]; unichar_t ubuf[12];
  
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    if ( sp->islockedend )
++    if ( sp->locked )
 +	col = sp==spl->first ? lockedfirstpointcol : lockedpointcol;
 +#endif
      if ( cv->markextrema && !sp->nonextcp && !sp->noprevcp &&
@@ -576,7 +584,7 @@
 +    if ( sp->selected )
  	 col = selectedpointcol;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    if ( sp->selected && sp->islockedend )
++    if ( sp->selected && sp->locked )
 +         col = lockedselectedpointcol;
 +#endif
  
@@ -587,10 +595,10 @@
  	else
  	    GDrawFillElipse(pixmap,&r,col);
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	if ( sp->isjoint ) {
++	if ( sp->islinkpt ) {
 +	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
 +	    GDrawSetLineWidth(pixmap,1);
-+	    GDrawDrawElipse(pixmap,&r,jointcol);
++	    GDrawDrawElipse(pixmap,&r,linkpointcol);
 +	}
 +#endif
      } else if ( sp->pointtype==pt_corner ) {
@@ -599,10 +607,10 @@
  	else
  	    GDrawFillRect(pixmap,&r,col);
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	if ( sp->isjoint ) {
++	if ( sp->islinkpt ) {
 +	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
 +	    GDrawSetLineWidth(pixmap,1);
-+	    GDrawDrawElipse(pixmap,&r,jointcol);
++	    GDrawDrawElipse(pixmap,&r,linkpointcol);
 +	}
 +#endif
      } else {
@@ -613,10 +621,10 @@
  	else
  	    GDrawFillPoly(pixmap,gp,4,col);
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	if ( sp->isjoint ) {
++	if ( sp->islinkpt ) {
 +	    r.x -= 4; r.y -= 4; r.width += 7; r.height += 7;
 +	    GDrawSetLineWidth(pixmap,1);
-+	    GDrawDrawElipse(pixmap,&r,jointcol);
++	    GDrawDrawElipse(pixmap,&r,linkpointcol);
 +	}
 +#endif
      }
@@ -728,7 +736,7 @@
  #define MID_AddAnchor	2310
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +#define MID_ToggleLocked	2320
-+#define MID_ToggleJoint 2321
++#define MID_ToggleLinkPoint 2321
 +#define MID_StrokeInfo 2322
 +#endif
  #define MID_AutoHint	2400
@@ -781,13 +789,13 @@
 +    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
 +	first = NULL;
 +	if ( spl->first->selected ) {
-+	    if ( locked==-2 ) locked=spl->first->islockedend;
-+	    else if ( spl->first->islockedend!=locked ) locked=-1;
++	    if ( locked==-2 ) locked=spl->first->locked;
++	    else if ( spl->first->locked!=locked ) locked=-1;
 +	}
 +	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
 +	    if ( spline->to->selected ) {
-+		if ( locked==-2 ) locked=spline->to->islockedend;
-+		else if ( spline->to->islockedend!=locked ) locked=-1;
++		if ( locked==-2 ) locked=spline->to->locked;
++		else if ( spline->to->locked!=locked ) locked=-1;
 +	    }
 +	    if ( first==NULL ) first = spline;
 +	}
@@ -796,10 +804,10 @@
 +    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
 +	first = NULL;
 +	if ( spl->first->selected )
-+	    spl->first->islockedend = !locked;
++	    spl->first->locked = !locked;
 +	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
 +	    if ( spline->to->selected )
-+		spline->to->islockedend = !locked;
++		spline->to->locked = !locked;
 +	    if ( first==NULL ) first = spline;
 +	}
 +    }
@@ -811,8 +819,8 @@
 +    _CVMenuToggleLocked(cv,mi);
 +}
 +
-+static void _CVMenuToggleJoint(CharView *cv,struct gmenuitem *mi) {
-+    int isjoint = -2;
++static void _CVMenuToggleLinkPoint(CharView *cv,struct gmenuitem *mi) {
++    int islinkpt = -2;
 +    SplinePointList *spl;
 +    Spline *spline, *first;
 +
@@ -820,34 +828,34 @@
 +    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
 +	first = NULL;
 +	if ( spl->first->selected ) {
-+	    if ( isjoint==-2 ) isjoint=spl->first->isjoint;
-+	    else if ( spl->first->isjoint!=isjoint ) isjoint=-1;
++	    if ( islinkpt==-2 ) islinkpt=spl->first->islinkpt;
++	    else if ( spl->first->islinkpt!=islinkpt ) islinkpt=-1;
 +	}
 +	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
 +	    if ( spline->to->selected ) {
-+		if ( isjoint==-2 ) isjoint=spline->to->isjoint;
-+		else if ( spline->to->isjoint!=isjoint ) isjoint=-1;
++		if ( islinkpt==-2 ) islinkpt=spline->to->islinkpt;
++		else if ( spline->to->islinkpt!=islinkpt ) islinkpt=-1;
 +	    }
 +	    if ( first==NULL ) first = spline;
 +	}
 +    }
-+    if (isjoint==-1) isjoint = 0;
++    if (islinkpt==-1) islinkpt = 0;
 +    for ( spl = cv->layerheads[cv->drawmode]->splines; spl!=NULL ; spl = spl->next ) {
 +	first = NULL;
 +	if ( spl->first->selected )
-+	    spl->first->isjoint = !isjoint;
++	    spl->first->islinkpt = !islinkpt;
 +	for ( spline=spl->first->next; spline!=NULL && spline!=first ; spline = spline->to->next ) {
 +	    if ( spline->to->selected )
-+		spline->to->isjoint = !isjoint;
++		spline->to->islinkpt = !islinkpt;
 +	    if ( first==NULL ) first = spline;
 +	}
 +    }
 +    CVCharChangedUpdate(cv);
 +}
 +
-+static void CVMenuToggleJoint(GWindow gw,struct gmenuitem *mi,GEvent *e) {
++static void CVMenuToggleLinkPoint(GWindow gw,struct gmenuitem *mi,GEvent *e) {
 +    CharView *cv = (CharView *) GDrawGetUserData(gw);
-+    _CVMenuToggleJoint(cv,mi);
++    _CVMenuToggleLinkPoint(cv,mi);
 +}
 +
 +#define CID_Width 1000
@@ -1041,7 +1049,7 @@
  static void cv_ptlistcheck(CharView *cv,struct gmenuitem *mi,GEvent *e) {
      int type = -2, cnt=0;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    int locked = -2, isjoint = -2;
++    int locked = -2, islinkpt = -2;
 +#endif
      SplinePointList *spl, *sel=NULL;
      Spline *spline, *first;
@@ -1051,10 +1059,10 @@
  	    if ( type==-2 ) type = spl->first->pointtype;
  	    else if ( type!=spl->first->pointtype ) type = -1;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	    if ( locked==-2 ) locked = spl->first->islockedend;
-+	    else if ( locked!=spl->first->islockedend ) locked = -1;
-+	    if ( isjoint==-2 ) isjoint = spl->first->isjoint;
-+	    else if ( locked!=spl->first->isjoint ) isjoint = -1;
++	    if ( locked==-2 ) locked = spl->first->locked;
++	    else if ( locked!=spl->first->locked ) locked = -1;
++	    if ( islinkpt==-2 ) islinkpt = spl->first->islinkpt;
++	    else if ( locked!=spl->first->islinkpt ) islinkpt = -1;
 +#endif
  	}
  	for ( spline=spl->first->next; spline!=NULL && spline!=first && type!=-1; spline = spline->to->next ) {
@@ -1062,10 +1070,10 @@
  		if ( type==-2 ) type = spline->to->pointtype;
  		else if ( type!=spline->to->pointtype ) type = -1;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+		if ( locked==-2 ) locked = spline->to->islockedend;
-+		else if ( locked!=spline->to->islockedend ) locked = -1;
-+		if ( isjoint==-2 ) isjoint = spline->to->isjoint;
-+		else if ( locked!=spline->to->isjoint ) isjoint = -1;
++		if ( locked==-2 ) locked = spline->to->locked;
++		else if ( locked!=spline->to->locked ) locked = -1;
++		if ( islinkpt==-2 ) islinkpt = spline->to->islinkpt;
++		else if ( locked!=spline->to->islinkpt ) islinkpt = -1;
 +#endif
  		selpt = spline->to;
  		sel = spl; ++cnt;
@@ -1079,9 +1087,9 @@
 +	    mi->ti.disabled = locked==-2;
 +	    mi->ti.checked = locked==1;
 +	  break;
-+	  case MID_ToggleJoint:
-+	    mi->ti.disabled = isjoint==-2;
-+	    mi->ti.checked = isjoint==1;
++	  case MID_ToggleLinkPoint:
++	    mi->ti.disabled = islinkpt==-2;
++	    mi->ti.checked = islinkpt==1;
 +	  break;
 +#endif
  	}
@@ -1097,7 +1105,7 @@
 +    { { (unichar_t *) _STR_StrokeInfo, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'I' }, '\0', ksm_control, NULL, NULL, CVMenuStrokeInfo, MID_StrokeInfo },
 +    { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
 +    { { (unichar_t *) _STR_LockLineEnd, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'E' }, '\0', ksm_control, NULL, NULL, CVMenuToggleLocked, MID_ToggleLocked },
-+    { { (unichar_t *) _STR_Joint, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'J' }, '\0', ksm_control, NULL, NULL, CVMenuToggleJoint, MID_ToggleJoint },
++    { { (unichar_t *) _STR_LinkPoint, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'J' }, '\0', ksm_control, NULL, NULL, CVMenuToggleLinkPoint, MID_ToggleLinkPoint },
 +#endif
      { NULL }
  };
@@ -1167,7 +1175,7 @@
  /* This command takes two strings which specify general expressions in x and y*/
  /*  and applies the specified transformations to the splines.  Note: Each     */
 --- fontforge/cvaddpoints.c.orig	Sun Jan  2 00:05:56 2005
-+++ fontforge/cvaddpoints.c	Sun May  1 00:57:59 2005
++++ fontforge/cvaddpoints.c	Wed May 11 19:17:02 2005
 @@ -207,6 +207,20 @@
  return( found );
  }
@@ -1203,17 +1211,17 @@
      cv->active_sp = sp;
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    if (sc->parent->strokedfont) {
-+	sp->islockedend = true;
-+	if (NumberOfPointsAre(sp, num_points_in_strokes[ss->stroketype]))
++	sp->locked = true;
++	if (NumberOfPointsAre(sp, num_edges_in_strokes[ss->stroketype]))
 +	    sp->selected = false;
 +    }
 +#endif
      CVSetCharChanged(cv,true);
      CVInfoDraw(cv,cv->gw);
      SCUpdateAll(sc);
---- fontforge/cvexport.c.orig	Mon Feb 28 14:22:27 2005
-+++ fontforge/cvexport.c	Thu May  5 23:05:28 2005
-@@ -38,6 +38,192 @@
+--- fontforge/cvexport.c.orig	Sun Feb 27 12:10:45 2005
++++ fontforge/cvexport.c	Wed May 11 19:33:27 2005
+@@ -38,6 +38,256 @@
  #include <utype.h>
  #endif
  
@@ -1250,18 +1258,16 @@
 +    iter->cur = NULL;
 +}
 +
-+int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphname, SplinePointList **sk_error) {
-+    int i, ret, numPoints = 0;
++int ExportNamedPrimitive(FILE *skel, SplineChar *sc, char *glyphname) {
++    int i, good, numPoints = 0;
 +    SplinePointList *spl;
 +    SplinePoint *sp;
 +    SPIterator iter;
 +    BasePoint points[256];
 +    int linkok[256], joints[128];
-+    PrimParams *fk = &sc->clwfk;
++    SkelParams *fk = &sc->clwfk;
 +    char *s = NULL;
 +
-+    if ( sk_error!=NULL )
-+	*sk_error = NULL;
 +    for (i = 0; i < 256; i++)
 +	linkok[i] = false;
 +    SCRound2Int(sc,1.0);
@@ -1269,9 +1275,10 @@
 +        s = copy(glyphname);
 +    else if (fk->glyphname!=NULL)
 +        s = u2utf8_copy(fk->glyphname);
++
 +    fprintf(skel, "(setq %s\n      '((", s!=NULL ? s : "UNKNOWN");
 +    if (s!=NULL)
-+        gfree(s);
++        free(s);
 +
 +    for ( spl=sc->layers[1].splines; spl!=NULL; spl=spl->next )
 +        if ( spl->stroketype < sk_kamae )
@@ -1279,7 +1286,7 @@
 +		i = BPIndex(sp->me, points, numPoints);
 +		if ( i < 0 )
 +		    points[i = numPoints++] = sp->me;
-+		if ( sp->isjoint )
++		if ( sp->islinkpt )
 +		  linkok[i] = true;
 +	    }
 +
@@ -1293,35 +1300,23 @@
 +
 +    fprintf(skel, "%s", "       (");
 +    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
-+        int nJoints=0, nPoints=0;
++        int nJoints=0;
 +	if ( spl->stroketype >= sk_kamae )
 +    continue;
 +        fprintf(skel, "%s(%s (", spl==sc->layers[ly_fore].splines?"":"        ",
 +		                stroketypes[spl->stroketype]);
 +	for ( initSPIterator(&iter, spl); (sp=nextSP(&iter)) != NULL; ) {
 +            BasePoint me = sp->me;
-+	    if ( sp->isjoint && sp->prev!=NULL && sp->next!=NULL && sp->next->to!=spl->first ) {
++	    if ( sp->islinkpt && sp->prev!=NULL && sp->next!=NULL && sp->next->to!=spl->first ) {
 +	        joints[nJoints++] = BPIndex(me,points,numPoints);
 +	    } else {
 +	        fprintf(skel, "%d", BPIndex(me,points,numPoints));
-+		nPoints++;
 +		if ( sp->next!=NULL && sp->next->to!=spl->first )
 +		    fputc(' ', skel);
 +	    }
 +	}
 +	fprintf(skel, ")");
 +
-+	if ( nPoints<num_points_in_strokes[spl->stroketype] ) {
-+	    if ( sk_error!=NULL ) {
-+		fprintf(stderr, 
-+			"Failed to export skeleton, because %s needs %d points but there are %d points\n",
-+			stroketypes[spl->stroketype],
-+			num_points_in_strokes[spl->stroketype],
-+			nPoints);
-+		*sk_error = spl;
-+return( 0 );
-+	    }
-+	}
 +	if (nJoints > 0) {
 +	    fprintf(skel, " (link ");
 +	    for ( i=0; i<nJoints; i++ ) {
@@ -1364,60 +1359,137 @@
 +        fprintf(skel, "       (hook  %s)\n", fk->hook);
 +    fprintf(skel, "))\n");
 +    
-+    ret = !ferror(skel);
++    good = !ferror(skel);
++return( good );
++}
++
++static void ExportJointSkel(FILE *skel, SplineChar *sc, int use_jointdef) {
++    RefChar *ref;
++    char *glyphname;
++    int cnt;
++
++    glyphname = u2utf8_copy(sc->clwfk.glyphname);
++    if ( use_jointdef ) {
++	if ( sc->clwfk.jointdef!=NULL ) {
++	    char *def = u2utf8_copy(sc->clwfk.jointdef);
++	    fprintf(skel, ";(setq %s '%s)\n", glyphname, def);
++	    free(def);
++	}
++	fprintf(skel, "(defjoint gothic %s\n", glyphname);
++    } else {
++	fprintf(skel, "(setq %s\n", glyphname);
++    }
++    free(glyphname);
++
++    fprintf(skel, "      '(joint '(");
++    cnt = 0;
++    for ( ref = sc->layers[ly_fore].refs; ref!=NULL; ref=ref->next ) {
++	fprintf(skel, "%s#(%f %f %f %f %f %f)%s", 
++		(cnt++ == 0) ? "" : "                ",
++		ref->transform[0], ref->transform[1], ref->transform[2],
++		ref->transform[3], ref->transform[4]*0.4, 
++		ref->transform[5]*(-0.4)+(1-ref->transform[3])*320,
++		(ref->next==NULL) ? "" : "\n");
++    }
++    fprintf(skel, ")\n      '(");
++    for ( ref = sc->layers[ly_fore].refs; ref!=NULL; ref=ref->next ) {
++	glyphname = u2utf8_copy(ref->sc->clwfk.glyphname);
++	fprintf(skel, "%s", glyphname );
++	if ( ref->next!=NULL )
++	    fputc(' ', skel);
++	free(glyphname);
++    }
++    fprintf(skel, ")\n      nil))\n\n");
++}
++
++static int isJointSkel(SplineChar *sc) {
++    if ( sc->layers[ly_fore].refs != NULL )
++return( true );
++    else
++return( false );
++}
++
++int ExportPrimitive(FILE *skel, SplineChar *sc) {
++    int ret;
++    char *name = u2utf8_copy(sc->clwfk.glyphname);
++    ret = ExportNamedPrimitive(skel,sc,name);
++    free(name);
 +return( ret );
 +}
 +
-+static int SKPointCount(SplinePointList *sk) {
-+    int cnt;
-+    SplinePoint *first = sk->first;
-+    Spline *spline;
++static int ExportJointSkelAndDeps(FILE *skel, SplineChar *sc) {
++    int enc, good=true;
++    RefChar *ref;
++    SplineChar *dep;
 +
-+    if ( first==NULL )
-+return( 0 );
-+    cnt = 1;
-+    for ( spline=first->next; spline!=NULL && spline->to!=first; spline=spline->to->next ) {
-+	if ( spline->to==NULL )
-+	    spline = NULL;
-+	else
-+	    cnt++;
++    for ( ref = sc->layers[ly_fore].refs; ref!=NULL; ref=ref->next ) {
++	enc = SFFindChar(sc->parent, -1, ref->sc->name);
++	if (enc < 0 || enc > sc->parent->charcnt)
++return( good = false );
++	dep = sc->parent->chars[enc];
++	if ( dep==NULL )
++return( good = false );
++	if ( isJointSkel(dep) ) {
++	    if (ExportJointSkelAndDeps(skel, dep) != 0 )
++return( good = false );
++	} else
++	    if ( ExportPrimitive(skel, dep)==0 )
++return( good );
 +    }
-+return( cnt );
++
++    ExportJointSkel(skel, sc, false);
++return( good );
 +}
 +
-+int ExportSkeleton(char *filename,SplineChar *sc) {
++static int _ExportSkeletonAndDepends(FILE *skel, SplineChar *sc, int export_deps, int use_jointdef) {
++    int good = true;
++
++    if ( !isJointSkel(sc) )
++	good = ExportPrimitive(skel,sc);
++    else if ( export_deps )
++	good = ExportJointSkelAndDeps(skel,sc);
++    else
++	ExportJointSkel(skel,sc,use_jointdef);
++
++return ( good );
++}
++
++int ExportSkeletonAndDepends(FILE *skel, SplineChar *sc) {
++    return _ExportSkeletonAndDepends(skel,sc,true,false);
++}
++
++int ExportSkeleton(FILE *skel, SplineChar *sc, int use_jointdef) {
++    return _ExportSkeletonAndDepends(skel,sc, false,use_jointdef);
++}
++
++static int ExportSkeletonFile(char *filename, SplineChar *sc) {
 +    FILE *skel;
-+    int ret;
-+    SplinePointList *error;
++    int good;
 +
 +    skel = fopen(filename,"w");
-+    if ( skel==NULL ) {
-+return( 0 );
-+    }
-+    ret = ExportSkeletonAs(skel,sc,NULL,&error);
-+    if ( ret==0 && error!=NULL )
-+	GWidgetErrorR(_STR_BadSkel, _STR_SkelExportFailedPopup, u_stroketypes[error->stroketype],
-+		      num_points_in_strokes[error->stroketype], SKPointCount(error));
++    if ( skel==NULL )
++return( false );
++    good = ExportSkeleton(skel,sc,true);
 +    fclose(skel);
-+return( ret );
++return ( good );
 +}
 +#endif
 +
  static void EpsGeneratePreview(FILE *eps,SplineChar *sc,DBounds *b) {
      double scale, temp;
      int pixelsize, depth;
-@@ -743,6 +929,10 @@
+@@ -743,6 +993,10 @@
  	good = ExportSVG(buffer,sc);
      else if ( format==3 )
  	good = ExportPDF(buffer,sc);
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    else if ( format==4 )
-+	good = ExportSkeleton(buffer,sc);
++	good = ExportSkeletonFile(buffer,sc);
 +#endif
      else if ( bc!=NULL )
  	good = BCExportXBM(buffer,bc,format-3);
      if ( !good )
-@@ -777,6 +967,9 @@
+@@ -777,6 +1031,9 @@
      { (unichar_t *) "XFig", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "SVG", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "PDF", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -1427,18 +1499,18 @@
      { (unichar_t *) "X Bitmap", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "BMP", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
  #ifndef _NO_LIBPNG
-@@ -803,6 +996,10 @@
+@@ -803,6 +1060,10 @@
  	good = ExportSVG(temp,d->sc);
      else if ( format==3 )
  	good = ExportPDF(temp,d->sc);
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    else if ( format==4 )
-+	good = ExportSkeleton(temp,d->sc);
++	good = ExportSkeletonFile(temp,d->sc);
 +#endif
      else
  	good = ExportXBM(temp,d->sc,format-4);
      if ( !good )
-@@ -906,8 +1103,14 @@
+@@ -906,8 +1167,14 @@
  			 format==1?".fig":
  			 format==2?".svg":
  			 format==3?".pdf":
@@ -1453,7 +1525,7 @@
  				   ".png");
  	GGadgetSetTitle(d->gfc,f2);
  	free(f2);
-@@ -1097,7 +1300,11 @@
+@@ -1097,7 +1364,11 @@
  	ext = _format==0 ? "xbm" : _format==1 ? "bmp" : "png";
      else
  	ext = _format==0?"eps":_format==1?"fig":_format==2?"svg":
@@ -1685,7 +1757,7 @@
  		cv->drawmode = layer==0 ? dm_grid : dm_back;
  		layer2.active = layer;
 --- fontforge/cvpointer.c.orig	Thu Jan  6 11:33:39 2005
-+++ fontforge/cvpointer.c	Thu May  5 11:42:26 2005
++++ fontforge/cvpointer.c	Wed May 11 19:17:03 2005
 @@ -488,6 +488,34 @@
  return( false );
  }
@@ -1708,8 +1780,8 @@
 +    }
 +}
 +
-+static void SelectOtherPointsOnJointPoint(CharView *cv, FindSel *fs) {
-+    if ( fs->p->sp!=NULL && fs->p->sp->isjoint )
++static void SelectOtherPointsOnLinkPoint(CharView *cv, FindSel *fs) {
++    if ( fs->p->sp!=NULL && fs->p->sp->islinkpt )
 +	SetSelectedAt(cv, fs->p->sp->me, fs->p->sp->selected);
 +    else if (fs->p->spline != NULL) {
 +	SetSelectedAt(cv, fs->p->spline->to->me, fs->p->spline->to->selected);
@@ -1727,7 +1799,7 @@
  	}
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	if ( needsupdate && !(event->u.mouse.state&ksm_control))
-+	    SelectOtherPointsOnJointPoint(cv, fs);
++	    SelectOtherPointsOnLinkPoint(cv, fs);
 +#endif
      } else if ( event->u.mouse.clicks<=1 ) {
  	if ( fs->p->nextcp || fs->p->prevcp )
@@ -1738,7 +1810,7 @@
  	}
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	if ( needsupdate && !(event->u.mouse.state&ksm_control))
-+	    SelectOtherPointsOnJointPoint(cv, fs);
++	    SelectOtherPointsOnLinkPoint(cv, fs);
 +#endif
      } else if ( event->u.mouse.clicks==2 ) {
  	if ( fs->p->spl!=NULL ) {
@@ -1767,7 +1839,7 @@
  			!mergess->last->selected)) {
  		    if ( !mergess->first->selected && activess->first->selected &&
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+			    !mergess->first->islockedend && !activess->first->islockedend &&
++			    !mergess->first->locked && !activess->first->locked &&
 +#endif
  			    Nearish(mergess->first->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->first->me.y,fudge)) {
@@ -1777,7 +1849,7 @@
  		    }
  		    if ( !mergess->last->selected && activess->first->selected &&
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+			    !mergess->last->islockedend && !activess->first->islockedend &&
++			    !mergess->last->locked && !activess->first->locked &&
 +#endif
  			    Nearish(mergess->last->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->last->me.y-activess->first->me.y,fudge)) {
@@ -1787,7 +1859,7 @@
  		    }
  		    if ( !mergess->first->selected && activess->last->selected &&
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+			    !mergess->first->islockedend && !activess->last->islockedend &&
++			    !mergess->first->locked && !activess->last->locked &&
 +#endif
  			    Nearish(mergess->first->me.x-activess->last->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->last->me.y,fudge)) {
@@ -1797,7 +1869,7 @@
  		    }
  		    if ( !mergess->last->selected && activess->last->selected &&
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+			    !mergess->last->islockedend && !activess->last->islockedend &&
++			    !mergess->last->locked && !activess->last->locked &&
 +#endif
  			    Nearish(mergess->last->me.x-activess->last->me.x,fudge) &&
  			    Nearish(mergess->last->me.y-activess->last->me.y,fudge)) {
@@ -2010,8 +2082,99 @@
 +static char *str_BadSkel = "不正なスケルトン";
 +static char *str_SkelExportFailedPopup = "スケルトンの書き出しに失敗しました.\n%sは %d 個の点が必要ですが,\n%d個しかありません";
 +#endif
---- fontforge/savefontdlg.c.orig	Wed Mar  9 10:15:09 2005
-+++ fontforge/savefontdlg.c	Thu May  5 18:59:47 2005
+--- fontforge/problems.c.orig	Thu Feb 17 11:21:53 2005
++++ fontforge/problems.c	Wed May 11 19:38:41 2005
+@@ -73,6 +73,14 @@
+     unsigned int doneexplain: 1;
+     unsigned int finish: 1;
+     unsigned int ignorethis: 1;
++#ifdef FONTFORGE_CONFIG_CLWFK
++    unsigned int strokeendpts: 1;
++    unsigned int danglinglink: 1;
++    unsigned int primnames: 1;
++#if 0	/* not yet implemented */
++    unsigned int kamaetype: 1;
++#endif
++#endif
+     real near, xval, yval, widthval;
+     int explaining;
+     real found, expected;
+@@ -3284,3 +3292,73 @@
+ 	GDrawDestroyWindow(p.explainw);
+ }
+ #endif		/* FONTFORGE_CONFIG_NO_WINDOWING_UI */
++
++#ifdef FONTFORGE_CONFIG_CLWFK
++static int SplEdgeCount(SplinePointList *spl) {
++    int cnt;
++    SplinePoint *first = spl->first, *sp;
++    Spline *spline;
++
++    if ( first==NULL )
++return( 0 );
++    cnt = 1;
++    for ( spline=first->next; spline!=NULL && spline->to!=first; spline=spline->to->next ) {
++        sp = spline->to;
++	if ( sp==NULL )
++	    spline = NULL;
++	else if ( sp->next==NULL || !sp->islinkpt )
++	    cnt++;
++    }
++return( cnt );
++}
++
++static int CheckStrokeEdgeCount(SplineChar *sc) {
++    SplinePointList *spl;
++    int good = true;
++    int cnt, correct_cnt;
++
++    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
++	cnt = SplEdgeCount(spl);
++	correct_cnt = num_edges_in_strokes[spl->stroketype];
++	if ( cnt < correct_cnt ) {
++	    fprintf(stderr, 
++		    "Failed to export skeleton, because %s needs %d edges but there are %d.\n",
++		    stroketypes[spl->stroketype], correct_cnt, cnt);
++	    GWidgetErrorR(_STR_BadSkel, _STR_SkelExportFailedPopup, 
++			  u_stroketypes[spl->stroketype], correct_cnt, cnt);
++return( good = false );
++	}
++    }
++return( good );
++}
++
++static int CheckSkeletonNames(SplineChar *sc) {
++    int enc, good = true;
++    RefChar *ref;
++
++    if (sc->clwfk.glyphname == NULL) {
++	fprintf(stderr, 
++		"You must name your skeleton to export. Set in [CLWFK] pane of Glyph Info\n");
++return ( good = false );
++    }
++    for ( ref = sc->layers[ly_fore].refs; ref!=NULL; ref=ref->next ) {
++	enc = SFFindChar(sc->parent, -1, ref->sc->name);
++	if (enc < 0 || enc > sc->parent->charcnt) {
++	    fprintf(stderr, "Char named %s does not exist in this font.\n", ref->sc->name);
++return( good = false );
++	} else {
++	    good = SkeletonCheck(sc->parent->chars[enc]);
++	    if ( !good )
++return( good = false );
++	}
++    }
++return ( good );
++}
++
++int SkeletonCheck(SplineChar *sc) {
++    int good;
++    good = (CheckStrokeEdgeCount(sc) && CheckSkeletonNames(sc));
++		
++return ( good );
++}
++#endif
+--- fontforge/savefontdlg.c.orig	Tue Mar  8 03:52:03 2005
++++ fontforge/savefontdlg.c	Wed May 11 19:42:41 2005
 @@ -89,7 +89,11 @@
  	".cid", ".cff", ".cid.cff",
  	".t42", ".cid.t42",
@@ -2051,7 +2214,7 @@
  #endif
  
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+static int WriteCLWFKSkeleton(char *fontname,SplineFont *sf,enum fontformat format,int flags) {
++static int WriteCLWFKSkeleton(char *fontname, SplineFont *sf, enum fontformat format, int flags) {
 +    FILE *file;
 +    int i, ret;
 +
@@ -2062,14 +2225,14 @@
 +	fprintf(file, "(setq gothicwidth %.2f)\n\n", sf->strokewidth * 0.2);
 +    for ( i = 0; i < sf->charcnt; i++ ) {
 +	if (sf->chars[i]!=NULL) {
-+	    ret &= ExportSkeletonAs(file, sf->chars[i], NULL, NULL);
++	    ret &= ExportSkeleton(file,sf->chars[i],true);
 +	    fputc('\n', file);
 +        }
 +    }
-+    if ( ferror(file))
++    if ( ferror(file) )
 +	ret = false;
 +    if ( fclose(file)==-1 )
-+return( false );
++        ret = false;
 +return( ret );
 +}
 +#endif
@@ -2122,8 +2285,8 @@
      { "CorrectDirection", bCorrectDirection },
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
---- fontforge/sfd.c.orig	Wed May  4 15:33:24 2005
-+++ fontforge/sfd.c	Sun May  8 00:54:29 2005
+--- fontforge/sfd.c.orig	Wed May  4 09:35:41 2005
++++ fontforge/sfd.c	Wed May 11 19:16:59 2005
 @@ -81,6 +81,82 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2212,7 +2375,7 @@
  			(sp->nextcpdef<<3)|(sp->prevcpdef<<4)|
  			(sp->roundx<<5)|(sp->roundy<<6)|
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+			(sp->islockedend<<8)|(sp->isjoint<<9)|
++			(sp->locked<<8)|(sp->islinkpt<<9)|
 +#endif
  			(sp->ttfindex==0xffff?(1<<7):0) );
 +#ifdef FONTFORGE_CONFIG_CLWFK
@@ -2228,8 +2391,8 @@
  	    else
  		pt->ttfindex = ttfindex++;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	    pt->islockedend = val&0x100?1:0;
-+	    pt->isjoint = val&0x200?1:0;
++	    pt->locked = val&0x100?1:0;
++	    pt->islinkpt = val&0x200?1:0;
 +#endif
  	    pt->nextcpindex = 0xfffe;
  	    ch = getc(sfd);
@@ -2260,7 +2423,7 @@
 +    "hira-long",
 +    "kamae", "kamae1", "kamae2", "nyou", "tare",
 +};
-+const int num_points_in_strokes[num_enum_stroke] = {
++const int num_edges_in_strokes[num_enum_stroke] = {
 +    2, 2, 2, 3, 3, 4, 3,
 +    4, 3, 4, 2, 4, 4, 
 +    3, 3, 3,
@@ -2320,7 +2483,7 @@
 +    SkelPoint *points;
 +    int num_strokes;
 +    SkelStroke *strokes;
-+    PrimParams extra;
++    SkelParams extra;
 +    DBounds kamaes[7];
 +} SkelChar;
 +
@@ -2842,7 +3005,7 @@
 +static void insert_linkpoint_into(Spline *spline, BasePoint bp) {
 +    Spline *after = chunkalloc(sizeof(Spline));
 +    SplinePoint *pt = chunkalloc(sizeof(SplinePoint));
-+    pt->islockedend = pt->isjoint = true;
++    pt->locked = pt->islinkpt = true;
 +    pt->me = bp;
 +    pt->noprevcp = pt->nonextcp = true;
 +    pt->next = after;
@@ -2886,7 +3049,7 @@
 +    to->nextcpdef = to->prevcpdef = false;
 +    to->ttfindex = to->nextcpindex = 0xfffe;
 +    to->pointtype = pt_corner;
-+    to->islockedend = true;
++    to->locked = true;
 +    SplineMake2(from,to);
 +return( to );
 +}
@@ -2913,8 +3076,8 @@
 +	    bp.x = skel->points[pt_index].x * 2.5;
 +	    bp.y = skel->points[pt_index].y * -2.5 + 800;
 +	    pt = chunkalloc(sizeof(SplinePoint));
-+	    pt->islockedend = 1;
-+	    pt->isjoint = skel->points[pt_index].link_ok;
++	    pt->locked = 1;
++	    pt->islinkpt = skel->points[pt_index].link_ok;
 +	    pt->me = bp;
 +	    pt->nextcp = pt->prevcp = pt->me;
 +	    pt->noprevcp = pt->nonextcp = true;
@@ -3117,8 +3280,8 @@
  	    } else {
  		FindEdges(sc,&es);
  		FillChar(&es);
---- fontforge/splinefont.h.orig	Wed May  4 15:33:24 2005
-+++ fontforge/splinefont.h	Wed May  4 21:45:05 2005
+--- fontforge/splinefont.h.orig	Wed May  4 09:35:41 2005
++++ fontforge/splinefont.h	Wed May 11 19:17:04 2005
 @@ -27,6 +27,8 @@
  #ifndef _SPLINEFONT_H
  #define _SPLINEFONT_H
@@ -3133,8 +3296,8 @@
      unsigned int watched: 1;
  	/* 1 bits left... */
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    unsigned int islockedend: 1;	/* don't join to other open path */
-+    unsigned int isjoint: 1;	/* move all snapped points simultaneously */
++    unsigned int locked: 1;	/* don't join to other open path */
++    unsigned int islinkpt: 1;	/* move all snapped points simultaneously */
 +#endif
      uint16 ptindex;		/* Temporary value used by metafont routine */
      uint16 ttfindex;		/* Truetype point index */
@@ -3155,7 +3318,7 @@
 +};
 +extern const char *stroketypes[num_enum_stroke];
 +extern const unichar_t *u_stroketypes[num_enum_stroke];
-+extern const int num_points_in_strokes[num_enum_stroke];
++extern const int num_edges_in_strokes[num_enum_stroke];
 +#endif
 +
  typedef struct splinepointlist {
@@ -3168,15 +3331,16 @@
  } SplinePointList, SplineSet;
  
  typedef struct imagelist {
-@@ -818,7 +843,24 @@
+@@ -818,7 +843,25 @@
  } Layer;
  
  enum layer_type { ly_grid= -1, ly_back=0, ly_fore=1 /* Possibly other foreground layers for multi-layered things */ };
 -    
 +
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+typedef struct prim_params {
++typedef struct skel_params {
 +    unichar_t *glyphname;
++    unichar_t *jointdef;
 +    real xlimit_min, xlimit_max;
 +    real ylimit_min, ylimit_max;
 +    real tateheight;
@@ -3188,25 +3352,25 @@
 +    real up;
 +    real down;
 +    char *hook;
-+} PrimParams;
++} SkelParams;
 +#endif
 +
  typedef struct splinechar {
      char *name;
      int enc, unicodeenc, old_enc;
-@@ -887,7 +929,10 @@
+@@ -887,7 +930,10 @@
      HintMask *countermasks;
      int16 tex_height, tex_depth;
      int16 tex_sub_pos, tex_super_pos;	/* Only for math fonts */
 -} SplineChar;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    PrimParams clwfk;
++    SkelParams clwfk;
 +#endif
 +}  SplineChar;
  
  #define TEX_UNDEF 0x7fff
  
-@@ -1045,6 +1090,9 @@
+@@ -1045,6 +1091,9 @@
      struct otfname *fontstyle_name;
      uint16 design_range_bottom, design_range_top;
      real strokewidth;
@@ -3216,7 +3380,7 @@
  /* For GDEF Mark Attachment Class -- used in lookup flags */
  /* As usual, class 0 is unused */
      int mark_class_cnt;
-@@ -1151,7 +1199,11 @@
+@@ -1151,7 +1200,11 @@
  	ff_ptype3, ff_ptype0, ff_cid, ff_cff, ff_cffcid,
  	ff_type42, ff_type42cid,
  	ff_ttf, ff_ttfsym, ff_ttfmacbin, ff_ttfdfont, ff_otf, ff_otfdfont,
@@ -3228,21 +3392,24 @@
  extern struct pschars *SplineFont2Chrs(SplineFont *sf, int iscjk,
  	struct pschars *subrs,int flags,enum fontformat format);
  struct cidbytes;
-@@ -1836,3 +1888,14 @@
+@@ -1835,4 +1888,17 @@
+ 
  extern void DefaultOtherSubrs(void);
  extern int ReadOtherSubrsFile(char *filename);
- #endif
++#endif
 +
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +extern SplineFont *SFReadClwfkSkeleton(char *fontname);
 +extern void SCBuildSkeleton(SplineChar *sc, char *name);
 +extern void SCFleshSkeleton(SplineChar *sc, char *face, int normkanji);
 +extern void StrokeGetInfo(struct charview *cv, SplinePointList *spl);
-+extern int ExportSkeletonAs(FILE *skel, SplineChar *sc, char *glyphnmne, SplinePointList **sk_error);
-+extern int ExportSkeleton(char *filename,SplineChar *sc);
++extern int ExportNamedPrimitive(FILE *skel, SplineChar *sc, char *glyphname);
++extern int ExportPrimitive(FILE *skel, SplineChar *sc);
++extern int ExportSkeleton(FILE *skel, SplineChar *sc, int use_jointdef);
++extern int ExportSkeletonAndDepends(FILE *skel, SplineChar *sc);
 +extern char *u2utf7_copy(const unichar_t *ubuf);
-+#endif
-+
++extern int SkeletonCheck(SplineChar *sc);
+ #endif
 --- fontforge/splineorder2.c.orig	Mon Mar 14 10:00:47 2005
 +++ fontforge/splineorder2.c	Mon May  9 12:08:13 2005
 @@ -550,6 +550,10 @@
