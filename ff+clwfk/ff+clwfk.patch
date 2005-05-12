@@ -1888,14 +1888,16 @@
      switch ( cv->active_tool ) {
        case cvt_rect:
 --- fontforge/diffstubs.c.orig	Sat Mar 12 13:44:38 2005
-+++ fontforge/diffstubs.c	Sun May  1 00:57:59 2005
-@@ -967,3 +967,8 @@
++++ fontforge/diffstubs.c	Thu May 12 18:54:55 2005
+@@ -967,3 +967,10 @@
  void SFSplinesFromLayers(SplineFont *sf,int flag) {
  }
  #endif
 +
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +SplineFont *SplineFontBlank(Encoding *encoding_name, int charcnt) {
++}
++int SFFindChar(SplineFont *sf, int unienc, const char *name) {
 +}
 +#endif
 --- fontforge/fontview.c.orig	Wed May  4 15:33:23 2005
@@ -2286,8 +2288,8 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 09:35:41 2005
-+++ fontforge/sfd.c	Wed May 11 19:16:59 2005
-@@ -81,6 +81,82 @@
++++ fontforge/sfd.c	Thu May 12 18:54:47 2005
+@@ -81,6 +81,92 @@
      putc(base64[ch&0x3f],sfd);
  }
  
@@ -2365,12 +2367,22 @@
 +    utf7_u_strcpy(buf,ubuf);
 +    return buf;
 +}
++
++char *utf82utf7_copy(const char *buf) {
++    unichar_t *uni;
++    char *ret;
++
++    uni = utf82u_copy(buf);
++    ret = u2utf7_copy(uni);
++    free(uni);
++return ( ret );
++}
 +#endif
 +
  #if defined(FONTFORGE_CONFIG_GTK)	/* GTK unicode strings are stored in utf8 rather than ucs2 */
  static void SFDDumpUTF7Str(FILE *sfd, const char *str) {
  #else
-@@ -384,7 +460,15 @@
+@@ -384,7 +470,15 @@
  	    fprintf(sfd, "%d", sp->pointtype|(sp->selected<<2)|
  			(sp->nextcpdef<<3)|(sp->prevcpdef<<4)|
  			(sp->roundx<<5)|(sp->roundy<<6)|
@@ -2386,7 +2398,7 @@
  	    if ( order2 ) {
  		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
  		    putc(',',sfd);
-@@ -2121,11 +2205,23 @@
+@@ -2121,11 +2215,23 @@
  		pt->ttfindex = 0xffff;
  	    else
  		pt->ttfindex = ttfindex++;
@@ -2410,7 +2422,7 @@
  	    } else if ( ch!=',' )
  		ungetc(ch,sfd);
  	    else {
-@@ -4767,3 +4863,810 @@
+@@ -4767,3 +4873,929 @@
      fclose(sfd);
  return( ret );
  }
@@ -2477,6 +2489,8 @@
 +    real width;
 +} SkelStroke;
 +
++typedef real transform_matrix[6];
++
 +typedef struct skelchar {
 +    enum skeltype type;
 +    int num_points;
@@ -2485,6 +2499,11 @@
 +    SkelStroke *strokes;
 +    SkelParams extra;
 +    DBounds kamaes[7];
++    int num_refs;
++    transform_matrix *matrice;
++    char **subskel_names;
++    char *orig_def;
++    int expanded;
 +} SkelChar;
 +
 +typedef struct skelchars {
@@ -2681,7 +2700,7 @@
 +    if (!openParenExists(file))
 +return NULL;
 +    while (openParenExists(file)) {
-+	if (i >= 512 || getNumeral(file,buf,bufsize) == NULL)
++	if (i >= (sizeof(pbuf)/sizeof(pbuf[0])) || getNumeral(file,buf,bufsize) == NULL)
 +return NULL;
 +	pbuf[i].x = strtod(buf,NULL);
 +	if (getNumeral(file,buf,bufsize) == NULL)
@@ -2908,8 +2927,76 @@
 +    return NULL;
 +}
 +
++static SkelChar *getPrimCharOrTateYoko(FILE *file, SkelChar *sc, char *buf, int bufsize) {
++    if (!tokCharExists(file, '\'') || !openParenExists(file) || 
++	getToken(file,buf,sizeof(buf))==NULL) 
++return NULL;
++    if (*buf == '(') {
++	ungetc('(',file);
++	if (SkelCharReadPoints(file,sc,buf,bufsize) == NULL ||
++	    SkelCharReadStrokes(file,sc,buf,bufsize) == NULL)
++return NULL;
++	if (openParenExists(file)) {
++	    ungetc('(',file);
++	    if (SkelCharReadExtraPrimInfo(file,sc,buf,bufsize)==NULL)
++return NULL;
++	}
++	if (!closeParenExists(file))
++return NULL;
++    } else
++return NULL;
++
++return sc;
++}
++
++static SkelChar *getJointSkel(FILE *file, SkelChar *sk, char *buf, int bufsize) {
++    transform_matrix trans[128];
++    char *subskel_names[128];
++    int i, cnt = 0;
++
++    if (!tokCharExists(file, '\'') || !openParenExists(file) ||
++	getToken(file,buf,bufsize)==NULL || strcasecmp(buf, "joint") != 0 ||
++	!tokCharExists(file, '\'') || !openParenExists(file))
++return NULL;
++    while (!closeParenExists(file)) {
++	if (!tokCharExists(file, '#') || !openParenExists(file))
++return NULL;
++ 	for (i = 0; i < 6; i++) {
++	    if (getNumeral(file,buf,bufsize)==NULL)
++return NULL;
++	    trans[cnt][i] = strtof(buf, NULL);
++	}
++	if (!closeParenExists(file))
++return NULL;
++	cnt++;
++    }
++
++    if (!tokCharExists(file, '\'') || !openParenExists(file))
++return NULL;
++    for (i = 0; i < cnt; i++) {
++	if (closeParenExists(file))
++return NULL;
++	if (getToken(file,buf,bufsize)==NULL)
++return NULL;
++	subskel_names[i] = copy(buf);
++    }
++    if (!closeParenExists(file))
++return NULL;
++    if (getToken(file,buf,bufsize)==NULL || strcasecmp(buf,"nil")!=0 || !closeParenExists(file))
++return NULL;
++
++    sk->num_refs = cnt;
++    sk->subskel_names = galloc(sizeof(char *) * cnt);
++    memcpy(sk->subskel_names, subskel_names, sizeof(char *) * cnt);
++    sk->matrice = galloc(sizeof(real) * 6 * cnt);
++    memcpy(sk->matrice, trans, sizeof(real) * 6 * cnt);
++
++return sk;
++}
++
 +static SkelChar *getSkeleton(FILE *file, SkelInfo *si, int *err) {
 +    char buf[256];
++    const int bufsize = sizeof(buf);
 +    SkelChar *sc = gcalloc(1,sizeof(SkelChar));
 +
 +begin:
@@ -2919,47 +3006,46 @@
 +    }
 +    else if (strcasecmp(buf,"(")!=0 )
 +goto err;
-+    if (!nameExists(file,buf,sizeof(buf),"setq") || !someNameExists(file,buf,sizeof(buf)))
-+goto err;
-+    if (strcasecmp(buf, "minchowidth")==0) {
-+	if (getNumeral(file,buf,sizeof(buf))==NULL)
-+goto err;
-+	si->minchowidth = strtof(buf,NULL);
-+	if (!closeParenExists(file))
-+goto err;
-+	else
-+goto begin;
-+    } else if (strcasecmp(buf, "gothicwidth")==0) {
-+	if (getNumeral(file,buf,sizeof(buf))==NULL)
-+goto err;
-+	si->gothicwidth = strtof(buf,NULL);
-+	if (!closeParenExists(file))
-+goto err;
-+	else
-+goto begin;
-+    } else if ((sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
-+goto err;
-+    u_utf8_strcpy(sc->extra.glyphname, buf);
-+    if (!tokCharExists(file, '\'') || !openParenExists(file) ||
-+	getToken(file,buf,sizeof(buf))==NULL) 
-+goto err;
 +
-+    if (*buf == '(') {
-+        ungetc('(',file);
-+	if (SkelCharReadPoints(file,sc,buf,sizeof(buf)) == NULL ||
-+	    SkelCharReadStrokes(file,sc,buf,sizeof(buf)) == NULL)
++    if (!someNameExists(file,buf,bufsize)) 
 +goto err;
-+	if (openParenExists(file)) {
-+	    ungetc('(',file);
-+	    if (SkelCharReadExtraPrimInfo(file,sc,buf,sizeof(buf))==NULL)
++    if (strcasecmp(buf, "setq") == 0) {
++	if (!someNameExists(file,buf,bufsize))
++goto err;
++	if (strcasecmp(buf, "minchowidth")==0) {
++	    if (getNumeral(file,buf,bufsize)==NULL)
++goto err;
++	    si->minchowidth = strtof(buf,NULL);
++	    if (!closeParenExists(file))
++goto err;
++	    else
++goto begin;
++	} else if (strcasecmp(buf, "gothicwidth")==0) {
++	    if (getNumeral(file,buf,bufsize)==NULL)
++goto err;
++	    si->gothicwidth = strtof(buf,NULL);
++	    if (!closeParenExists(file))
++goto err;
++	    else
++goto begin;
++	} else {
++	    if ((sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
++goto err;
++	    u_utf8_strcpy(sc->extra.glyphname, buf);
++	    if (getPrimCharOrTateYoko(file,sc,buf,bufsize) == NULL)
 +goto err;
 +	}
-+	if (!closeParenExists(file))
++    } else if (strcasecmp(buf, "defjoint")==0) {
++	/* accept any alphabetical string as typeface name */
++	if (getToken(file,buf,bufsize) == NULL || !isalpha(buf[0]))
 +goto err;
-+    } else if (isLispNameToken(buf))
-+goto err;	/* combination editor not implemented yet */
-+    else
++	if (getToken(file,buf,bufsize) == NULL ||
++	    (sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
 +goto err;
++	u_utf8_strcpy(sc->extra.glyphname, buf);
++	if (getJointSkel(file,sc,buf,bufsize) == NULL)
++goto err;
++    }
 +
 +    if (!closeParenExists(file)){
 +goto err;}
@@ -3124,6 +3210,43 @@
 +return head;
 +}
 +
++
++static RefChar *RefsFromSkelChar(SkelChar *skel, SplineChar *sc) {
++    RefChar *refs = NULL, *prev = NULL, *cur;
++    int i, j, enc = -1;
++    char *subskel_name;
++
++    for (i = 0; i < skel->num_refs; i++) {
++	subskel_name = utf82utf7_copy(skel->subskel_names[i]);
++	enc = SFFindChar(sc->parent, -1, subskel_name);
++	free(subskel_name);
++	if (enc < 0 || enc >= sc->parent->charcnt)
++goto notfound;
++
++	cur = RefCharCreate();
++
++	if (refs == NULL) refs = cur;
++	if (prev != NULL) prev->next = cur;
++
++	cur->sc = sc->parent->chars[enc];
++	cur->unicode_enc = cur->adobe_enc = -1;
++	cur->local_enc = enc;
++	for (j = 0; j < 6; j++)
++	    cur->transform[j] = skel->matrice[i][j];
++
++	SCReinstanciateRefChar(sc, refs);
++	SCMakeDependent(sc, sc->parent->chars[enc]);
++	prev = cur;
++    }
++return ( refs );
++
++notfound:
++    free(subskel_name);
++    if (refs)
++	RefCharFree(refs);
++return ( refs );
++}
++
 +static SplineChar *SplineCharFromSkelChar(SkelChar *skel, SplineFont *sf, int enc) {
 +    SplineChar *sc;
 +    char buf[20];
@@ -3140,7 +3263,10 @@
 +    sc->width = 1000;
 +    sc->vwidth=sf->ascent+sf->descent;
 +    sc->layers[ly_back].splines=NULL;
-+    sc->layers[ly_fore].splines = SplineSetFromSkelChar(skel,sf->strokewidth);
++    if (skel->num_points > 0)
++	sc->layers[ly_fore].splines = SplineSetFromSkelChar(skel,sf->strokewidth);
++    if (skel->num_refs > 0)
++	sc->layers[ly_fore].refs = RefsFromSkelChar(skel,sc);
 +    sc->clwfk = skel->extra;
 +return sc;
 +}
@@ -3148,12 +3274,17 @@
 +static void FreeSkelInfo(SkelInfo *si) {
 +    const int chunksize = sizeof(((SkelChars*)NULL)->skel)/sizeof(((SkelChars*)NULL)->skel[0]);
 +    SkelChars *sks = si->chars, *next;
-+    int i;
++    int i, j;
 +
 +    for (sks=si->chars; si->num_skel>0; si->num_skel-=chunksize) {
 +	for (i=0; i<si->num_skel && i<chunksize; i++) {
-+	    free(sks->skel[i]->points);
-+	    free(sks->skel[i]->strokes);
++	    if (sks->skel[i]->points!=NULL)    free(sks->skel[i]->points);
++	    if (sks->skel[i]->strokes!=NULL)   free(sks->skel[i]->strokes);
++	    if (sks->skel[i]->matrice!=NULL)   free(sks->skel[i]->matrice);
++	    if (sks->skel[i]->subskel_names!=NULL)
++		for (j=0; j<sks->skel[i]->num_refs; j++)
++		    free(&(sks->skel[i]->subskel_names[j]));
++	    if (sks->skel[i]->orig_def!=NULL)  free(sks->skel[i]->orig_def);
 +	}
 +	next=sks->next;
 +	free(sks);
@@ -3281,7 +3412,7 @@
  		FindEdges(sc,&es);
  		FillChar(&es);
 --- fontforge/splinefont.h.orig	Wed May  4 09:35:41 2005
-+++ fontforge/splinefont.h	Wed May 11 19:17:04 2005
++++ fontforge/splinefont.h	Thu May 12 16:56:53 2005
 @@ -27,6 +27,8 @@
  #ifndef _SPLINEFONT_H
  #define _SPLINEFONT_H
@@ -3392,7 +3523,7 @@
  extern struct pschars *SplineFont2Chrs(SplineFont *sf, int iscjk,
  	struct pschars *subrs,int flags,enum fontformat format);
  struct cidbytes;
-@@ -1835,4 +1888,17 @@
+@@ -1835,4 +1888,18 @@
  
  extern void DefaultOtherSubrs(void);
  extern int ReadOtherSubrsFile(char *filename);
@@ -3408,6 +3539,7 @@
 +extern int ExportSkeleton(FILE *skel, SplineChar *sc, int use_jointdef);
 +extern int ExportSkeletonAndDepends(FILE *skel, SplineChar *sc);
 +extern char *u2utf7_copy(const unichar_t *ubuf);
++extern char *utf82utf7_copy(const char *buf);
 +extern int SkeletonCheck(SplineChar *sc);
  #endif
 --- fontforge/splineorder2.c.orig	Mon Mar 14 10:00:47 2005
