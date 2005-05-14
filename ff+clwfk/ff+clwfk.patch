@@ -1810,23 +1810,24 @@
  		    }
  		}
 --- fontforge/cvpalettes.c.orig	Sat Feb 26 06:47:34 2005
-+++ fontforge/cvpalettes.c	Sun May  1 00:57:59 2005
-@@ -864,6 +864,14 @@
++++ fontforge/cvpalettes.c	Sat May 14 20:27:39 2005
+@@ -864,6 +864,15 @@
  	if ( event->u.mouse.clicks>=2 &&
  		(pos/2 == cvt_scale/2 || pos/2 == cvt_rotate/2 || pos == cvt_3d_rotate ))
  	    CVDoTransform(cv,pos);
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +{
-+        SplinePointList *spl; RefChar *r; ImageList *im;
-+	if ( event->u.mouse.clicks>=2 && CVOneContourSel(cv,&spl,&r,&im) &&
++        SplinePointList *spl;
++        int selected_num;
++	if ( event->u.mouse.clicks>=2 && CVPointsSel(cv,&spl,&selected_num) &&
 +		(pos == cvt_curve || pos == cvt_corner || pos == cvt_tangent ))
-+	    StrokeGetInfo(cv, spl);
++	    StrokeGetInfo(cv, spl, selected_num);
 +}
 +#endif
      } else if ( event->type == et_mousemove ) {
  	if ( cv->pressed_tool==cvt_none && pos!=cvt_none )
  	    /* Not pressed */
-@@ -1322,7 +1330,7 @@
+@@ -1322,7 +1331,7 @@
        break;
        case et_mousedown: {
  	int layer = (event->u.mouse.y-CV_LAYERS2_HEADER_HEIGHT)/CV_LAYERS2_LINE_HEIGHT;
