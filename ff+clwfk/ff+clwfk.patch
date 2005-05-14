@@ -280,7 +280,7 @@
  static void _SCAutoTrace(SplineChar *sc, char **args) {
      ImageList *images;
 --- fontforge/charinfo.c.orig	Mon May  9 23:33:50 2005
-+++ fontforge/charinfo.c	Wed May 11 19:37:47 2005
++++ fontforge/charinfo.c	Sat May 14 22:20:17 2005
 @@ -69,6 +69,19 @@
  #define CID_Copy	1024
  #define CID_Paste	1025
@@ -301,7 +301,7 @@
  #define CID_PST		1111
  #define CID_Tag		1112
  #define CID_Contents	1113
-@@ -4469,6 +4482,9 @@
+@@ -4469,7 +4482,11 @@
      FontView *fvs;
      int err = false;
      int tex_height, tex_depth, tex_sub, tex_super;
@@ -309,9 +309,11 @@
 +    SkelParams clwfk;
 +#endif
  
++    memset(&clwfk,'\0',sizeof(SkelParams));
      val = ParseUValue(ci->gw,CID_UValue,true,ci->sc->parent);
      if ( val==-2 )
-@@ -4481,12 +4497,29 @@
+ return( false );
+@@ -4481,12 +4498,29 @@
  return( false );
      if ( !CI_ProcessPosSubs(ci))
  return( false );
@@ -342,7 +344,7 @@
      comment = _GGadgetGetTitle(GWidgetGetControl(ci->gw,CID_Comment));
      SCPreserveState(ci->sc,2);
      ret = SCSetMetaData(ci->sc,name,val,comment);
-@@ -4510,6 +4543,12 @@
+@@ -4510,6 +4544,12 @@
  	ci->sc->tex_depth  = tex_depth;
  	ci->sc->tex_sub_pos   = tex_sub;
  	ci->sc->tex_super_pos = tex_super;
@@ -355,7 +357,7 @@
      }
      if ( ret )
  	ci->sc->parent->changed = true;
-@@ -5684,6 +5723,67 @@
+@@ -5684,6 +5724,67 @@
  	buffer[0] = '\0';
      uc_strcpy(ubuf,buffer);
      GGadgetSetTitle(GWidgetGetControl(ci->gw,CID_TeX_Super),ubuf);
@@ -423,7 +425,7 @@
  }
  
  static int CI_NextPrev(GGadget *g, GEvent *e) {
-@@ -5768,6 +5868,10 @@
+@@ -5768,6 +5869,10 @@
      GWindowAttrs wattrs;
      GGadgetCreateData ugcd[12], cgcd[6], psgcd[7][7], cogcd[3], mgcd[9], tgcd[10];
      GTextInfo ulabel[12], clabel[6], pslabel[7][6], colabel[3], mlabel[9], tlabel[10];
@@ -434,7 +436,7 @@
      int i;
      GTabInfo aspects[13];
      static GBox smallbox = { bt_raised, bs_rect, 2, 1, 0, 0, 0,0,0,0, COLOR_DEFAULT,COLOR_DEFAULT };
-@@ -5843,7 +5947,6 @@
+@@ -5843,7 +5948,6 @@
  	ugcd[3].gd.cid = CID_UValue;
  	ugcd[3].gd.handle_controlevent = CI_UValChanged;
  	ugcd[3].creator = GTextFieldCreate;
@@ -442,7 +444,7 @@
  	ulabel[4].text = (unichar_t *) _STR_UnicodeChar;
  	ulabel[4].text_in_resource = true;
  	ugcd[4].gd.label = &ulabel[4];
-@@ -6077,6 +6180,97 @@
+@@ -6077,6 +6181,97 @@
  	tgcd[7].gd.cid = CID_TeX_Super;
  	tgcd[7].creator = GTextFieldCreate;
  
@@ -540,7 +542,7 @@
  
  	memset(&mgcd,0,sizeof(mgcd));
  	memset(&mlabel,0,sizeof(mlabel));
-@@ -6127,6 +6321,12 @@
+@@ -6127,6 +6322,12 @@
  	aspects[i].text = (unichar_t *) _STR_TeX;
  	aspects[i].text_in_resource = true;
  	aspects[i++].gcd = tgcd;
