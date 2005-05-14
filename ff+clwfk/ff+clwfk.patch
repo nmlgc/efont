@@ -554,7 +554,7 @@
  	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
  	mgcd[0].gd.pos.width = CI_Width-10;
 --- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
-+++ fontforge/charview.c	Wed May 11 19:17:14 2005
++++ fontforge/charview.c	Sat May 14 21:41:29 2005
 @@ -105,6 +105,12 @@
  static Color backimagecol = 0x707070;
  static Color fillcol = 0x707070;
@@ -775,7 +775,7 @@
  static void CVMenuShowGridFit(GWindow gw,struct gmenuitem *mi,GEvent *e) {
      CharView *cv = (CharView *) GDrawGetUserData(gw);
  
-@@ -5081,6 +5212,268 @@
+@@ -5081,6 +5212,297 @@
      }
  }
  
@@ -861,7 +861,7 @@
 +#define CID_Width 1000
 +#define CID_StrokeType 1001
 +
-+GTextInfo stroketypelist[num_enum_stroke+1] = {
++GTextInfo stroketypelist[num_enum_stroke+2] = {
 +  { (unichar_t *) "ten", NULL, 0, 0, (void *)sk_ten, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "tate", NULL, 0, 0, (void *)sk_tate, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "yoko", NULL, 0, 0, (void *)sk_yoko, NULL, 0, 0, 0, 0, 0, 0, 1},
@@ -884,6 +884,7 @@
 +  { (unichar_t *) "kamae2", NULL, 0, 0, (void *)sk_kamae2, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "nyou", NULL, 0, 0, (void *)sk_nyou, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { (unichar_t *) "tare", NULL, 0, 0, (void *)sk_tare, NULL, 0, 0, 0, 0, 0, 0, 1},
++  { (unichar_t *) "----", NULL, 0, 0, (void *)num_enum_stroke, NULL, 0, 0, 0, 0, 0, 0, 1},
 +  { NULL }
 +};
 +
@@ -898,9 +899,33 @@
 +    int err = false;
 +
 +    if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
-+	struct sgid *sgid = GDrawGetUserData(GGadgetGetWindow(g));
-+	sgid->spl->width = GetRealR(sgid->gw,CID_Width,_STR_Width, &err);
-+	sgid->spl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(sgid->gw,CID_StrokeType))->userdata);
++	SplinePointList *spl;
++	int stroketype;
++	real width;
++  	struct sgid *sgid = GDrawGetUserData(GGadgetGetWindow(g)); 
++
++ 	width = GetRealR(sgid->gw,CID_Width,_STR_Width, &err);
++ 	stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(sgid->gw,CID_StrokeType))->userdata);
++ 
++ 	for (spl = sgid->spl; spl != NULL; spl = spl->next) {
++	    SplinePointList *found = NULL;
++	    Spline *spline;
++ 
++	    if ( spl->first->selected )
++		found = spl;
++	    for ( spline=spl->first->next; spline!=NULL; spline=spline->to->next ) {
++		if ( spline->to == spl->first )
++		    /* returned to first spline point */
++	    break;
++		if ( spline->to->selected )
++		    found = spl;
++	    }
++	    if ( found!=NULL ) {
++		spl->width = width;
++		if ( stroketype < num_enum_stroke )
++		    spl->stroketype = stroketype;
++	    }
++ 	}
 +	sgid->cv->sc->parent->last_stroketype = sgid->spl->stroketype;
 +	sgid->done = true;
 +    }
@@ -928,7 +953,7 @@
 +return( true );
 +}
 +
-+void StrokeGetInfo(CharView *cv, SplinePointList *spl) {
++void StrokeGetInfo(CharView *cv, SplinePointList *spl, int selected_num) {
 +    GWindow gw;
 +    GWindowAttrs wattrs;
 +    GGadgetCreateData gcd[9];
@@ -971,14 +996,20 @@
 +    gcd[i++].creator = GLabelCreate;
 +
 +    gcd[i].gd.pos.x = 80; gcd[i].gd.pos.y = gcd[i-1].gd.pos.y-5; gcd[i].gd.pos.width = 100;
-+    gcd[i].gd.flags = gg_enabled|gg_visible;
-+    gcd[i].gd.cid = CID_StrokeType;
++    if (selected_num <= 1)
++	gcd[i].gd.flags = gg_enabled|gg_visible;
++    else
++	gcd[1].gd.flags = gg_visible;
 +    gcd[i].gd.u.list = stroketypelist;
++    gcd[i].gd.cid = CID_StrokeType;
 +    gcd[i++].creator = GListButtonCreate;
++
 +    for ( j=0; j<sizeof(stroketypelist)/sizeof(stroketypelist[0]); j++) {
-+      stroketypelist[j].selected = (j == spl->stroketype);
-+      stroketypelist[j].disabled = false;
++	stroketypelist[j].selected = (selected_num == 1) && (j == spl->stroketype);
++	stroketypelist[j].disabled = (selected_num != 1);
 +    }
++    stroketypelist[num_enum_stroke].selected = (selected_num > 1);
++    stroketypelist[num_enum_stroke].disabled = (selected_num <= 1);
 +
 +    label[i].text = (unichar_t *) _STR_WidthC;
 +    label[i].text_in_resource = true;
@@ -987,7 +1018,7 @@
 +    gcd[i].gd.flags = gg_enabled|gg_visible;
 +    gcd[i++].creator = GLabelCreate;
 +
-+    sprintf( buffer, "%f", spl->width );
++    sprintf( buffer, "%.2f", spl->width );
 +    label[i].text = (unichar_t *) buffer;
 +    label[i].text_is_1byte = true;
 +    gcd[i].gd.label = &label[i];
@@ -1030,21 +1061,19 @@
 +}
 +
 +static void CVMenuStrokeInfo(GWindow gw,struct gmenuitem *mi,GEvent *e) {
-+    CharView *cv = (CharView *) GDrawGetUserData(gw);
-+    SplinePointList *spl;
-+    RefChar *r;
-+    ImageList *im;
++	CharView *cv = (CharView *) GDrawGetUserData(gw);
++	SplinePointList *spl;
++	int selected_num = 0;
 +
-+    if ( CVOneContourSel(cv,&spl,&r,&im) ) {
-+        StrokeGetInfo(cv, spl);
-+    }
++	if (CVPointsSel(cv, &spl, &selected_num))
++		StrokeGetInfo(cv, spl, selected_num);
 +}
 +#endif
 +
  static void _CVMenuPointType(CharView *cv,struct gmenuitem *mi) {
      int pointtype = mi->mid==MID_Corner?pt_corner:mi->mid==MID_Tangent?pt_tangent:pt_curve;
      SplinePointList *spl;
-@@ -5111,6 +5504,9 @@
+@@ -5111,6 +5533,9 @@
  
  static void cv_ptlistcheck(CharView *cv,struct gmenuitem *mi,GEvent *e) {
      int type = -2, cnt=0;
@@ -1054,7 +1083,7 @@
      SplinePointList *spl, *sel=NULL;
      Spline *spline, *first;
      SplinePoint *selpt=NULL;
-@@ -5122,11 +5518,23 @@
+@@ -5122,11 +5547,23 @@
  	    selpt = spl->first; ++cnt;
  	    if ( type==-2 ) type = spl->first->pointtype;
  	    else if ( type!=spl->first->pointtype ) type = -1;
@@ -1078,7 +1107,7 @@
  		selpt = spline->to;
  		sel = spl; ++cnt;
  	    }
-@@ -5159,6 +5567,16 @@
+@@ -5159,6 +5596,16 @@
  	    mi->ti.disabled = AnchorClassUnused(cv->sc,&waslig)==NULL;
  	  break;
  #endif
@@ -1095,7 +1124,7 @@
  	}
      }
  }
-@@ -6806,7 +7224,13 @@
+@@ -6806,7 +7253,13 @@
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
      { { (unichar_t *) _STR_AddAnchor, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'A' }, '0', ksm_control, NULL, NULL, CVMenuAddAnchor, MID_AddAnchor },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
@@ -1110,7 +1139,7 @@
      { NULL }
  };
  
-@@ -7045,6 +7469,11 @@
+@@ -7045,6 +7498,11 @@
      { { (unichar_t *) _STR_NumberPoints, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'o' }, '\0', ksm_control, nplist, nplistcheck },
      { { (unichar_t *) _STR_MarkExtrema, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'M' }, '\0', ksm_control, NULL, NULL, CVMenuMarkExtrema, MID_MarkExtrema },
      { { (unichar_t *) _STR_Fill, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuFill, MID_Fill },
@@ -1122,7 +1151,7 @@
      { { (unichar_t *) _STR_ShowGridFitDDD, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGridFit, MID_ShowGridFit },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, }},
      { { (unichar_t *) _STR_Combinations, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'b' }, '\0', ksm_shift|ksm_control, cblist, cblistcheck },
-@@ -8002,3 +8431,4 @@
+@@ -8002,3 +8460,4 @@
      _CharViewCreate(&sv->cv_srch, &sv->sc_srch, &sv->dummy_fv);
  }
  #endif		/* FONTFORGE_CONFIG_NO_WINDOWING_UI */
@@ -1175,8 +1204,56 @@
  /* This command takes two strings which specify general expressions in x and y*/
  /*  and applies the specified transformations to the splines.  Note: Each     */
 --- fontforge/cvaddpoints.c.orig	Sun Jan  2 00:05:56 2005
-+++ fontforge/cvaddpoints.c	Wed May 11 19:17:02 2005
-@@ -207,6 +207,20 @@
++++ fontforge/cvaddpoints.c	Sat May 14 21:45:19 2005
+@@ -153,6 +153,47 @@
+ return( false );
+ }
+ 
++#ifdef FONTFORGE_CONFIG_CLWFK
++int CVPointsSel(CharView *cv,
++		   SplinePointList **_spl,
++		   int *selected_num) {
++        /* if there are selected points, return the first one and the number of selected items*/
++
++	SplinePointList *spl, *found=NULL;
++	Spline *spline;
++
++	*selected_num = 0;
++	for (spl = cv->layerheads[cv->drawmode]->splines; spl != NULL; spl = spl->next) {
++		if (spl->first->selected ) {
++			if (found == NULL) {
++				*selected_num = 1;
++				found = spl;
++			}
++			else if (found != spl)
++				(*selected_num)++;
++		}
++		for (spline = spl->first->next; spline != NULL; spline = spline->to->next ) {
++			if (spline->to == spl->first )
++				break;
++			if (spline->to->selected) {
++				if (found == NULL) {
++					*selected_num = 1;
++					found = spl;
++				}
++				else if (found != spl)
++					(*selected_num)++;
++			}
++		}
++	}
++	*_spl = found;
++
++    if (found)
++	    return (true);
++
++    return (false);
++}
++#endif
++
+ SplinePointList *CVAnySelPointList(CharView *cv) {
+     /* if there is exactly one point selected and it is on an open splineset */
+     /*  and it is one of the endpoints of the splineset, then return that */
+@@ -207,6 +248,20 @@
  return( found );
  }
  
@@ -1197,7 +1274,7 @@
  /* When the user tries to add a point (by doing a mouse down with a point tool
    selected) there are several cases to be looked at:
  	If there is a single point selected and it is at the begining/end of an open spline set
-@@ -362,10 +376,21 @@
+@@ -362,10 +417,21 @@
  	sp->nextcpdef = sp->prevcpdef = 1;
  	sp->pointtype = ptype;
  	sp->selected = true;
@@ -3394,7 +3471,7 @@
  		FindEdges(sc,&es);
  		FillChar(&es);
 --- fontforge/splinefont.h.orig	Wed May  4 09:35:41 2005
-+++ fontforge/splinefont.h	Thu May 12 16:56:53 2005
++++ fontforge/splinefont.h	Sat May 14 20:28:30 2005
 @@ -27,6 +27,8 @@
  #ifndef _SPLINEFONT_H
  #define _SPLINEFONT_H
@@ -3515,7 +3592,7 @@
 +extern SplineFont *SFReadClwfkSkeleton(char *fontname);
 +extern void SCBuildSkeleton(SplineChar *sc, char *name);
 +extern void SCFleshSkeleton(SplineChar *sc, char *face, int normkanji);
-+extern void StrokeGetInfo(struct charview *cv, SplinePointList *spl);
++extern void StrokeGetInfo(struct charview *cv, SplinePointList *spl, int selected_num);
 +extern int ExportNamedPrimitive(FILE *skel, SplineChar *sc, char *glyphname);
 +extern int ExportPrimitive(FILE *skel, SplineChar *sc);
 +extern int ExportSkeleton(FILE *skel, SplineChar *sc, int use_jointdef);
@@ -3561,8 +3638,8 @@
  
      first = NULL;
      for ( pt=spl->first; pt!=NULL && pt!=first; pt = pt->next->to ) {
---- fontforge/views.h.orig	Tue Mar 29 04:33:51 2005
-+++ fontforge/views.h	Sun May  1 00:57:59 2005
+--- fontforge/views.h.orig	Wed May  4 09:35:42 2005
++++ fontforge/views.h	Sat May 14 21:43:42 2005
 @@ -50,6 +50,9 @@
      int markextrema;
      int showblues, showfamilyblues;
@@ -3583,3 +3660,14 @@
      Layer *layerheads[dm_max];
      real scale;
  #if defined(FONTFORGE_CONFIG_GTK)
+@@ -973,6 +979,10 @@
+ 	RefChar **ref, ImageList **img, AnchorPoint **ap);
+ extern int CVOneContourSel(CharView *cv, SplinePointList **_spl,
+ 	RefChar **ref, ImageList **img);
++#ifdef FONTFORGE_CONFIG_CLWFK
++extern int CVPointsSel(CharView *cv,  SplinePointList **_spl,
++			  int *selected_num);
++#endif
+ extern void RevertedGlyphReferenceFixup(SplineChar *sc, SplineFont *sf);
+ extern void CVImport(CharView *cv);
+ extern void BVImport(BitmapView *bv);
