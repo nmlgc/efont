@@ -1301,8 +1301,8 @@
      CVInfoDraw(cv,cv->gw);
      SCUpdateAll(sc);
 --- fontforge/cvexport.c.orig	Sun Feb 27 12:10:45 2005
-+++ fontforge/cvexport.c	Wed May 11 19:33:27 2005
-@@ -38,6 +38,256 @@
++++ fontforge/cvexport.c	Sun May 15 01:12:42 2005
+@@ -38,6 +38,257 @@
  #include <utype.h>
  #endif
  
@@ -1411,11 +1411,12 @@
 +	    fprintf(skel, " (widthratio . %.3f)", spl->width / sc->parent->strokewidth);
 +	fprintf(skel, spl->next==NULL?")":")\n");
 +    }
++    fprintf(skel, ")\n");
++
 +    if ( fk->xlimit_min!=0 || (fk->xlimit_max!=0 && fk->xlimit_max!=1000 ))
 +        fprintf(skel, "\n       (xlimit %g %g)", fk->xlimit_min, fk->xlimit_max);
 +    if ( fk->ylimit_min!=0 || (fk->ylimit_max!=0 && fk->ylimit_max!=1000 ))
 +        fprintf(skel, "\n       (ylimit %g %g)", fk->ylimit_min, fk->ylimit_max);
-+    fprintf(skel, ")\n");
 +
 +    for ( spl=sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
 +        if ( spl->stroketype >= sk_kamae )
@@ -1559,7 +1560,7 @@
  static void EpsGeneratePreview(FILE *eps,SplineChar *sc,DBounds *b) {
      double scale, temp;
      int pixelsize, depth;
-@@ -743,6 +993,10 @@
+@@ -743,6 +994,10 @@
  	good = ExportSVG(buffer,sc);
      else if ( format==3 )
  	good = ExportPDF(buffer,sc);
@@ -1570,7 +1571,7 @@
      else if ( bc!=NULL )
  	good = BCExportXBM(buffer,bc,format-3);
      if ( !good )
-@@ -777,6 +1031,9 @@
+@@ -777,6 +1032,9 @@
      { (unichar_t *) "XFig", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "SVG", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "PDF", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
@@ -1580,7 +1581,7 @@
      { (unichar_t *) "X Bitmap", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
      { (unichar_t *) "BMP", NULL, 0, 0, NULL, 0, 0, 0, 0, 0, 0, 0, 1 },
  #ifndef _NO_LIBPNG
-@@ -803,6 +1060,10 @@
+@@ -803,6 +1061,10 @@
  	good = ExportSVG(temp,d->sc);
      else if ( format==3 )
  	good = ExportPDF(temp,d->sc);
@@ -1591,7 +1592,7 @@
      else
  	good = ExportXBM(temp,d->sc,format-4);
      if ( !good )
-@@ -906,8 +1167,14 @@
+@@ -906,8 +1168,14 @@
  			 format==1?".fig":
  			 format==2?".svg":
  			 format==3?".pdf":
@@ -1606,7 +1607,7 @@
  				   ".png");
  	GGadgetSetTitle(d->gfc,f2);
  	free(f2);
-@@ -1097,7 +1364,11 @@
+@@ -1097,7 +1365,11 @@
  	ext = _format==0 ? "xbm" : _format==1 ? "bmp" : "png";
      else
  	ext = _format==0?"eps":_format==1?"fig":_format==2?"svg":
