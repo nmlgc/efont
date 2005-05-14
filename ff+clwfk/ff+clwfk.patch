@@ -2350,7 +2350,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 09:35:41 2005
-+++ fontforge/sfd.c	Thu May 12 18:54:47 2005
++++ fontforge/sfd.c	Sun May 15 00:02:44 2005
 @@ -81,6 +81,92 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2484,7 +2484,7 @@
  	    } else if ( ch!=',' )
  		ungetc(ch,sfd);
  	    else {
-@@ -4767,3 +4873,929 @@
+@@ -4767,3 +4873,934 @@
      fclose(sfd);
  return( ret );
  }
@@ -2801,6 +2801,7 @@
 +    static SkelStroke sbuf[256];
 +    int s = 0, p;	/* count of stroke and point (in the stroke) */
 +    int type;
++    int link_found;	/* only first (link ...) is recognized */
 +
 +    if (!openParenExists(file))
 +return NULL;
@@ -2821,6 +2822,7 @@
 +	    }
 +	    sbuf[s].num_points = p;
 +	    sbuf[s].is_link = 0;
++	    link_found = false;
 +	    while (openParenExists(file)) {
 +		if (getToken(file,buf,bufsize) == NULL)
 +return NULL;
@@ -2828,9 +2830,12 @@
 +		    for (; !closeParenExists(file); p++) {
 +			if (getNumeral(file,buf,bufsize) == NULL)
 +return NULL;
-+			sbuf[s].point_index[p] = strtod(buf,NULL);
-+			sbuf[s].num_points = p + 1;
-+			sbuf[s].is_link |= (1<<p);
++			if ( !link_found ) {
++			    sbuf[s].point_index[p] = strtod(buf,NULL);
++			    sbuf[s].num_points = p + 1;
++			    sbuf[s].is_link |= (1<<p);
++			    link_found = true;
++			}
 +		    }
 +		} else if (strcasecmp(buf,"widthratio") ==0) {
 +		    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize) == NULL)
