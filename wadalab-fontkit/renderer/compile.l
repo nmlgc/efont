@@ -27,8 +27,11 @@
 ; $Id$
 
 (setq source-load t)
+(setq *compile-progress* nil)
+(setq *compile-verbose* nil)
+(setq *compile-print* nil)
 (load "load.l")
-(mapc #'compile-file
+(mapc #'(lambda (file) (compile-file file :verbose nil :print nil :progress nil))
       '("apply.l" "center.l" "compat.l" "gothic.l" "hiranew.l" "lib.l"
 	"limit.l" "limitrule.l" "maru.l" "mincho.l" "newjoint.l" "out2ps.l"
 	"out2sfd.l" "outline.l" "pack.l" "region.l" "sym.l" "transform.l" 

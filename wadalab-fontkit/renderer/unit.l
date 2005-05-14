@@ -633,7 +633,6 @@
 	(p1 (nth (car (last (cadr element))) points)))
   (list (cons (min (cadr p0)(cadr p1))(max (cadr p0)(cadr p1))))))
 ;
-(defun absdiff (x y) (abs (- x y)))
 ;
 (defun elx2y (element points x)
   (do ((l (cadr element) (cdr l))

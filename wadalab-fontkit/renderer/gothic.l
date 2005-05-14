@@ -584,6 +584,42 @@
 			   (setq minlink (car ll) minlen len))))))
 	    (t (push (car l) newelements))))))
 
+; エレメントの長さとその X/Y 軸への射影
+; (現在は単純にストロークを構成する折れ線の長さの和)
+(defun elemlen (elem points)
+  (do* ((prev (caadr elem) (car rest))
+	(rest (cdadr elem) (cdr rest))
+	(em 400)
+	(len 0) (len_x 0) (len_y 0))
+       ((atom rest) `(,(/ len em) ,(/ len_x em) ,(/ len_y em)))
+    (let* ((this (car rest))
+	   (from (nth prev points))
+	   (to (nth this points))
+	   (x (absdiff (car from) (car to)))
+	   (y (absdiff (cadr from) (cadr to)))
+	   (l (length2 `(,x ,y))))
+      (setq len   (+ len l))
+      (setq len_x (+ len_x x))
+      (setq len_y (+ len_y y)))))
+
+; 文字に含まれるエレメントの長さの総和
+(defun total-elemlen (prim)
+  (let* ((len 0) (len_x 0) (len_y 0)
+	(points (car prim))
+	(elements (cadr prim)))
+    (mapc #'(lambda (elem)
+	      (let ((lengths (elemlen elem points)))
+		(setq len   (+ len   (car lengths)))
+		(setq len_x (+ len_x (cadr lengths)))
+		(setq len_y (+ len_y (caddr lengths)))))
+	  elements)
+    `(,len ,len_x ,len_y)))
+
+
+(defun insert-width (elem width)
+  (or (assq 'widthratio (cddr elem))
+      (rplacd (last elem) `((widthratio .,(/ width gothicwidth))))))
+
 (defun gothic-prim (prim)
   (let* ((prim (rm-geta prim 30.0))
 	 (points (car prim))
@@ -595,10 +631,13 @@
 			   .,(every #'(lambda (x) 
 					(not (memq (car x) '(xunit yunit))))
 				    alist))))
+;	 (totallen (elemlen elem points))
 	 (width (min gothicwidth
 		     (* 0.16 (min (car origunits)(cdr origunits)(car units)(cdr units))))))
 ;    (break)
-    (setq local_gothicwidth width)
+    (mapc #'(lambda (elem) (insert-width elem width))
+	  elements)
+    
     `(,points ,elements .,alist)))
 
 (deftypehook gothic

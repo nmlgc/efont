@@ -35,6 +35,8 @@
 (defvar minchowidth nil)
 (defvar meshsize nil)
 
+(defun absdiff (x y) (abs (- x y)))
+
 ;-----------------------------------------------------------------------------
 ; 点・ベクトルに対する演算
 ;-----------------------------------------------------------------------------
@@ -216,7 +218,7 @@
      (+ (svref trans 4) (* x (svref trans 0)) (* y (svref trans 2)))
      (+ (svref trans 5) (* x (svref trans 1)) (* y (svref trans 3))))))
 ;
-; 新しく定義
+; 変換行列 (恒等・平行移動・拡大縮小・回転) を返す関数群
 ;
 (defun identity-trans ()
   (vector 1.0 0.0 0.0 1.0 0.0 0.0))

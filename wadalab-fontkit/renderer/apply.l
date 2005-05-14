@@ -331,9 +331,13 @@
       (setq lpoint (assq 'link (cddr part))) ; リンク点の点番号のリスト
       (setq lpoint (cond (lpoint (cdr lpoint))))
       (setq partpoint nil)
+
       ; ストロークを可変幅にするための変更 (2005-04-30)。
-      ; 各ストロークの肉付け結果を得る前にグローバル変数 local_gothicwidth,
-      ; local_minchowidth を一時的に書き換えるという ad hoc な対処法による。
+      ; オリジナルの実装では 1 文字内のストロークの太さは一定だったので、
+      ; local_minchowidth, local_minchowidth の書き換えは、skeleton2list を
+      ; 呼び出す直前に 1 回だけ行っていた。
+      ; 現在はエレメントが属性として相対太さを持っているので、各エレメントの
+      ; 肉付けアウトラインを求めるごとに再設定する必要がある。
       (setq widthratio (cdr (or (assq 'widthratio (cddr part))
 				'(widthratio . 1.0))))
       (setq local_gothicwidth (* gothicwidth widthratio))
@@ -375,6 +379,9 @@
 	(setq link (assq 'link (cdr (assq (car lll) linkpoints))))
 	(rplacd link (cons (list type 2 tmpline) (cdr link)))))
 
+    ; 線端に「飾り」をつける処理を行う。
+    ; ある点に 2 本の線が集まる場合を典型的なケースとして処理する。
+    ; 
     (do ((ll linkpoints (cdr ll)))
       ((atom ll))
       (setq link (assq 'link (cdar ll)))
