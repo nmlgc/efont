@@ -556,7 +556,7 @@
  	mgcd[0].gd.pos.x = 4; mgcd[0].gd.pos.y = 6;
  	mgcd[0].gd.pos.width = CI_Width-10;
 --- fontforge/charview.c.orig	Sat Apr  2 07:05:52 2005
-+++ fontforge/charview.c	Sat May 14 21:41:29 2005
++++ fontforge/charview.c	Sun May 15 00:15:24 2005
 @@ -105,6 +105,12 @@
  static Color backimagecol = 0x707070;
  static Color fillcol = 0x707070;
@@ -684,7 +684,7 @@
      } else if ( event->u.chr.keysym == GK_Left ||
  	    event->u.chr.keysym == GK_Up ||
  	    event->u.chr.keysym == GK_Right ||
-@@ -2027,6 +2093,35 @@
+@@ -2027,6 +2093,37 @@
  	    dy = -1;
  	  break;
  	}
@@ -706,10 +706,12 @@
 +	    }
 +	    for ( spl=cv->sc->layers[ly_fore].splines; spl!=NULL; spl=spl->next ) {
 +		if ( SplIsSelected(spl) ) {
-+		    if ( spl->width==0 )
++		    if ( spl->width==0 ) 
 +			spl->width = cv->sc->parent->strokewidth;
 +		    spl->width += dw;
 +		    if ( spl->width < 0 )
++			spl->width = 0;
++		    if ( spl->stroketype >= sk_kamae )
 +			spl->width = 0;
 +		}
 +	    }
@@ -720,7 +722,7 @@
  	if ( event->u.chr.state & (ksm_control|ksm_capslock) ) {
  	    struct sbevent sb;
  	    sb.type = dy>0 || dx<0 ? et_sb_halfup : et_sb_halfdown;
-@@ -3882,6 +3977,11 @@
+@@ -3882,6 +3979,11 @@
  #define MID_PtsSVG	2024
  #define MID_Ligatures	2025
  #define MID_Former	2026
@@ -732,7 +734,7 @@
  #define MID_Cut		2101
  #define MID_Copy	2102
  #define MID_Paste	2103
-@@ -3956,6 +4056,11 @@
+@@ -3956,6 +4058,11 @@
  #define MID_MakeFirst	2304
  #define MID_MakeLine	2305
  #define MID_AddAnchor	2310
@@ -744,7 +746,7 @@
  #define MID_AutoHint	2400
  #define MID_ClearHStem	2401
  #define MID_ClearVStem	2402
-@@ -4304,6 +4409,32 @@
+@@ -4304,6 +4411,32 @@
      GDrawRequestExpose(cv->v,NULL,false);
  }
  
@@ -777,7 +779,7 @@
  static void CVMenuShowGridFit(GWindow gw,struct gmenuitem *mi,GEvent *e) {
      CharView *cv = (CharView *) GDrawGetUserData(gw);
  
-@@ -5081,6 +5212,297 @@
+@@ -5081,6 +5214,297 @@
      }
  }
  
@@ -1075,7 +1077,7 @@
  static void _CVMenuPointType(CharView *cv,struct gmenuitem *mi) {
      int pointtype = mi->mid==MID_Corner?pt_corner:mi->mid==MID_Tangent?pt_tangent:pt_curve;
      SplinePointList *spl;
-@@ -5111,6 +5533,9 @@
+@@ -5111,6 +5535,9 @@
  
  static void cv_ptlistcheck(CharView *cv,struct gmenuitem *mi,GEvent *e) {
      int type = -2, cnt=0;
@@ -1085,7 +1087,7 @@
      SplinePointList *spl, *sel=NULL;
      Spline *spline, *first;
      SplinePoint *selpt=NULL;
-@@ -5122,11 +5547,23 @@
+@@ -5122,11 +5549,23 @@
  	    selpt = spl->first; ++cnt;
  	    if ( type==-2 ) type = spl->first->pointtype;
  	    else if ( type!=spl->first->pointtype ) type = -1;
@@ -1109,7 +1111,7 @@
  		selpt = spline->to;
  		sel = spl; ++cnt;
  	    }
-@@ -5159,6 +5596,16 @@
+@@ -5159,6 +5598,16 @@
  	    mi->ti.disabled = AnchorClassUnused(cv->sc,&waslig)==NULL;
  	  break;
  #endif
@@ -1126,7 +1128,7 @@
  	}
      }
  }
-@@ -6806,7 +7253,13 @@
+@@ -6806,7 +7255,13 @@
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
      { { (unichar_t *) _STR_AddAnchor, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'A' }, '0', ksm_control, NULL, NULL, CVMenuAddAnchor, MID_AddAnchor },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, 0, 0, }},
@@ -1141,7 +1143,7 @@
      { NULL }
  };
  
-@@ -7045,6 +7498,11 @@
+@@ -7045,6 +7500,11 @@
      { { (unichar_t *) _STR_NumberPoints, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'o' }, '\0', ksm_control, nplist, nplistcheck },
      { { (unichar_t *) _STR_MarkExtrema, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'M' }, '\0', ksm_control, NULL, NULL, CVMenuMarkExtrema, MID_MarkExtrema },
      { { (unichar_t *) _STR_Fill, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuFill, MID_Fill },
@@ -1153,7 +1155,7 @@
      { { (unichar_t *) _STR_ShowGridFitDDD, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'l' }, '\0', 0, NULL, NULL, CVMenuShowGridFit, MID_ShowGridFit },
      { { NULL, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 1, }},
      { { (unichar_t *) _STR_Combinations, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 1, 0, 'b' }, '\0', ksm_shift|ksm_control, cblist, cblistcheck },
-@@ -8002,3 +8460,4 @@
+@@ -8002,3 +8462,4 @@
      _CharViewCreate(&sv->cv_srch, &sv->sc_srch, &sv->dummy_fv);
  }
  #endif		/* FONTFORGE_CONFIG_NO_WINDOWING_UI */
@@ -1955,13 +1957,13 @@
  			    Nearish(mergess->last->me.y-activess->last->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->last,activess,
 --- fontforge/cvshapes.c.orig	Sun Jan  2 00:05:56 2005
-+++ fontforge/cvshapes.c	Sun May  1 00:57:59 2005
++++ fontforge/cvshapes.c	Sun May 15 00:35:20 2005
 @@ -85,6 +85,10 @@
      cv->active_shape->next = cv->layerheads[cv->drawmode]->splines;
      cv->layerheads[cv->drawmode]->splines = cv->active_shape;
      cv->active_shape->first = last = SPMake(&cv->info,pt_corner);
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+    cv->active_shape->width = cv->sc->parent->strokewidth;
++    cv->active_shape->width = 0;
 +    cv->active_shape->stroketype = sk_tare;
 +#endif
  
@@ -3419,8 +3421,8 @@
 +}
 +
 +#endif
---- fontforge/splinefill.c.orig	Sat Feb 26 14:00:23 2005
-+++ fontforge/splinefill.c	Fri May  6 21:57:15 2005
+--- fontforge/splinefill.c.orig	Fri Feb 25 14:32:26 2005
++++ fontforge/splinefill.c	Sun May 15 00:31:26 2005
 @@ -458,6 +458,17 @@
      FindEdgesSplineSet(sc->layers[ly_fore].splines,es);
  }
@@ -3439,7 +3441,7 @@
  Edge *ActiveEdgesInsertNew(EdgeList *es, Edge *active,int i) {
      Edge *apt, *pr, *npt;
  
-@@ -972,13 +983,17 @@
+@@ -972,13 +983,22 @@
  	Bresenham(bytemap,es,x1,x2,y1,y2,grey);
  }
  
@@ -3453,12 +3455,17 @@
      for ( ; ss!=NULL; ss=ss->next ) {
  	first = NULL;
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	width = (ss->width > 0.0) ? rint(ss->width*es->scale) : defaultwidth;
++	if ( ss->stroketype >= sk_kamae )
++	    width = 1.0*es->scale;
++	else if ( ss->width > 0.0 )
++	    width = rint( ss->width*es->scale );
++	else 
++	    width = defaultwidth;
 +#endif
  	for ( spline = ss->first->next; spline!=NULL && spline!=first; spline=spline->to->next ) {
  	    lap = SplineApproximate(spline,es->scale);
  	    if ( lap->lines!=NULL ) {
-@@ -1213,9 +1228,19 @@
+@@ -1213,9 +1233,19 @@
  	    } else
  #endif
  	    if ( sc->parent->strokedfont ) {
