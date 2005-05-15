@@ -2353,7 +2353,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 09:35:41 2005
-+++ fontforge/sfd.c	Sun May 15 00:02:44 2005
++++ fontforge/sfd.c	Sun May 15 10:53:51 2005
 @@ -81,6 +81,92 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2487,7 +2487,7 @@
  	    } else if ( ch!=',' )
  		ungetc(ch,sfd);
  	    else {
-@@ -4767,3 +4873,934 @@
+@@ -4767,3 +4873,941 @@
      fclose(sfd);
  return( ret );
  }
@@ -2889,7 +2889,7 @@
 +    }
 +}
 +
-+static SkelChar *SkelCharReadExtraPrimInfo(FILE *file,SkelChar *sc,char *buf,int bufsize) {
++static SkelChar *SkelCharReadExtraSkelInfo(FILE *file,SkelChar *sc,char *buf,int bufsize) {
 +    int type;
 +
 +    while (openParenExists(file)) {
@@ -2997,18 +2997,18 @@
 +    return NULL;
 +}
 +
-+static SkelChar *getPrimCharOrTateYoko(FILE *file, SkelChar *sc, char *buf, int bufsize) {
++static SkelChar *getPrimCharOrTateYoko(FILE *file, SkelChar *sk, char *buf, int bufsize) {
 +    if (!tokCharExists(file, '\'') || !openParenExists(file) || 
 +	getToken(file,buf,sizeof(buf))==NULL) 
 +return NULL;
 +    if (*buf == '(') {
 +	ungetc('(',file);
-+	if (SkelCharReadPoints(file,sc,buf,bufsize) == NULL ||
-+	    SkelCharReadStrokes(file,sc,buf,bufsize) == NULL)
++	if (SkelCharReadPoints(file,sk,buf,bufsize) == NULL ||
++	    SkelCharReadStrokes(file,sk,buf,bufsize) == NULL)
 +return NULL;
 +	if (openParenExists(file)) {
 +	    ungetc('(',file);
-+	    if (SkelCharReadExtraPrimInfo(file,sc,buf,bufsize)==NULL)
++	    if (SkelCharReadExtraSkelInfo(file,sk,buf,bufsize)==NULL)
 +return NULL;
 +	}
 +	if (!closeParenExists(file))
@@ -3016,7 +3016,7 @@
 +    } else
 +return NULL;
 +
-+return sc;
++return sk;
 +}
 +
 +static SkelChar *getJointSkel(FILE *file, SkelChar *sk, char *buf, int bufsize) {
@@ -3029,6 +3029,13 @@
 +	!tokCharExists(file, '\'') || !openParenExists(file))
 +return NULL;
 +    while (!closeParenExists(file)) {
++	if (openParenExists(file)) {
++	    ungetc('(',file);
++	    if (SkelCharReadExtraSkelInfo(file,sk,buf,bufsize) == NULL ||
++		!closeParenExists(file))
++return NULL;
++    break;
++	}
 +	if (!tokCharExists(file, '#') || !openParenExists(file))
 +return NULL;
 + 	for (i = 0; i < 6; i++) {
@@ -3067,10 +3074,10 @@
 +static SkelChar *getSkeleton(FILE *file, SkelInfo *si, int *err) {
 +    char buf[256];
 +    const int bufsize = sizeof(buf);
-+    SkelChar *sc = gcalloc(1,sizeof(SkelChar));
++    SkelChar *sk = gcalloc(1,sizeof(SkelChar));
 +
 +begin:
-+    if ( sc==NULL || getToken(file,buf,sizeof(buf))==NULL || *buf=='\0') {
++    if ( sk==NULL || getToken(file,buf,sizeof(buf))==NULL || *buf=='\0') {
 +*err=false;
 +return NULL;
 +    }
@@ -3099,10 +3106,10 @@
 +	    else
 +goto begin;
 +	} else {
-+	    if ((sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
++	    if ((sk->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
 +goto err;
-+	    u_utf8_strcpy(sc->extra.glyphname, buf);
-+	    if (getPrimCharOrTateYoko(file,sc,buf,bufsize) == NULL)
++	    u_utf8_strcpy(sk->extra.glyphname, buf);
++	    if (getPrimCharOrTateYoko(file,sk,buf,bufsize) == NULL)
 +goto err;
 +	}
 +    } else if (strcasecmp(buf, "defjoint")==0) {
@@ -3110,17 +3117,17 @@
 +	if (getToken(file,buf,bufsize) == NULL || !isalpha(buf[0]))
 +goto err;
 +	if (getToken(file,buf,bufsize) == NULL ||
-+	    (sc->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
++	    (sk->extra.glyphname=galloc(strlen(buf)+1)) == NULL)
 +goto err;
-+	u_utf8_strcpy(sc->extra.glyphname, buf);
-+	if (getJointSkel(file,sc,buf,bufsize) == NULL)
++	u_utf8_strcpy(sk->extra.glyphname, buf);
++	if (getJointSkel(file,sk,buf,bufsize) == NULL)
 +goto err;
 +    }
 +
 +    if (!closeParenExists(file)){
 +goto err;}
 +    else{
-+return sc; }
++return sk; }
 +
 +err:
 +    *err = true;
@@ -3286,6 +3293,7 @@
 +    int i, j, enc = -1;
 +    char *subskel_name;
 +
++    sc->clwfk = skel->extra;
 +    for (i = 0; i < skel->num_refs; i++) {
 +	subskel_name = utf82utf7_copy(skel->subskel_names[i]);
 +	enc = SFFindChar(sc->parent, -1, subskel_name);
@@ -3304,8 +3312,7 @@
 +	for (j = 0; j < 6; j++)
 +	    cur->transform[j] = skel->matrice[i][j];
 +
-+	SCReinstanciateRefChar(sc, refs);
-+	SCMakeDependent(sc, sc->parent->chars[enc]);
++	SFDFixupRef(sc, cur);
 +	prev = cur;
 +    }
 +return ( refs );
@@ -3353,7 +3360,7 @@
 +	    if (sks->skel[i]->matrice!=NULL)   free(sks->skel[i]->matrice);
 +	    if (sks->skel[i]->subskel_names!=NULL)
 +		for (j=0; j<sks->skel[i]->num_refs; j++)
-+		    free(&(sks->skel[i]->subskel_names[j]));
++		    free(sks->skel[i]->subskel_names[j]);
 +	    if (sks->skel[i]->orig_def!=NULL)  free(sks->skel[i]->orig_def);
 +	}
 +	next=sks->next;
