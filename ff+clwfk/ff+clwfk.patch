@@ -2071,6 +2071,26 @@
      int i;
  
      if ( filename==NULL )
+--- fontforge/gotodlg.c.orig	Sun Jan  2 00:05:57 2005
++++ fontforge/gotodlg.c	Mon May 16 19:07:09 2005
+@@ -462,6 +462,17 @@
+ 	    d->ret = NameToEncoding(d->sf,ret);
+ 	    if ( d->ret<0 || d->ret>=d->sf->charcnt )
+ 		d->ret = -1;
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    if ( d->ret==-1 ) {
++		char *utf7name = u2utf7_copy(ret);
++		unichar_t *uname = uc_copy(utf7name);
++		d->ret = NameToEncoding(d->sf,uname);
++		free(uname);
++		free(utf7name);
++		if ( d->ret<0 || d->ret>=d->sf->charcnt )
++		    d->ret = -1;
++	    }
++#endif
+ 	    if ( d->ret==-1 ) {
+ 		char *temp=cu_copy(ret);
+ #if defined(FONTFORGE_CONFIG_GDRAW)
 --- fontforge/nomen-en.c.orig	Wed May  4 09:35:41 2005
 +++ fontforge/nomen-en.c	Wed May 11 15:44:09 2005
 @@ -3738,3 +3738,36 @@
