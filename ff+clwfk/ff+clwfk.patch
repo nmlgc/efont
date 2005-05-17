@@ -280,7 +280,7 @@
  static void _SCAutoTrace(SplineChar *sc, char **args) {
      ImageList *images;
 --- fontforge/charinfo.c.orig	Mon May  9 23:33:50 2005
-+++ fontforge/charinfo.c	Sat May 14 22:20:17 2005
++++ fontforge/charinfo.c	Sat May 14 23:01:09 2005
 @@ -69,6 +69,19 @@
  #define CID_Copy	1024
  #define CID_Paste	1025
@@ -2013,15 +2013,6 @@
  			                       'p','d','b',',',
  			                       'f','o','n',',',
  			                       'f','n','t','}', 
-@@ -3309,7 +3316,7 @@
- 	    if ( GWidgetAskR(_STR_Replacearing,buts,0,1,_STR_Areyousurearing)==1 )
- #elif defined(FONTFORGE_CONFIG_GTK)
-     static char *buts[] = { GTK_STOCK_YES, GTK_STOCK_NO, NULL };
--	    if ( gwwv_ask(_("Replace Å"),buts,0,1,_("Are you sure you want to replace Å?\nThe ring will not join to the A."))==1 )
-+	    if ( gwwv_ask(_("Replace "),buts,0,1,_("Are you sure you want to replace ?\nThe ring will not join to the A."))==1 )
- #endif
-     continue;
- 	}
 @@ -8049,6 +8056,24 @@
  	if ( index<0 ) index = 9;
  	if ( script_filenames[index]!=NULL )
@@ -2373,7 +2364,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Wed May  4 09:35:41 2005
-+++ fontforge/sfd.c	Sun May 15 10:53:51 2005
++++ fontforge/sfd.c	Tue May 17 12:02:42 2005
 @@ -81,6 +81,92 @@
      putc(base64[ch&0x3f],sfd);
  }
@@ -2863,7 +2854,7 @@
 +		} else if (strcasecmp(buf,"widthratio") ==0) {
 +		    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize) == NULL)
 +return NULL;
-+		    sbuf[s].width = strtof(buf,NULL);
++		    sbuf[s].width = (real)strtod(buf,NULL);
 +		    if (!closeParenExists(file))
 +return NULL;
 +		} else {
@@ -2967,16 +2958,16 @@
 +	} else if ((type = kamaetype(buf)) > 0) {
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +return NULL;
-+	    sc->kamaes[type-sk_kamae].minx = strtof(buf,NULL);
++	    sc->kamaes[type-sk_kamae].minx = (real)strtod(buf,NULL);
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +return NULL;
-+	    sc->kamaes[type-sk_kamae].miny = strtof(buf,NULL);
++	    sc->kamaes[type-sk_kamae].miny = (real)strtod(buf,NULL);
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +return NULL;
-+	    sc->kamaes[type-sk_kamae].maxx = strtof(buf,NULL);
++	    sc->kamaes[type-sk_kamae].maxx = (real)strtod(buf,NULL);
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +return NULL;
-+	    sc->kamaes[type-sk_kamae].maxy = strtof(buf,NULL);
++	    sc->kamaes[type-sk_kamae].maxy = (real)strtod(buf,NULL);
 +	} else
 +return NULL;
 +	if (!closeParenExists(file))
@@ -3061,7 +3052,7 @@
 + 	for (i = 0; i < 6; i++) {
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +return NULL;
-+	    trans[cnt][i] = strtof(buf, NULL);
++	    trans[cnt][i] = (real)strtod(buf, NULL);
 +	}
 +	if (!closeParenExists(file))
 +return NULL;
@@ -3112,7 +3103,7 @@
 +	if (strcasecmp(buf, "minchowidth")==0) {
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +goto err;
-+	    si->minchowidth = strtof(buf,NULL);
++	    si->minchowidth = (real)strtod(buf,NULL);
 +	    if (!closeParenExists(file))
 +goto err;
 +	    else
@@ -3120,7 +3111,7 @@
 +	} else if (strcasecmp(buf, "gothicwidth")==0) {
 +	    if (getNumeral(file,buf,bufsize)==NULL)
 +goto err;
-+	    si->gothicwidth = strtof(buf,NULL);
++	    si->gothicwidth = (real)strtod(buf,NULL);
 +	    if (!closeParenExists(file))
 +goto err;
 +	    else
