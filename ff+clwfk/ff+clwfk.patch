@@ -1983,8 +1983,8 @@
 +int SFFindChar(SplineFont *sf, int unienc, const char *name) {
 +}
 +#endif
---- fontforge/fontview.c.orig	Wed May  4 15:33:23 2005
-+++ fontforge/fontview.c	Sat May  7 11:16:26 2005
+--- fontforge/fontview.c.orig	Wed May  4 09:35:40 2005
++++ fontforge/fontview.c	Tue May 17 12:09:53 2005
 @@ -26,6 +26,7 @@
   */
  #include "pfaeditui.h"
@@ -2013,7 +2013,66 @@
  			                       'p','d','b',',',
  			                       'f','o','n',',',
  			                       'f','n','t','}', 
-@@ -8049,6 +8056,24 @@
+@@ -1369,6 +1376,8 @@
+ #define MID_48	2004
+ #define MID_72	2014
+ #define MID_96	2015
++#define MID_120	2025
++#define MID_200	2026
+ #define MID_AntiAlias	2005
+ #define MID_Next	2006
+ #define MID_Prev	2007
+@@ -4071,6 +4080,10 @@
+ 	default_fv_font_size = dspsize = 72;
+     else if ( mi->mid == MID_96 )
+ 	default_fv_font_size = dspsize = 96;
++    else if ( mi->mid == MID_120 )
++	default_fv_font_size = dspsize = 120;
++    else if ( mi->mid == MID_200 )
++	default_fv_font_size = dspsize = 200;
+     else if ( mi->mid == MID_FitToEm ) {
+ # elif defined(FONTFORGE_CONFIG_GTK)
+ void FontViewMenu_PixelSize(GtkMenuItem *menuitem, gpointer user_data) {
+@@ -4090,6 +4103,10 @@
+ 	default_fv_font_size = dspsize = 72;
+     else if ( strstr(name,"96")!=NULL )
+ 	default_fv_font_size = dspsize = 96;
++    else if ( strstr(name,"120")!=NULL )
++	default_fv_font_size = dspsize = 120;
++    else if ( strstr(name,"200")!=NULL )
++	default_fv_font_size = dspsize = 200;
+     else if ( strcmp(name,"fit_to_em1")==0 ) {
+ # endif
+ 	default_fv_bbsized = fv->bbsized = !fv->bbsized;
+@@ -5816,8 +5833,10 @@
+     { { (unichar_t *) _STR_24, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '2' }, '2', ksm_control, NULL, NULL, FVMenuSize, MID_24 },
+     { { (unichar_t *) _STR_36, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '3' }, '3', ksm_control, NULL, NULL, FVMenuSize, MID_36 },
+     { { (unichar_t *) _STR_48, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '4' }, '4', ksm_control, NULL, NULL, FVMenuSize, MID_48 },
+-    { { (unichar_t *) _STR_72, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '4' }, '7', ksm_control, NULL, NULL, FVMenuSize, MID_72 },
+-    { { (unichar_t *) _STR_96, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '4' }, '9', ksm_control, NULL, NULL, FVMenuSize, MID_96 },
++    { { (unichar_t *) _STR_72, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '7' }, '7', ksm_control, NULL, NULL, FVMenuSize, MID_72 },
++    { { (unichar_t *) _STR_96, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '9' }, '9', ksm_control, NULL, NULL, FVMenuSize, MID_96 },
++    { { (unichar_t *) _STR_120, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, '8' }, '8', ksm_control, NULL, NULL, FVMenuSize, MID_120 },
++    { { (unichar_t *) _STR_200, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 }, 0, ksm_control, NULL, NULL, FVMenuSize, MID_200 },
+     { { (unichar_t *) _STR_Antialias, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'A' }, '5', ksm_control, NULL, NULL, FVMenuSize, MID_AntiAlias },
+     { { (unichar_t *) _STR_FitToEm, NULL, COLOR_DEFAULT, COLOR_DEFAULT, NULL, NULL, 0, 0, 1, 0, 0, 0, 0, 1, 0, 'F' }, '6', ksm_control, NULL, NULL, FVMenuSize, MID_FitToEm },
+     { NULL },			/* Some extra room to show bitmaps */
+@@ -5927,6 +5946,14 @@
+ 	    mi->ti.checked = (fv->show!=NULL && fv->show==fv->filled && fv->show->pixelsize==96);
+ 	    mi->ti.disabled = fv->sf->onlybitmaps && fv->show!=fv->filled;
+ 	  break;
++	  case MID_120:
++	    mi->ti.checked = (fv->show!=NULL && fv->show==fv->filled && fv->show->pixelsize==120);
++	    mi->ti.disabled = fv->sf->onlybitmaps && fv->show!=fv->filled;
++	  break;
++	  case MID_200:
++	    mi->ti.checked = (fv->show!=NULL && fv->show==fv->filled && fv->show->pixelsize==200);
++	    mi->ti.disabled = fv->sf->onlybitmaps && fv->show!=fv->filled;
++	  break;
+ 	  case MID_AntiAlias:
+ 	    mi->ti.checked = (fv->show!=NULL && fv->show->clut!=NULL);
+ 	    mi->ti.disabled = fv->sf->onlybitmaps && fv->show!=fv->filled;
+@@ -8049,6 +8076,24 @@
  	if ( index<0 ) index = 9;
  	if ( script_filenames[index]!=NULL )
  	    ExecuteScriptFile(fv,script_filenames[index]);
@@ -2038,7 +2097,7 @@
      } else if ( event->u.chr.keysym == GK_Left ||
  	    event->u.chr.keysym == GK_Tab ||
  	    event->u.chr.keysym == GK_BackTab ||
-@@ -9212,6 +9237,10 @@
+@@ -9212,6 +9257,10 @@
  	sf = SFFromMF(fullname);
      } else if ( strmatch(fullname+strlen(fullname)-3, ".ik")==0 ) {
  	sf = SFReadIkarus(fullname);
@@ -2049,7 +2108,7 @@
      } else {
  	sf = SFReadMacBinary(fullname,0);
      }
-@@ -9317,7 +9346,11 @@
+@@ -9317,7 +9366,11 @@
      FontView *fv;
      SplineFont *sf;
      char *pt, *ept, *tobefreed1=NULL, *tobefreed2=NULL;
@@ -2083,8 +2142,18 @@
  		char *temp=cu_copy(ret);
  #if defined(FONTFORGE_CONFIG_GDRAW)
 --- fontforge/nomen-en.c.orig	Wed May  4 09:35:41 2005
-+++ fontforge/nomen-en.c	Wed May 11 15:44:09 2005
-@@ -3738,3 +3738,36 @@
++++ fontforge/nomen-en.c	Tue May 17 12:09:53 2005
+@@ -453,6 +453,9 @@
+ static unichar_t mnemonic_72[] = '7';
+ static char str_96[] = "96 pixel outline";
+ static unichar_t mnemonic_96[] = '9';
++static char str_120[] = "120 pixel outline";
++static unichar_t mnemonic_120[] = '8';
++static char str_200[] = "200 pixel outline";
+ static char str_Antialias[] = "Anti Alias";
+ static unichar_t mnemonic_Antialias[] = 'A';
+ static char str_LinearB = "Linear B";
+@@ -3738,3 +3741,36 @@
  
  static int num_buttonsize = 55;
  static int num_ScaleFactor = 100;
@@ -2122,8 +2191,18 @@
 +static char *str_SkelExportFailedPopup = "Failed to export skeleton, because\n%s needs %d points but there are %d";
 +#endif
 --- fontforge/nomen-ja.c.orig	Wed May  4 11:37:27 2005
-+++ fontforge/nomen-ja.c	Wed May 11 15:42:55 2005
-@@ -3734,3 +3734,36 @@
++++ fontforge/nomen-ja.c	Tue May 17 12:09:53 2005
+@@ -453,6 +453,9 @@
+ static unichar_t mnemonic_72[] = '7';
+ static char str_96[] = "96 pixel outline";
+ static unichar_t mnemonic_96[] = '9';
++static char str_120[] = "120 pixel outline";
++static unichar_t mnemonic_120[] = '8';
++static char str_200[] = "200 pixel outline";
+ static char str_Antialias[] = "アンチエイリアス(A)";
+ static unichar_t mnemonic_Antialias[] = 'A';
+ static char str_FitToEm[] = "表示を全角に固定(F)";
+@@ -3734,3 +3737,36 @@
  static int num_buttonsize = 80;
  static int num_ScaleFactor = 115;
  /* based on nomen-en.c:1.90 */
