@@ -888,3 +888,29 @@
   (do ((l (oblist) (cdr l)))
     ((atom l))
     (remprop (car l) 'prim)))
+;
+; 漢字定義が依存する部品名とその定義自身の部品名をリストアップする。
+;
+(defun kanjiusage (def)
+  (remove-duplicates
+   (cond ((primitivep def)
+	  (list def))
+	 ((symbolp def)
+	  (append (kanjiusage (eval def)) (list def)))
+	 ((memq (car def) '(xscale yscale))
+	  (kanjiusage (caddr def)))
+	 ((eq (car def) 'joint)
+	  (mappend #'kanjiusage (eval (third def))))
+	 (t
+	  (mapcan #'kanjiusage (cdr def))))))
+;
+; 与えられたシンボルがプリミティブとして定義されているかどうか
+(defun primitivep (def)
+  (and (symbolp def)
+       (let ((expanded (eval def)))
+	 (and (listp expanded)
+	      (listp (car expanded))
+	      (listp (caar expanded))
+	      (numberp (caaar expanded))))))
+
+
