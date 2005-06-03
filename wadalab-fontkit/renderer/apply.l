@@ -855,7 +855,7 @@
     (do ((l list (cdr l))
 	 (ret))
       ((atom l))
-      (princ (string-append "; " (car l)) *terminal-io*) 
+      (princ (concatenate 'string "; " (car l)) *terminal-io*) 
       (format *terminal-io* "~%")
       (setq ret nil)
 ;      (let ((err:argument-type #'(lambda (x (y))(throw 'err)))
