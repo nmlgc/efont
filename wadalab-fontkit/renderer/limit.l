@@ -445,11 +445,12 @@
 (defun revconv (conv)
   (let* ((rmat (rmat conv))
 	 (ret (copy-seq rmat)))
-    (vset ret 4 (minus (+ (* (svref conv 4)(svref rmat 0))
-			  (* (svref conv 5)(svref rmat 1)))))
-    (vset ret 5 (minus (+ (* (svref conv 4)(svref rmat 2))
-			  (* (svref conv 5)(svref rmat 3)))))
-    ret))
+    (vector (svref rmat 0) (svref rmat 1)
+	    (svref rmat 2) (svref rmat 3)
+	    (minus (+ (* (svref conv 4)(svref rmat 0))
+		      (* (svref conv 5)(svref rmat 1))))
+	    (minus (+ (* (svref conv 4)(svref rmat 2))
+		      (* (svref conv 5)(svref rmat 3)))))))
 ;
 ;
 (defparameter delta 0.0)
