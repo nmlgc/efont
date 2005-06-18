@@ -483,14 +483,14 @@
 		    (list (car ts)))
 		   (t nil)))))))
 ;
-; aX^2+bX+c=0の解のリスト
+; aX^2+bX+c=0の実数解のリスト (重解も重複して挙げる)
 ;
 (defun equation2 (a b c)
   (cond ((zerop a)
-	 (list (/ b (- c))))
+	 (list (- (/ c b))))
 	(t
 	 (let* ((d (- (* b b)(* 4 a c)))
-		(sqrtd (and (not (minusp d))(sqrt (float d)))))
+		(sqrtd (and (not (minusp d))(sqrt d))))
 	   (cond (sqrtd
 		  (list (/ (+ sqrtd b) -2.0 a)
 			(/ (- sqrtd b) 2.0 a)))
