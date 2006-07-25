@@ -484,7 +484,7 @@
 (setq 1-52-55 '(yoko いとへん 肅))
 (setq 1-52-56 '(yoko いとへん 貴))
 (setq 1-52-57 '(yoko いとへん 喜))
-(setq 1-52-58 '(tate (yoko 車凵 るまた) 手))
+(setq 1-52-58 '(tate (yoko 車凵 るまた) 糸))
 (setq 1-52-59 '(yoko いとへん 一田一田一))
 (setq 1-52-60 '(yoko いとへん 圜の中))
 (setq 1-52-61 '(yoko いとへん (yoko 白方 のぶん)))
