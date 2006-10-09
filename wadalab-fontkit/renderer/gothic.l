@@ -40,6 +40,15 @@
       ((angle .,(diff2 p1 l1))
        (angle .,(diff2 p2 l1))))))
 ;
+(defun gothic2v (p1 p2 w1 w2)
+  (let* ((p12 (diff2 p2 p1))
+	 (l1 (normlen2 w1 (rot270 p12)))
+	 (l2 (normlen2 w2 (rot270 p12))))
+    `(((angle .,(plus2 p1 l1))
+       (angle .,(plus2 p2 l2)))
+      ((angle .,(diff2 p1 l1))
+       (angle .,(diff2 p2 l2))))))
+;
 ; flection : カーブ中間部の折れ曲がりのきつさを表すパラメータ。METAFONT の tension の逆とも言える。
 ; flare : (払いの先端が) 末広がりになる度合のパラメータ。1.0 より大きいと先端部がラッパ状になる。
 ; right-curvature: カーブの中間部で、進行方向右側 (左払いではカーブの内側、右払いでは外側) の
@@ -128,7 +137,7 @@
        (angle .,b3)))))
 
 ;
-(defkazari gothic ((hidari tasuki magaritate) 0 (hidari tasuki magaritate) 1)
+(defkazari gothic ((tasuki magaritate) 0 (tasuki magaritate) 1)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -149,8 +158,8 @@
 ; 2004050: 縦画の打ち込みを水平に近くしてみた。(垂直方向≒75%, 水平≒90%)
 ; オリジナルは上の定義を参照のこと。
 ;
-(defkazari gothic ((tate tatehidari tatehane kokoro) 0 
-	    (tate tatehidari tatehane kokoro) 1)
+(defkazari gothic ((hidari tate tatehidari tatehane kokoro) 0 
+	    (hidari tate tatehidari tatehane kokoro) 1)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -160,13 +169,13 @@
 	 (sintheta (* 0.5 (car d0))))
   `((angle .,p0)
     (bezier .,
-     (plus2 p1 (normlen2 (+ (* len 0.12)(* 0.9 len sintheta)) (diff2 p3 p1))
-	    (normlen2 (* len 0.5) (diff2 p1 p0))))
+     (plus2 p1 (normlen2 (+ (* len 0.1)(* 0.9 len sintheta)) (diff2 p3 p1))
+	    (normlen2 (* len 0.42) (diff2 p1 p0))))
     (bezier .,
-     (plus2 p1 (normlen2 (+ (* len 0.38)(* 1.35 len sintheta)) (diff2 p3 p1))
-	    (normlen2 (* len 0.5) (diff2 p1 p0))))
+     (plus2 p1 (normlen2 (+ (* len 0.28)(* 1.35 len sintheta)) (diff2 p3 p1))
+	    (normlen2 (* len 0.42) (diff2 p1 p0))))
     (angle .,
-     (plus2 p1 (normlen2 (+ (* len 0.55)(* len sintheta)) (diff2 p3 p1)))))))
+     (plus2 p1 (normlen2 (+ (* len 0.45)(* len sintheta)) (diff2 p3 p1)))))))
 ;
 (defkazari gothic ((tatehane) 0 
 	    (tatehane) 1)
@@ -340,7 +349,7 @@
 	 (p2 (caddr points))
 	 (p3 (cadddr points))
 	 (w local_gothicwidth)
-	 (l0 (gothic2 p0 p1 w))
+	 (l0 (gothic2v p0 p1 (* w 1.03) w))
 	 (l1 (gothic3 p1 p2 p3 w)))
     `(,(nconc (car l0) (cdar l1))
       ,(nconc (cadr l0) (cdadr l1)))))
@@ -618,14 +627,14 @@
 
 (defun insert-width (elem width)
   (or (assq 'widthratio (cddr elem))
-     (append elem `((widthratio .,(/ width gothicwidth))))))
+      (append elem `((widthratio .,(/ width gothicwidth))))))
 
 (defun gothic-prim (prim)
   (let* ((prim (rm-geta prim 30.0))
 	 (points (car prim))
 	 (elements (cadr prim))
-	 (alist (cddr prim))
 	 (elements-with-width)
+	 (alist (cddr prim))
 	 (origunits (units prim))
 	 (units (units 
 		 `(,points ,elements 
