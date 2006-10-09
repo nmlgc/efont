@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2005
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -618,13 +618,14 @@
 
 (defun insert-width (elem width)
   (or (assq 'widthratio (cddr elem))
-      (rplacd (last elem) `((widthratio .,(/ width gothicwidth))))))
+     (append elem `((widthratio .,(/ width gothicwidth))))))
 
 (defun gothic-prim (prim)
   (let* ((prim (rm-geta prim 30.0))
 	 (points (car prim))
 	 (elements (cadr prim))
 	 (alist (cddr prim))
+	 (elements-with-width)
 	 (origunits (units prim))
 	 (units (units 
 		 `(,points ,elements 
@@ -635,10 +636,11 @@
 	 (width (min gothicwidth
 		     (* 0.16 (min (car origunits)(cdr origunits)(car units)(cdr units))))))
 ;    (break)
-    (mapc #'(lambda (elem) (insert-width elem width))
-	  elements)
-    
-    `(,points ,elements .,alist)))
+    (setq elements-with-width
+	  (mapcar #'(lambda (elem) (insert-width elem width))
+		  elements))
+
+    `(,points ,elements-with-width .,alist)))
 
 (deftypehook gothic
   (function gothic-prim))
