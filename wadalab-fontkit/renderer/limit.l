@@ -39,7 +39,7 @@
 ; 区間の表現
 ; -∞ = nil, +∞ = t, 閉端 = 実数, 左開端 = (> . 実数), 右開端 = (< . 実数)
 ; 単純区間は (左端 . 右端) のドット対で表す。区間は、1 個以上の単純区間で表す。
-; 空集合は nil で表す。(長さ 0 の開区間は不正なである)
+; 空集合は nil で表す。(長さ 0 の開区間は不正である)
 
 ; sの形
 ; 1.0, t(s>0のどんなsでもよい), nil(どんなsでも駄目)
@@ -71,10 +71,10 @@
 	 (let* ((aa (rm-eq a)) (bb (rm-eq b)))
 	   (cond ((< aa bb) t)
 		 ((> aa bb) nil)
-		 ((eq '> (eqsym aa)) nil)
-		 ((eq '> (eqsym bb)) t)
-		 ((eq '< (eqsym aa)) t)
-		 ((eq '< (eqsym bb)) nil))))))
+		 ((eq '> (eqsym a)) nil)
+		 ((eq '> (eqsym b)) t)
+		 ((eq '< (eqsym a)) t)
+		 ((eq '< (eqsym b)) nil))))))
 
 (defun gt (a b)
   (cond ((null a) nil)
@@ -85,10 +85,10 @@
 	 (let* ((aa (rm-eq a))(bb (rm-eq b)))
 	   (cond ((< aa bb) nil)
 		 ((> aa bb) t)
-		 ((eq '> (eqsym aa)) t)
-		 ((eq '> (eqsym bb)) nil)
-		 ((eq '< (eqsym aa)) nil)
-		 ((eq '< (eqsym bb)) t)
+		 ((eq '> (eqsym a)) t)
+		 ((eq '> (eqsym b)) nil)
+		 ((eq '< (eqsym a)) nil)
+		 ((eq '< (eqsym b)) t)
 		 (t))))))
 
 (defun orsection (s1 s2)
