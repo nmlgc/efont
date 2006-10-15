@@ -1,4 +1,4 @@
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -26,15 +26,37 @@
 ;
 ; $Id$
 
-(setq source-load t)
+(defvar source-load t)
 (setq *compile-progress* nil)
 (setq *compile-verbose* nil)
 (setq *compile-print* nil)
-(load "load.l")
-(mapc #'(lambda (file) (compile-file file :verbose nil :print nil :progress nil))
-      '("apply.l" "center.l" "compat.l" "gothic.l" "hiranew.l" "lib.l"
-	"limit.l" "limitrule.l" "maru.l" "mincho.l" "newjoint.l" "out2ps.l"
-	"out2sfd.l" "outline.l" "pack.l" "region.l" "sym.l" "transform.l" 
-	"type1.l" "unit.l" "yokosort.l"))
-	
+
+(load "compat.l")
+(load "lib.l")
+
+(defconstant binary-extension
+  (cond
+   ((equal (lisp-implementation-type) "CMU Common Lisp")
+    "x86f")
+   ((equal (lisp-implementation-type) "CLISP")
+    "fas")))
+
+(defun updated (file)
+  (let ((binary-file (concatenate 'string
+				  "./"
+				  (subseq file 0 (1- (length file)))
+				  binary-extension)))
+    (or (null (probe-file binary-file))
+	(> (file-write-date file) (file-write-date binary-file)))))
+
+(defun compile-file-if-updated (file)
+  (and (updated file)
+       (compile-file file :verbose nil :print nil :progress nil)))
+
+(mapcar #'compile-file-if-updated
+   '("compat.l" "lib.l" "pack.l" "yokosort.l" "mincho.l" "apply.l" "sym.l"
+     "type1.l" "gothic.l" "newjoint.l" "center.l" "hiranew.l" "limit.l"
+     "limitrule.l" "unit.l" "transform.l" "maru.l" "region.l" "out2ps.l"
+     "out2sfd.l" "outline.l"))
+
 (quit)
