@@ -472,9 +472,9 @@
 	   nil)
 	  (t
 	   (let* ((rmat (rmat mat))
-		  (rconv (svref rmat 0) (svref rmat 1)
-			 (svref rmat 2) (svref rmat 3)
-			 0 0)
+		  (rconv (vector (svref rmat 0) (svref rmat 1)
+				 (svref rmat 2) (svref rmat 3)
+				 0 0))
 		  (bp (diff2 b p))
 		  (ts))
 	     (setq ts (affine bp rconv))
