@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,9 @@
      "region.l"
      "out2ps.l"
      "out2sfd.l"
-     "outline.l")))
+     "outline.l"
+     "interpol.l"
+     "mincho2.l")))
  (cond (source-load
 	(mapc #'(lambda (file) 
 		  (load (concatenate 'string base-directory "/" file)))

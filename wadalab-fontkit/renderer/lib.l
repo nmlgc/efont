@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -282,14 +282,36 @@
 		      half))
 	  outline))
 ;
-; 線分 s を d に移すような変換行列を作成する
+; 線分 s を d に移すような変換行列を作成する。
 ; mincho1 でしか使用されていない。
 ;
 (defun type1-trans (s0x s0y s1x s1y d0x d0y d1x d1y ratio)
   (let* ((slen (metric2 (list s0x s0y)(list s1x s1y)))
 	 (dlen (metric2 (list d0x d0y)(list d1x d1y)))
 	 (a (/ dlen slen))
-	 (b ratio)
+	 (b ratio) ;; d に垂直な方向の拡大率 (水平方向と独立に指定)
+	 (costheta (/ (- s1x s0x) slen))
+	 (sintheta (minus (/ (- s1y s0y) slen)))
+	 (offx (- (* costheta s0x) (* sintheta s0y)))
+	 (offy (+ (* sintheta s0x) (* costheta s0y)))
+	 (cosphi (/ (- d1x d0x) dlen))
+	 (sinphi (/ (- d1y d0y) dlen)))
+    (vector (-     (* a costheta cosphi) (* b sintheta sinphi))
+	    (+     (* a costheta sinphi) (* b sintheta cosphi))
+	    (- 0.0 (* a sintheta cosphi) (* b costheta sinphi))
+	    (-     (* b costheta cosphi) (* a sintheta sinphi))
+	    (+ d0x (minus (* a cosphi offx)) (* b sinphi offy))
+	    (- d0y        (* a sinphi offx)  (* b cosphi offy)))))
+;
+; 線分 s を d に移すような変換行列を作成する。
+; type1-trans と違い、d に垂直な方向の拡大・縮小率を水平方向との
+; 相対値で指定する (vscale = 1 の時、歪みなしに拡縮 & 回転 & 平行移動)
+;
+(defun superpose-trans (s0x s0y s1x s1y d0x d0y d1x d1y vscale)
+  (let* ((slen (metric2 (list s0x s0y)(list s1x s1y)))
+	 (dlen (metric2 (list d0x d0y)(list d1x d1y)))
+	 (a (/ dlen slen))
+	 (b (* a vscale))
 	 (costheta (/ (- s1x s0x) slen))
 	 (sintheta (minus (/ (- s1y s0y) slen)))
 	 (offx (- (* costheta s0x) (* sintheta s0y)))
