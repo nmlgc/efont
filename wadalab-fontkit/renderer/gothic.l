@@ -475,8 +475,13 @@
 	 (out4 (cond (p21 (gothiccurve p21 p2 p23 w))
 		     (t (gothiccurve p12 p2 p23 w))))
 	 (out5 (gothic2 p23 p3 w)))
-    `(,(nconc (car out1)(cdar out2)(cdar out3)(cdar out4)(cdar out5))
-      ,(nconc (cadr out1)(cdadr out2)(cdadr out3)(cdadr out4)(cdadr out5)))))
+    (cond 
+     (p21
+      `(,(nconc (car out1)(cdar out2)(cdar out3)(cdar out4)(cdar out5))
+	,(nconc (cadr out1)(cdadr out2)(cdadr out3)(cdadr out4)(cdadr out5))))
+     (t
+      `(,(nconc (car out1)(cdar out2)(cdar out4)(cdar out5))
+	,(nconc (cadr out1)(cdadr out2)(cdadr out4)(cdadr out5)))))))
 ;
 ; ¤¿¤¹¤­
 ;
@@ -528,8 +533,9 @@
        	 (p12 (cond ((< w2 (metric2 p2 p1))
 		     (plus2 p1 (normlen2 w2 (diff2 p2 p1))))
 		    (t (inter2 p1 p2 0.9))))
-	 (out1 (cond ((not (eq p0 p10)) (gothic2 p0 p10 w))(t '(nil nil))))
 	 (out2 (gothiccurve p10 p1 p12 w circle-ratio))
+	 (out1 (cond ((not (eq p0 p10)) (gothic2 p0 p10 w))
+		     (t `((,(caar out2)) (,(caadr out2))))))
 	 (out3 (gothic2 p12 p2 w)))
     `(,(nconc (car out1)(cdar out2)(cdar out3))
       ,(nconc (cadr out1)(cdadr out2)(cdadr out3)))))
