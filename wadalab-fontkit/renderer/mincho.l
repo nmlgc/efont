@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -51,8 +51,8 @@
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
 	 (p3 (svref cross 3)))
-    `((angle .,(inter2 p0 p2 0.5))
-      (angle .,(inter2 p1 p3 -0.5)))))
+    `((angle .,(inter2 p0 p2 0.3))
+      (angle .,(inter2 p1 p3 -0.3)))))
 ;
 (defkazari mincho ((migi shin-nyuu) 0 (migi shin-nyuu) 1)
   (let* ((p0 (svref cross 0))
@@ -258,7 +258,7 @@
       (bezier .,p5)
       (angle .,p2)      )))
 ;
-(defkazari mincho ((tate magaritate) 3 yoko 2)
+(defkazari mincho (magaritate 3 yoko 2)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -374,28 +374,9 @@
     (mincho1 
      p0
      p1
-;; これがオリジナル
      '((80 171 136 255)
        ((angle 80 171)(bezier 119 214)(bezier 104 256)(angle 136 255))
        ((angle 80 171)(bezier 155 204)(bezier 173 251)(angle 136 255)))
-#|
-;; 「痙」でエラーが発生する原因となるので封印
-	 ; 細いのでデザインやり直し
-     (if (< (metric2 p0 p1) 120)
-         '((158 162 223 247)
-	   ((angle 158 162) (angle 159 161) (bezier 184 172) (bezier 200 182)
-	    (angle 215 199) (bezier 225 211) (bezier 237 237) (angle 223 247))
-	   ((angle 158 162) (angle 152 163) (bezier 170 178) (bezier 180 193)
-	    (angle 190 213) (bezier 194 222) (bezier 202 252) (angle 218 247)))
-       '((55 137 280 330)
-	 ((angle 55 137) (angle 55 143) (bezier 91 167) (bezier 131 196) 
-	  (angle 163 222) (bezier 187 245) (bezier 217 276) 
-	  (angle 232 305) (bezier 238 318) (bezier 262 346) (angle 280 330))
-	 ((angle 55 137) (angle 61 136) (bezier 107 154) (bezier 149 178)
-	  (angle 187 203) (bezier 219 224) (bezier 257 254)
-	  (angle 267 272) (bezier 289 300) (bezier 292 320) (angle 280 330)))
-       )
-|#
      (cond ((< (* 3.0 w) len)
 	    (/ w 20.0))
 	   (t (/ len 60.0))))))
