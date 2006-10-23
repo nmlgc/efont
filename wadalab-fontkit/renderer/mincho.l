@@ -45,7 +45,11 @@
 ; ライブラリを load する
 ;(or (boundp 'kanjilib) (load "lib.l"))
 
-;
+; defkazari の引数
+;	 (x 0 x 1) : x の始点   0 -> 1 の順に線を引く。
+;	 (x 2 x 3) : x の終点   2 -> 3 の順。
+; ┌ (縦,横の順)
+;        (x 
 (defkazari mincho (yoko 0 yoko 1)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
@@ -258,7 +262,7 @@
       (bezier .,p5)
       (angle .,p2)      )))
 ;
-(defkazari mincho (magaritate 3 yoko 2)
+(defkazari mincho ((tate magaritate) 3 yoko 2)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -266,10 +270,12 @@
 	 (len (metric2 p0 p2))
 	 (p4 (plus2 p0 (normlen2 len (diff2 p0 p1))))
 	 (p5 (plus2 p2 (normlen2 len (diff2 p2 p3)))))
+; 裏返しだった
     `((angle .,(inter2 p2 p3 0.1))
       (bezier .,p5)
       (bezier .,p4)
       (angle .,p0))))
+
 ;
 #|
 (defkazari mincho (kozato 2 kozato 3)
