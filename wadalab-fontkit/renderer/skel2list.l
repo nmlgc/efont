@@ -367,12 +367,22 @@
      ret))))
 
 ;
+; plistにfonttypeがあるときはそちらの定義を
+; そうで無いときはsymbol valueを参照する
+;
+(defun get-def (symbol fonttype)
+  (do ((l fonttype (get l 'parent))(def))
+    ((null l)
+     (and (boundp symbol)(eval symbol)))
+    (and (setq def (get symbol l))(return def))))
+
+;
 ; メンバーかどうか
 ;
 (defun eq_member (l pat)
   (cond ((eq pat '*) t)
 	((atom pat) (eq l pat))
-	(t (memeq l pat))))
+	(t (memq l pat))))
 
 ;
 ; pointsのn番目を取り，floatに変換する
