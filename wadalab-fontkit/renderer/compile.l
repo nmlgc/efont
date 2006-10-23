@@ -54,9 +54,9 @@
        (compile-file file :verbose nil :print nil :progress nil)))
 
 (mapcar #'compile-file-if-updated
-   '("compat.l" "lib.l" "pack.l" "yokosort.l" "mincho.l" "apply.l" "sym.l"
-     "type1.l" "gothic.l" "newjoint.l" "center.l" "hiranew.l" "limit.l"
-     "limitrule.l" "unit.l" "transform.l" "maru.l" "region.l" "out2ps.l"
-     "out2sfd.l" "outline.l" "interpol.l" "mincho2.l"))
+   '("compat.l" "lib.l" "pack.l" "yokosort.l" "mincho.l" "apply.l"
+     "skel2list.l" "sym.l" "type1.l" "gothic.l" "newjoint.l" "center.l" 
+     "hiranew.l" "limit.l" "limitrule.l" "unit.l" "transform.l" "maru.l" 
+     "region.l" "out2ps.l" "out2sfd.l" "outline.l" "interpol.l" "mincho2.l"))
 
 (quit)

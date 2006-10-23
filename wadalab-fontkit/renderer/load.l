@@ -42,6 +42,7 @@
      "yokosort.l"
      "mincho.l"
      "apply.l"
+     "skel2list.l"
      "sym.l"
      "type1.l"
      "gothic.l"
