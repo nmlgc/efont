@@ -78,30 +78,30 @@
 			(t "l")))))
 		 source-files))))
 ;
-; $B$R$i$,$J$NI}(B
+; ¤Ò¤é¤¬¤Ê¤ÎÉý
 ;
 (setq *default-hirawidth* 8)
 ;
-; $BL@D+BN(B(mincho.l)
+; ÌÀÄ«ÂÎ(mincho.l)
 ;
 
-; $BL@D+BN$N=DK@$NI}(B
+; ÌÀÄ«ÂÎ¤Î½ÄËÀ¤ÎÉý
 (setq minchowidth 8)
-; $BL@D+BN$N=DK@$KBP$9$k2#K@$NHfN((B
+; ÌÀÄ«ÂÎ¤Î½ÄËÀ¤ËÂÐ¤¹¤ë²£ËÀ¤ÎÈæÎ¨
 (setq tateyokoratio 0.4)
-; $B%G%6%$%s%5%$%:$KBP$9$kI}$N3HBgN((B
+; ¥Ç¥¶¥¤¥ó¥µ¥¤¥º¤ËÂÐ¤¹¤ëÉý¤Î³ÈÂçÎ¨
 (setq hirawidth 0.6)
-; $B=DK@$N;OE@$N>~$j(B
+; ½ÄËÀ¤Î»ÏÅÀ¤Î¾þ¤ê
 (setq tatekazari 1.5) 
-; $B2#@~$N;_$a$N=D@~$KBP$9$kHf(B
+; ²£Àþ¤Î»ß¤á¤Î½ÄÀþ¤ËÂÐ¤¹¤ëÈæ
 (setq tomeheight 1.8)
-; $B=DK@$H2#K@$N8rE@$N>~$j(B
+; ½ÄËÀ¤È²£ËÀ¤Î¸òÅÀ¤Î¾þ¤ê
 (setq kazariheight 1.4)
-; $B%G%U%)%k%H$N(Bmeshsize$B$r==J,>.$5$/$9$k$H32$,$J$$(B. 
+; ¥Ç¥Õ¥©¥ë¥È¤Îmeshsize¤ò½½Ê¬¾®¤µ¤¯¤¹¤ë¤È³²¤¬¤Ê¤¤. 
 ;(setq meshsize 6.618290) 
 (setq meshsize 0.01)
 
 ;
-; $B%4%7%C%/BN(B(gothic.l, maru.l)
+; ¥´¥·¥Ã¥¯ÂÎ(gothic.l, maru.l)
 ;
 (setq gothicwidth 13.0)
