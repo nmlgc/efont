@@ -30,6 +30,27 @@
 ; $Id$
 
 ;
+; plistにfonttypeがあるときはそちらの定義を
+; そうで無いときはsymbol valueを参照する
+;
+(defun get-def (symbol fonttype)
+  (do ((l fonttype (get l 'parent))(def))
+    ((null l)
+     (and (boundp symbol)(eval symbol)))
+    (and (setq def (get symbol l))(return def))))
+
+;
+; points全体をfloatに変換する
+;
+(defun floatlist (list)
+  (mapcar #'(lambda (x) `(,(float (car x)) ,(float (cadr x)) . ,(cddr x)))
+	  list))
+;
+; 見てのとおり
+;
+(defun appendrev (a b) (append a (reverse b)))
+
+;
 ; スケルトンからアウトラインへの変換を行なう
 ;
 
@@ -37,10 +58,40 @@
 ; 各点の周りに集まる線を網羅したデータ構造 linkpoints と、スケルトンの
 ; 各ラインに太さに応じて肉付けした結果を束ねただけの linelistを構築する
 ;
+; この関数が終了した時点で、linkpoints のデータ構造は以下のような形をしている。
+; LINK と LINES は固定のキーワード。同一の LINES リストは linkpoints の中に
+; 2 回 (途中にリンク点を持つ場合は 3 回以上) 出現する (同一の cons セル)。
+; また、linelist も LINES を共有している
+;
+;                              == 例 ==
+; ((2  ; 点番号(降順)
+;   (LINK
+;    (yoko 1 ; 0=始端, 1=終端, 2=途中を表す 
+;     (LINES <-----------------------------------------------------+
+;      (((ANGLE x座標 y座標) … (ANGLE 〜 〜)) ; 中心線の右側の線  |
+;       ((ANGLE 〜 〜) … (ANGLE 〜 〜))       ; 中心線の左側の線  |
+;      ; ここに kazari 曲線などが挿入される                        |
+;     ))))                                                         |
+;  (1                                                              |
+;   (LINK                                                          |  
+;    (tate 1                                                       |
+;     (LINES ; <--------------------------------------------+      +--これらは
+;      (((ANGLE 〜 〜) … (ANGLE 〜 〜))                    |      |  それぞれ
+;       ((ANGLE 〜 〜) … (ANGLE 〜 〜))))))                +-------- eq な
+;  (0                                                       |      |  cons セル
+;   (LINK                                                   |      |
+;    (yoko 0 ;                                              |      |
+;     (LINES ; <--------------------------------------------|------+
+;      ((右側の線の点リスト) (左側の線の点リスト))))        |
+;    (tate 0                                                |
+;     (LINES; <---------------------------------------------+
+;      ((右側の線の点リスト) (左側の線の点リスト)))))))
+;    
+;
 (defun setup-linkpoints (points lines tag)
   (let ((linkpoints nil) (linelist nil)
 	(part nil)(type nil)(cpoint nil)(lpoint nil)(partpoint nil)
-	(widthratio nil)(flag nil)(link nil)(part1 nil)(part2 nil)
+	(widthratio nil)(flag nil)(link nil)
 	(tmpline nil))
 
     ; linkpointsの初期化: ((2 (link)) (1 (link)) (0 (link))) のようになる。
@@ -68,12 +119,11 @@
       (setq widthratio (cdr (or (assq 'widthratio (cddr part))
 				'(widthratio . 1.0))))
       (setq local_gothicwidth (* gothicwidth widthratio))
-      (setq local_minchcwidth (* minchowidth widthratio))
+      (setq local_minchowidth (* minchowidth widthratio))
 
       ; partpoint に、ストロークを構成する点の座標を順に並べたリストを格納
       (do ((lll cpoint (cdr lll)))
 	((atom lll))
-;	(push (point-n  (car lll) points) partpoint)
 	(push (nth (car lll) points) partpoint))
       (setq partpoint (nreverse partpoint))
       ; ストロークに (defelement で定義された) 肉付け関数を適用する
@@ -106,86 +156,58 @@
 	(setq link (assq 'link (cdr (assq (car lll) linkpoints))))
 	(rplacd link (cons (list type 2 tmpline) (cdr link)))))
 
-    (list linkpoints linelist)
-))
+    (list linkpoints linelist)))
 
 ;
-; スケルトンへの肉付けを行う
+; 3 本の線が 1 点で出会う所 (「しんにゅう」の左下) にできる三角形を追加する
+; link を介し、linkpoints および linelist を破壊的に書き換える。
 ;
-;   l: (展開済みの)スケルトン定義
-;   tag: 書体名 ('mincho, 'gothic, 'maru)
-;
-(defun skeleton2list (l tag)
-  ; 仮想的なエレメント xlimit, ylimitを取り除く
-;  (setq l (rm-limit l))
-  ; 書体固有のスケルトン変形関数が定義されている場合は呼び出す
-  (let ((func (get-def 'typehook tag)))
-    (and func (setq l (funcall func l))))
-  (let ((linkpoints nil)
-	(linelist nil)
-	(outline nil)
-	(points (floatlist(car l)))
-	(tmpline nil)(type3 nil)
-	(type1 nil)(type2 nil)(cross nil)(kazari nil)(part3 nil)
-	(lines (cadr l)))
-
-    ; linkpoints を構築する
-    (let ((ret (setup-linkpoints points lines tag)))
-      (setq linkpoints (car ret) linelist (cadr ret)))
-
-    ; 線端に「飾り」をつける処理を行う。
-    ; ある点に 2 本の線が集まる場合を典型的なケースとして処理する。
-    ; 
-    (do ((ll linkpoints (cdr ll)))
-      ((atom ll))
-      (setq link (assq 'link (cdar ll)))
-      (cond 
-       ((eq 4 (length link)) ; 3本のストロークが集まる点
-	(setq part1 (second link) part2 (third link) part3 (fourth link))
-	(setq type1 (cadr part1) type2 (cadr part2) type3 (cadr part3))
-	(and (memq type1 '(0 1))(memq type2 '(0 1))(memq type3 '(0 1))
-	     (let* ((ass1 (assq 'lines (cddr part1)))
-		    (lines1 (second ass1))
-		    (line10 (case type1
+(defun kazari-joint3 (link)
+  (let* ((part1 (second link)) (part2 (third link)) (part3 (fourth link))
+	 (type1 (cadr part1))  (type2 (cadr part2)) (type3 (cadr part3)))
+    (and (memq type1 '(0 1))(memq type2 '(0 1))(memq type3 '(0 1))
+	 (let* ((ass1 (assq 'lines (cddr part1)))
+		(lines1 (second ass1))
+		(line10 (case type1
 			      (0 (first lines1))
 			      (1 (reverse (second lines1)))))
-		    (line11 (case type1
+		(line11 (case type1
 			      (0 (second lines1))
 			      (1 (reverse (first lines1)))))
-		    (dir1 (diff2 (cdr (second line10))
-				 (cdr (first line10))))
-		    (ass2 (assq 'lines (cddr part2)))
-		    (lines2 (second ass2))
-		    (line20 (case type2
+		(dir1 (diff2 (cdr (second line10))
+			     (cdr (first line10))))
+		(ass2 (assq 'lines (cddr part2)))
+		(lines2 (second ass2))
+		(line20 (case type2
 			      (0 (first lines2))
 			      (1 (reverse (second lines2)))))
-		    (line21 (case type2
+		(line21 (case type2
 			      (0 (second lines2))
 			      (1 (reverse (first lines2)))))
-		    (dir2 (diff2 (cdr (second line20))
-				 (cdr (first line20))))
-		    (ass3 (assq 'lines (cddr part3)))
-		    (lines3 (second ass3))
-		    (line30 (case type3
+		(dir2 (diff2 (cdr (second line20))
+			     (cdr (first line20))))
+		(ass3 (assq 'lines (cddr part3)))
+		(lines3 (second ass3))
+		(line30 (case type3
 			      (0 (first lines3))
 			      (1 (reverse (second lines3)))))
-		    (line31 (case type3
+		(line31 (case type3
 			      (0 (second lines3))
 			      (1 (reverse (first lines3)))))
-		    (dir3 (diff2 (cdr (second line30))
-				 (cdr (first line30))))
-		    (theta12 (theta dir2 dir1))
-		    (theta12 (cond ((minusp theta12)
-				    (+ theta12 (* 2 3.14159265)))
-				   (t theta12)))
-		    (theta13 (theta dir3 dir1))
-		    (theta13 (cond ((minusp theta13)
-				    (+ theta13 (* 2 3.14159265)))
-				   (t theta13)))
-		    (next1 (cond ((< theta12 theta13)
-				  2)
-				 (t 3)))
-		    (linesall (case next1
+		(dir3 (diff2 (cdr (second line30))
+			     (cdr (first line30))))
+		(theta12 (theta dir2 dir1))
+		(theta12 (cond ((minusp theta12)
+				(+ theta12 (* 2 3.14159265)))
+			       (t theta12)))
+		(theta13 (theta dir3 dir1))
+		(theta13 (cond ((minusp theta13)
+				(+ theta13 (* 2 3.14159265)))
+			       (t theta13)))
+		(next1 (cond ((< theta12 theta13)
+			      2)
+			     (t 3)))
+		(linesall (case next1
 				(2
 				 `(((,line11 ,line20)
 				    ((,type1 ,ass1)(,type2 ,ass2)))
@@ -202,122 +224,191 @@
 				   ((,line21 ,line10)
 				    ((,type2 ,ass2)
 				     (,type1 ,ass1)))))))
-)
-	       (do ((l linesall (cdr l))
-		    (line0)(type0)(lines0)
-		    (line1)(type1)(lines1)(p)(plist)(flag1)(flag2))
-		 ((atom l)
-		  (setq plist (nreverse plist))
-		  (do ((ll plist (cdr ll))(i 0 (1+ i))
-		       (start (car plist))(maxlen)(len0)(max))
-		    ((atom (cdr ll))
-		     (setq len0 (metric2 (car ll) start))
-		     (and (> len0 maxlen)(setq max i))
-		     (setq max (rem (1+ max) 3))
-;		     (pprint max)
-;		     (pprint plist)
-;		     (pprint linesall)
-		     (setq type1 (car (first (second (nth max linesall)))))
-		     (setq lines1 (cadr (first (second (nth max linesall)))))
-		     (setq line1 `((angle .,(nth max plist))
-				   (angle .,(nth (rem (1+ max) 3) 
-						 plist))
-				   (angle .,(nth (rem (+ 2 max) 3) 
-						 plist))))
-		     (nconc lines1 `((,(- -1 type1)
-				      .,(cond ((zerop type1)
-					       (nreverse line1))
-					      (t line1))
-				      )))
-;		     (pprint `(,type1 ,lines1))
-		     )
-		    (setq len0 (metric2 (car ll) (cadr ll)))
-		    (and (or (null maxlen)(> len0 maxlen))
-			 (setq maxlen len0)(setq max i))))
-		 (setq line0 (first (caar l)) line1 (second (caar l)))
-		 (setq type1 (caar (cadar l)) lines1 (cadar (cadar l)))
-		 (setq type2 (caadr (cadar l)) lines2 (cadadr (cadar l)))
-		 (setq flag1 (cond ((equal type1 0) 1)
-				   (t 2)))
-		 (setq flag2 (cond ((equal type2 0) 0)
-				   (t 3)))
-		 (setq p (linecross line0 line1))
-		 (push p plist)
-;		 (pprint p)
-		 (nconc lines1 `((,flag1 .,p)))
-		 (nconc lines2 `((,flag2 .,p)))))))
-       ((eq 3 (length link))
-	(setq part1 (cadr link) part2 (caddr link))
-	(setq type1 (cadr part1) type2 (cadr part2))
-	(setq cross (crosspoint part1 part2))
-	(setq kazari
-	      (case type1
-		(1
-		 (case type2
-		   (1
-		    (appendrev
-		     (findkazari part1 part2 0 1 cross tag)
-		     (findkazari part1 part2 1 0 cross tag)))
-		   (0
-		    (appendrev
-		     (findkazari part1 part2 0 0 cross tag)
-		     (findkazari part1 part2 1 1 cross tag)))
-		   (2
-		    (find-last part1 part2))))
-		(0
-		 (case type2
-		   (1
-		    (appendrev
-		     (findkazari part1 part2 1 1 cross tag)
-		     (findkazari part1 part2 0 0 cross tag)))
-		   (0
-		    (appendrev
-		     (findkazari part1 part2 1 0 cross tag)
-		     (findkazari part1 part2 0 1 cross tag)))
-		   (2 
-		    (find-first part1 part2))))
-		(2 (case type2
-		     (0 (find-first part2 part1))
-		     (1 (find-last part2 part1))))))
-	(cond ((> (length kazari) 2) (push kazari outline)))
-	)
-       ((and (eq 2 (length link))(<= 0 (cadadr link) 1))
-	(setq part1 (cadr link))
-	(setq type1 (cadr part1))
-;	     (setq cross (cross2point part1 (point-n (caar ll) points)))
-	(setq cross (cross2point part1 (nth (caar ll) points)))
-	(setq kazari
-	      (findkazari part1 part1 0 1 cross tag))
-	(nconc (assq 'lines (cddr part1))
-	       (cons (cons (- -1 type1) kazari) nil)))))
+		)
+	   (do ((l linesall (cdr l))
+		(line0);(type0)(lines0)
+		(line1)(type1)(lines1)(p)(plist)(flag1)(flag2))
+	       ((atom l)
+		(setq plist (nreverse plist))
+	     (do ((ll plist (cdr ll))(i 0 (1+ i))
+		  (start (car plist))(maxlen)(len0)(max))
+		 ((atom (cdr ll))
+		  (setq len0 (metric2 (car ll) start))
+		  (and (> len0 maxlen)(setq max i))
+		  (setq max (rem (1+ max) 3))
+;		   (pprint max)
+;		   (pprint plist)
+;		   (pprint linesall)
+		  (setq type1 (car (first (second (nth max linesall)))))
+		  (setq lines1 (cadr (first (second (nth max linesall)))))
+		  (setq line1 `((angle .,(nth max plist))
+				(angle .,(nth (rem (1+ max) 3) 
+					      plist))
+				(angle .,(nth (rem (+ 2 max) 3) 
+					      plist))))
+		  (nconc lines1 `((,(- -1 type1)
+				   .,(cond ((zerop type1)
+					    (nreverse line1))
+					   (t line1))
+				   )))
+;		   (pprint `(,type1 ,lines1))
+		  )
+	       (setq len0 (metric2 (car ll) (cadr ll)))
+	       (and (or (null maxlen)(> len0 maxlen))
+		    (setq maxlen len0)(setq max i))))
+	       (setq line0 (first (caar l)) line1 (second (caar l)))
+	       (setq type1 (caar (cadar l)) lines1 (cadar (cadar l)))
+	       (setq type2 (caadr (cadar l)) lines2 (cadadr (cadar l)))
+	       (setq flag1 (cond ((equal type1 0) 1)
+				 (t 2)))
+	       (setq flag2 (cond ((equal type2 0) 0)
+				 (t 3)))
+	       (setq p (linecross line0 line1))
+	       (push p plist)
+;	      (pprint p)
+	       (nconc lines1 `((,flag1 .,p)))
+	       (nconc lines2 `((,flag2 .,p))))))))
 
+;
+; 2 本の線端同士が出会う角の外側につけられる「飾り」を計算する。
+; kazari-joint1, kazari-joint3 と異なり、linkpoints 等を破壊的に
+; 書き換えるのではなく、曲線を返り値として返す。
+; 
+(defun kazari-joint2 (link tag)
+  (let* ((part1 (cadr link)) (part2 (caddr link))
+	 (type1 (cadr part1))(type2 (cadr part2))
+	 (cross (crosspoint part1 part2)))
+    (case type1
+	  (1
+	   (case type2
+		 (1
+		  (appendrev
+		   (findkazari part1 part2 0 1 cross tag)
+		   (findkazari part1 part2 1 0 cross tag)))
+		 (0
+		  (appendrev
+		   (findkazari part1 part2 0 0 cross tag)
+		   (findkazari part1 part2 1 1 cross tag)))
+		 (2
+		  (find-last part1 part2))))
+	  (0
+	   (case type2
+		 (1
+		  (appendrev
+		   (findkazari part1 part2 1 1 cross tag)
+		   (findkazari part1 part2 0 0 cross tag)))
+		 (0
+		  (appendrev
+		   (findkazari part1 part2 1 0 cross tag)
+		   (findkazari part1 part2 0 1 cross tag)))
+		 (2
+		  (find-first part1 part2))))
+	  (2 (case type2
+		   (0 (find-first part2 part1))
+		   (1 (find-last part2 part1)))))))
+
+;
+; 独立した線端に飾りをつける。
+; ll を介して、linkpoints の LINK (LINES の後ろ) に書き込まれる
+;
+(defun kazari-joint1 (ll link points tag)
+  (let* ((part1 (cadr link))
+	 (type1 (cadr part1))
+	 (cross (cross-at-end part1 (nth (caar ll) points)))
+	 (kazari (findkazari part1 part1 0 1 cross tag)))
+    (nconc (assq 'lines (cddr part1))
+	   (cons (cons (- -1 type1) kazari) nil))))
+
+;
+; 全ての線端に「飾り」をつける (ただし、他の線に隠れる物を除く)
+;
+; 独立した (閉じた) 「飾り」アウトラインは outline に追加する
+; 2 本の線端をつなぐ、開いた「飾り」曲線は linkpoints に追加する
+;
+(defun add-kazari (linkpoints points outline tag)
+  (do ((ll linkpoints (cdr ll))
+       (link) (nlines))
+      ((atom ll) outline)
+    (setq link (assq 'link (cdar ll)))
+    (setq nlines (1- (length link))) ; 第 1 要素は常に `LINK' なので 1 を引く
+    (cond 
+     ((eq 3 nlines)
+      (kazari-joint3 link)) ; 3 つの線が作る三角形を linkpoints に挿入
+     ((eq 2 nlines)
+      (let ((kazari (kazari-joint2 link tag)))
+	(cond ((> (length kazari) 2) (push kazari outline)))))
+     ((and (eq 1 nlines)           ; その点に集まる線が 1 本しか無く、
+	   (<= 0 (cadadr link) 1)) ; 最初 (唯一) の点が線の端点 (0か1) の場合
+      (kazari-joint1 ll link points tag)))))
+
+;
+; スケルトンへの肉付けを行う
+;
+;   l: (展開済みの) スケルトン定義
+;   tag: 書体名 ('mincho, 'gothic, 'maru)
+;
+(defun skeleton2list (l tag)
+  ; 仮想的なエレメント xlimit, ylimitを取り除く
+;  (setq l (rm-limit l))
+  ; 書体固有のスケルトン変形関数が定義されている場合は呼び出す
+  (let ((func (get-def 'typehook tag)))
+    (and func (setq l (funcall func l))))
+  (let ((linkpoints nil)
+	(linelist nil)
+	(outline nil)
+	(points (floatlist(car l)))
+	(lines (cadr l)))
+
+    ; linkpoints (各点にどのLINESが集まるか) と linelist (LINES の一覧) を構築
+    ; 両者の (LINES ...) は同じオブジェクトを指している
+    (let ((ret (setup-linkpoints points lines tag)))
+      (setq linkpoints (car ret)
+	    linelist (cadr ret)))
+    ; 線端にkazari を付加する
+    ;; linkpoints を書き換える (同時に linelist も書き換わる)
+    (setq outline (add-kazari linkpoints points outline tag)) 
+
+    ; linelist の 2 本の線と 2 個の kazari (あれば) をつないで閉じたパスを作る
     (do ((ll linelist (cdr ll))
-	 (part0 nil)
-	 (part1 nil))
-      ((atom ll))
-      (setq part0 (car (cadar ll)))
-      (setq part1 (cadr (cadar ll)))
+	 (part0 nil) (part1 nil) (part2) (part3))
+	((atom ll))
+      (setq part0 (car (cadar ll)))	; 右側のライン (往路)
+      (setq part1 (cadr (cadar ll)))	; 左側のライン (復路)
       (setq part2 nil part3 nil)
 ;      (pprint (cddar ll))
       (do ((lll (cddar ll) (cdr lll)))
 	  ((atom lll))
 	  (case (caar lll)
+			; 終点側の橋渡しとなる kazari 
 		(-2 (setq part3 (cond ((cdar lll)(cddar lll)))))
+			; 始点側の橋渡しとなる kazari 
 		(-1 (setq part2 (cond ((cdar lll)(reverse (cddar lll))))))
+			; 往路の始点を再設定
 		(0 (setq part0 (change-head part0 (cdar lll))))
+			; 復路の始点を再設定
 		(1 (setq part1 (change-head part1 (cdar lll))))
+			; 往路の終点を再設定
 		(2 (setq part0 (change-tail part0 (cdar lll))))
+			; 復路の終点を再設定
 		(3 (setq part1 (change-tail part1 (cdar lll))))
 ;		   (t (pprint (caar lll)))
 		   ))
+      ; 左回りになるように結合 (SFD 書き出しの時に裏返すので右回りになる)
       (push (append part0 part3 (reverse part1) part2) outline))
 ;    (break)
   outline))
 
 ;
+; atm が pattern のメンバーかどうか
+;
+(defun eq_member (atm pattern)
+  (cond ((eq pattern '*) t)
+	((atom pattern) (eq atm pattern))
+	(t (memq atm pattern))))
+
+;
 ; 飾りのアウトラインを求める
 ;
-
 (defun findkazari (part1 part2 line1 line2 cross tag)
   (let*
    ((ret nil)
@@ -333,11 +424,11 @@
 	  (ll nil))
 	 ((atom l) ret)
 	 (setq ll (car l))
-	 (cond ((and (eq_member parttype1 (car ll))
-		     (eq_member line1 (cadr ll))
-		     (eq_member parttype2 (caddr ll))
-		     (eq_member line2 (cadddr ll)))
-		(setq ret (funcall (car (cddddr ll)) cross))
+	 (cond ((and (eq_member parttype1 (first ll))
+		     (eq_member line1 (second ll))
+		     (eq_member parttype2 (third ll))
+		     (eq_member line2 (fourth ll)))
+		(setq ret (funcall (fifth ll) cross))
 		(nconc (assq 'lines (cddr part1)) 
 		       (cons (cons line1 (cdr (car ret))) nil))
 		(nconc (assq 'lines (cddr part2)) 
@@ -365,41 +456,6 @@
      (nconc (assq 'lines (cddr part1)) (cons (cons line1 (cdar ret)) nil))
      (nconc (assq 'lines (cddr part2)) (cons (cons line2 (cdar ret)) nil))
      ret))))
-
-;
-; plistにfonttypeがあるときはそちらの定義を
-; そうで無いときはsymbol valueを参照する
-;
-(defun get-def (symbol fonttype)
-  (do ((l fonttype (get l 'parent))(def))
-    ((null l)
-     (and (boundp symbol)(eval symbol)))
-    (and (setq def (get symbol l))(return def))))
-
-;
-; メンバーかどうか
-;
-(defun eq_member (l pat)
-  (cond ((eq pat '*) t)
-	((atom pat) (eq l pat))
-	(t (memq l pat))))
-
-;
-; pointsのn番目を取り，floatに変換する
-;
-(defun point-n (n points)
-  (let ((point (nth n points)))
-    `(,(float (car point)),(float (cadr point)) .,(cddr point))))
-;
-; points全体をfloatに変換する
-;
-(defun floatlist (list)
-  (mapcar #'(lambda (x) `(,(float (car x)) ,(float (cadr x)) . ,(cddr x)))
-	  list))
-;
-; 見てのとおり
-;
-(defun appendrev (a b) (append a (reverse b)))
 
 ; 
 ; line0 と line1 の交点を求める。
@@ -614,7 +670,7 @@
 ; 始点を変更する
 ;
 (defun change-head (l c)
-  (let* ((first (car l))
+  (let* (;(first (car l))
 	 (second (cadr l)))
 ;    (print (list l c))
     (cond ((eq 'bezier (car second))
@@ -637,7 +693,7 @@
 	 (p1 (cdr (second l)))
 	 (p2 (cdr (third l)))
 	 (p3 (cdr (fourth l)))
-	 (dp0 (times2 3.0 (diff2 p1 p0)))
+	 ;(dp0 (times2 3.0 (diff2 p1 p0)))
 	 (dp3 (times2 3.0 (diff2 p3 p2)))
 	 (ret)
 	 (t1 (cond ((plusp (costheta (diff2 c p0)(diff2 p1 p0)))
@@ -694,6 +750,9 @@
 ;
 ; 2つのpartの間の点
 ;
+; part1 の進行方向に右側が 0 / 1, 左側が 2 / 3,
+; part2 の進行方向に右側が 0 / 2, 左側が 1 / 3.
+;
 (defun crosspoint (part1 part2)
   (let ((line0 (caadr (assq 'lines (cddr part1))))
 	(line1 (cadadr (assq 'lines (cddr part1))))
@@ -748,7 +807,7 @@
 	 (setq q0 (plus2 q1 (diff2 q3 q2))))
 	(t q0)))
 
-; crosspoint の単独バージョン。
+; crosspoint の単独バージョン (交差点でなく裸の線端に適用)。
 ;
 ; point は中心線の始端または終端。part への垂線の足 (ret[0],ret[1]) と、
 ; その他の 2 点 (ret[2],ret[3]; 線幅分だけ内側にある点) を返す。
@@ -758,7 +817,7 @@
 ;                    *------>                  ----->*
 ; 　　　　　　　　　[0] [2] 　　　　　　　　　　[2] [0]
 ;
-(defun cross2point (part1 point)
+(defun cross-at-end (part1 point)
   (let ((ret (make-array 4))
 	(line0 (caadr (assq 'lines (cddr part1))))
 	(line1 (cadadr (assq 'lines (cddr part1)))))
