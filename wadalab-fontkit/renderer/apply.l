@@ -131,3 +131,19 @@
 	      (listp (car expanded))
 	      (listp (caar expanded))
 	      (numberp (caaar expanded))))))
+
+;
+; EUC の漢字 1 文字から、16 進文字列の JIS コードを得る
+;
+; lisp/disp.l でしか使われていない。(未移植部分)
+; Unicode 化されている処理系 (clisp 等) では正しく動かない。
+;
+(defun euc2jis(str)
+  (let* ((len (length str))
+	 (newstr ""))
+    (do ((i 0 (1+ i)))
+      ((>= i len) newstr)
+      (setq newstr
+	    (concatenate 'string 
+			 newstr 
+			 (hex2 (logand 127 (char-int (char str i)))))))))
