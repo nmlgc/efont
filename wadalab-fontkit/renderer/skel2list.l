@@ -142,7 +142,7 @@
 	  ((atom lll))
 	  (cond ((zerop i)
 		 (setq flag 0))				; 最初の点
-		((atom (cdr lll));(eq i (1- npoint))
+		((atom (cdr lll))			; (eq i (1- npoint))
 		 (setq flag 1))				; 最後の点
 		(t (setq flag 2)))			; 中間点
 	  (setq link (assq 'link (cdr (assq (car lll) linkpoints))))
@@ -280,6 +280,8 @@
 		 (1
 		  (appendrev
 		   (findkazari part1 part2 0 1 cross tag)
+					  ;↑角に位置する点が part1, part2
+		 			  ;  から見て右 (0) か左 (1) か
 		   (findkazari part1 part2 1 0 cross tag)))
 		 (0
 		  (appendrev
@@ -413,45 +415,52 @@
     (parttype2 (car part2))
     (type1 (cadr part1))
     (type2 (cadr part2))
-    (line1 (+ (* 2 type1) line1))
-    (line2 (+ (* 2 type2) line2)))
+    ; 確定する端点のタイプ
+    ; 0: 往路の始点, 1: 復路の始点, 2: 往路の終点, 3: 復路の終点
+    (end1 (+ (* 2 type1) line1)) 
+    (end2 (+ (* 2 type2) line2)))
+
+   ; tag で指定された書体、その親書体…と調べて行って、条件に合う
+   ; defkazari を探し、「飾り」のアウトラインを ret に格納するとともに、
+   ; その両端点を開始・終了点として part1/part2 の LINES に付加する。
+   ; (ret に値が格納されたら return を 2 回行って 2 重ループを脱出する)
    (do ((tmptag tag (get tmptag 'parent)))
-     ((null tmptag))
+       ((null tmptag))
      (do ((l (get-def 'allkazari tmptag) (cdr l))
 	  (ll nil))
 	 ((atom l) ret)
-	 (setq ll (car l))
-	 (cond ((and (eq_member parttype1 (first ll))
-		     (eq_member line1 (second ll))
-		     (eq_member parttype2 (third ll))
-		     (eq_member line2 (fourth ll)))
-		(setq ret (funcall (fifth ll) cross))
-		(nconc1 (assq 'lines (cddr part1)) 
-			(cons line1 (cdr (car ret))))
-		(nconc1 (assq 'lines (cddr part2)) 
-			(cons line2 (cdar (last ret))))
-		(return ret))
-	       ((and (eq_member parttype2 (car ll))
-		     (eq_member line2 (cadr ll))
-		     (eq_member parttype1 (caddr ll))
-		     (eq_member line1 (cadddr ll)))
-		(setq ret (funcall (car (cddddr ll)) (rev4 cross)))
-		(nconc1 (assq 'lines (cddr part1)) 
-			(cons line1 (cdar (last ret))))
-		(nconc1 (assq 'lines (cddr part2)) 
-			(cons line2 (cdr (car ret))))
-		(return (reverse ret)))))
+       (setq ll (car l))
+       (cond ((and (eq_member parttype1 (first ll))
+		   (eq_member end1 (second ll))
+		   (eq_member parttype2 (third ll))
+		   (eq_member end2 (fourth ll)))
+	      (setq ret (funcall (fifth ll) cross))
+	      (nconc1 (assq 'lines (cddr part1))
+		      (cons end1 (cdr (car ret))))
+	      (nconc1 (assq 'lines (cddr part2))
+		      (cons end2 (cdar (last ret))))
+	      (return ret))
+	     ; 裏返しにすると一致する場合
+	     ((and (eq_member parttype2 (first ll))
+		   (eq_member end2 (second ll))
+		   (eq_member parttype1 (third ll))
+		   (eq_member end1 (fourth ll)))
+	      (setq ret (funcall (fifth ll) (rev4 cross)))
+	      (nconc1 (assq 'lines (cddr part1))
+		      (cons end1 (cdar (last ret))))
+	      (nconc1 (assq 'lines (cddr part2)) 
+		      (cons end2 (cdr (car ret))))
+	      (return (reverse ret)))))
+;	      (return ret))))
      (and ret (return)))
-   (cond 
-    (ret)
-    ((eq part1 part2) nil)
+
+   (cond
+    (ret)		   ; defkazari があった場合、処理結果をそのまま返す
+    ((eq part1 part2) nil) ; 裸の端点の場合何もしない (端同士を直結する結果)
     (t
-     (setq ret (cons 
-		(append '(angle) (svref cross (+ (logand line2 1)
-						 (* 2 (logand 1 line1)))))
-		nil))
-     (nconc1 (assq 'lines (cddr part1)) (cons line1 (cdar ret)))
-     (nconc1 (assq 'lines (cddr part2)) (cons line2 (cdar ret)))
+     (setq ret (list (cons 'angle (svref cross (+ (* 2 line1) line2)))))
+     (nconc1 (assq 'lines (cddr part1)) (cons end1 (cdar ret)))
+     (nconc1 (assq 'lines (cddr part2)) (cons end2 (cdar ret)))
      ret))))
 
 ; 
