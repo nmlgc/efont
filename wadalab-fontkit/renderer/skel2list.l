@@ -45,10 +45,6 @@
 (defun floatlist (list)
   (mapcar #'(lambda (x) `(,(float (car x)) ,(float (cadr x)) . ,(cddr x)))
 	  list))
-;
-; 見てのとおり
-;
-(defun appendrev (a b) (append a (reverse b)))
 
 ;
 ; スケルトンからアウトラインへの変換を行なう
@@ -125,7 +121,7 @@
       (do ((lll cpoint (cdr lll)))
 	((atom lll))
 	(push (nth (car lll) points) partpoint))
-      (setq partpoint (nreverse partpoint))
+      (nreverse partpoint)
       ; ストロークに (defelement で定義された) 肉付け関数を適用する
 ;; tag に対するプロパティが未定義のときのため(石井)
 ;; if を使わないように直す(田中)
@@ -229,7 +225,7 @@
 		(line0);(type0)(lines0)
 		(line1)(type1)(lines1)(p)(plist)(flag1)(flag2))
 	       ((atom l)
-		(setq plist (nreverse plist))
+		(nreverse plist)
 	     (do ((ll plist (cdr ll))(i 0 (1+ i))
 		  (start (car plist))(maxlen)(len0)(max))
 		 ((atom (cdr ll))
@@ -311,23 +307,24 @@
 ; 独立した線端に飾りをつける。
 ; ll を介して、linkpoints の LINK (LINES の後ろ) に書き込まれる
 ;
-(defun kazari-joint1 (ll link points tag)
+(defun kazari-joint1 (link endpoint tag)
   (let* ((part1 (cadr link))
 	 (type1 (cadr part1))
-	 (cross (cross-at-end part1 (nth (caar ll) points)))
+	 (cross (cross-at-end part1 endpoint))
 	 (kazari (findkazari part1 part1 0 1 cross tag)))
-    (nconc (assq 'lines (cddr part1))
-	   (cons (cons (- -1 type1) kazari) nil))))
+    (nconc1 (assq 'lines (cddr part1))
+	    (cons (- -1 type1) ; -1:始点, -2:終点 (skeleton2listのcase文を参照)
+		  kazari))))
 
 ;
 ; 全ての線端に「飾り」をつける (ただし、他の線に隠れる物を除く)
 ;
-; 独立した (閉じた) 「飾り」アウトラインは outline に追加する
+; 独立した (閉じた)「飾り」アウトラインのみ outline に格納し、返り値とする
 ; 2 本の線端をつなぐ、開いた「飾り」曲線は linkpoints に追加する
 ;
-(defun add-kazari (linkpoints points outline tag)
+(defun add-kazari (linkpoints points tag)
   (do ((ll linkpoints (cdr ll))
-       (link) (nlines))
+       (link) (nlines) (outline))
       ((atom ll) outline)
     (setq link (assq 'link (cdar ll)))
     (setq nlines (1- (length link))) ; 第 1 要素は常に `LINK' なので 1 を引く
@@ -339,7 +336,7 @@
 	(cond ((> (length kazari) 2) (push kazari outline)))))
      ((and (eq 1 nlines)           ; その点に集まる線が 1 本しか無く、
 	   (<= 0 (cadadr link) 1)) ; 最初 (唯一) の点が線の端点 (0か1) の場合
-      (kazari-joint1 ll link points tag)))))
+      (kazari-joint1 link (nth (caar ll) points) tag)))))
 
 ;
 ; スケルトンへの肉付けを行う
@@ -366,7 +363,7 @@
 	    linelist (cadr ret)))
     ; 線端にkazari を付加する
     ;; linkpoints を書き換える (同時に linelist も書き換わる)
-    (setq outline (add-kazari linkpoints points outline tag)) 
+    (setq outline (add-kazari linkpoints points tag)) 
 
     ; linelist の 2 本の線と 2 個の kazari (あれば) をつないで閉じたパスを作る
     (do ((ll linelist (cdr ll))
@@ -399,7 +396,7 @@
   outline))
 
 ;
-; atm が pattern のメンバーかどうか
+; atm (シンボルや数値) が pattern のメンバーかどうか
 ;
 (defun eq_member (atm pattern)
   (cond ((eq pattern '*) t)
@@ -429,20 +426,20 @@
 		     (eq_member parttype2 (third ll))
 		     (eq_member line2 (fourth ll)))
 		(setq ret (funcall (fifth ll) cross))
-		(nconc (assq 'lines (cddr part1)) 
-		       (cons (cons line1 (cdr (car ret))) nil))
-		(nconc (assq 'lines (cddr part2)) 
-		       (cons (cons line2 (cdar (last ret))) nil))
+		(nconc1 (assq 'lines (cddr part1)) 
+			(cons line1 (cdr (car ret))))
+		(nconc1 (assq 'lines (cddr part2)) 
+			(cons line2 (cdar (last ret))))
 		(return ret))
 	       ((and (eq_member parttype2 (car ll))
 		     (eq_member line2 (cadr ll))
 		     (eq_member parttype1 (caddr ll))
 		     (eq_member line1 (cadddr ll)))
 		(setq ret (funcall (car (cddddr ll)) (rev4 cross)))
-		(nconc (assq 'lines (cddr part1)) 
-		       (cons (cons line1 (cdar (last ret))) nil))
-		(nconc (assq 'lines (cddr part2)) 
-		       (cons (cons line2 (cdr (car ret))) nil))
+		(nconc1 (assq 'lines (cddr part1)) 
+			(cons line1 (cdar (last ret))))
+		(nconc1 (assq 'lines (cddr part2)) 
+			(cons line2 (cdr (car ret))))
 		(return (reverse ret)))))
      (and ret (return)))
    (cond 
@@ -453,8 +450,8 @@
 		(append '(angle) (svref cross (+ (logand line2 1)
 						 (* 2 (logand 1 line1)))))
 		nil))
-     (nconc (assq 'lines (cddr part1)) (cons (cons line1 (cdar ret)) nil))
-     (nconc (assq 'lines (cddr part2)) (cons (cons line2 (cdar ret)) nil))
+     (nconc1 (assq 'lines (cddr part1)) (cons line1 (cdar ret)))
+     (nconc1 (assq 'lines (cddr part2)) (cons line2 (cdar ret)))
      ret))))
 
 ; 

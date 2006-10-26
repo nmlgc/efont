@@ -108,6 +108,7 @@
 ;-----------------------------------------------------------------------------
 (defun neq (a b) (not (eq a b)))
 (defun minus (a) (- a))
+
 ; Common Lisp の assq, memq は真リストしか引数に取れないので、名前を変える
 (or (fboundp 'assq)
     (defmacro assq (key obj) `(assoc ,key ,obj :test #'eq)))
@@ -117,10 +118,10 @@
       ((atom l) nil)
       (and (consp (car l)) (eq (caar l) key)
 	   (return (car l)))))
+
 (defun memeq (key lst) (and (listp lst) (member key lst :test #'eq)))
 (or (fboundp 'memq)
     (defmacro memq (key lst) `(member ,key ,lst :test #'eq)))
-
 (or (fboundp 'remq)
     (defun remq (key lst) (if (listp lst) (remove key lst :test #'eq) lst)))
 
@@ -238,3 +239,12 @@
 ;-----------------------------------------------------------------------------
 (defun mappend (fn &rest lists)
   (apply #'append (apply fn lists)))
+
+; 1 要素の追加 (nconc1 は破壊的)
+(defun append1 (lst elem)
+  (append lst (list elem)))
+(defun nconc1 (lst elem)
+  (nconc lst (list elem)))
+
+(defun appendrev (a b)
+  (append a (reverse b)))
