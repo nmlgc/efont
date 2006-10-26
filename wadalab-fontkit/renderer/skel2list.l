@@ -121,7 +121,7 @@
       (do ((lll cpoint (cdr lll)))
 	((atom lll))
 	(push (nth (car lll) points) partpoint))
-      (nreverse partpoint)
+      (setq partpoint (nreverse partpoint))
       ; ストロークに (defelement で定義された) 肉付け関数を適用する
 ;; tag に対するプロパティが未定義のときのため(石井)
 ;; if を使わないように直す(田中)
@@ -225,7 +225,7 @@
 		(line0);(type0)(lines0)
 		(line1)(type1)(lines1)(p)(plist)(flag1)(flag2))
 	       ((atom l)
-		(nreverse plist)
+		(setq plist (nreverse plist))
 	     (do ((ll plist (cdr ll))(i 0 (1+ i))
 		  (start (car plist))(maxlen)(len0)(max))
 		 ((atom (cdr ll))
