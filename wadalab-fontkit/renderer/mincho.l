@@ -48,8 +48,19 @@
 ; defkazari 及婁醒
 ;	 (x 0 x 1) : x 及銨鰾   0 -> 1 及賜卞瞬毛婁仁﹝
 ;	 (x 2 x 3) : x 及蔽鰾   2 -> 3 及賜﹝
-; 見 (衝,產及賜)
-;        (x 
+; 見 (衝 = x, 產 = y 午允月﹝動票き迋)
+;        (x 1 y 0)
+;        (x 0 y 1) (峚輊五)
+; 谷
+;        (x 2 y 0)
+;        (x 3 y 1) (峚輊五)
+; 角
+;        (x 1 y 3)
+;        (x 0 y 2) (峚輊五)
+; 言
+;        (x 2 y 3)
+;        (x 3 y 2) (峚輊五)
+;
 (defkazari mincho (yoko 0 yoko 1)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
@@ -310,6 +321,7 @@
 	 (len1 (max len (* 2 w))))
     `((angle .,(plus2 p1 (normlen2 w (diff2 p1 p0))))
       (angle .,(plus2 p1 (normlen2 len1 (diff2 p3 p1)))))))
+
 ;
 (defkazari mincho ((tate hidari tatehidari) 0 hidari 2)
   (let* ((minchoheight (* mw kazariheight)))
@@ -319,10 +331,10 @@
 		       (diff2 (svref cross 1) (svref cross 0)))))
       (angle .,(svref cross 2)))))
   
-(defkazari mincho ((tate hidari tatehane kokoro tsukurihane magaritate tasuki migi) 1 yoko 3)
+(defkazari mincho (yoko 3 (tate hidari tatehane kokoro tsukurihane magaritate tasuki migi) 1)
   (let* ((p0 (svref cross 0))
-	 (p1 (svref cross 1))
-	 (p2 (svref cross 2))
+	 (p1 (svref cross 2)) ; !!
+	 (p2 (svref cross 1)) ; !!
 	 (p3 (svref cross 3))
 	 (d1 (diff2 p1 p3))
 	 (d0 (rot90 d1))
@@ -358,14 +370,23 @@
 ;    (break)
     (setq p8 (inter2 p5 p6 
 		     (min 0.9 (/ (metric2 p5 p4)(metric2 p5 p8)))))
-    `((angle .,p4)
+    `((angle .,p7)
+      (angle .,p6)
+      (angle .,p8)
+;      (angle .,p5)
+      (bezier .,(inter2 p8 p5 0.9))
+      (bezier .,(inter2 p4 p5 0.9))
+      (angle .,p4))))
+#|
+    `(
+      (angle .,p4)
       (bezier .,(inter2 p4 p5 0.9))
       (bezier .,(inter2 p8 p5 0.9))
 ;      (angle .,p5)
       (angle .,p8)
       (angle .,p6)
       (angle .,p7))))
-
+|#
 
 ;
 ;
