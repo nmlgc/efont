@@ -45,10 +45,12 @@
 ; ライブラリを load する
 ;(or (boundp 'kanjilib) (load "lib.l"))
 
-; defkazari の引数
+; defkazari の引数の意味 (x, y は部品の名前)
+; 単独:
 ;	 (x 0 x 1) : x の始点   0 -> 1 の順に線を引く。
 ;	 (x 2 x 3) : x の終点   2 -> 3 の順。
-; ┌ (縦 = x, 横 = y とする。以下同様)
+; 角:
+; ┌ (縦 = x, 横 = y とする。縦横逆の場合は表裏の関係が逆になる)
 ;        (x 1 y 0)
 ;        (x 0 y 1) (裏向き)
 ; └
@@ -228,7 +230,7 @@
 	  (bezier .,(plus2 p0 (times2 0.5 (diff2 p1 p0))))
 	  (angle .,(plus2 p1 (times2 0.7 (diff2 p1 p3)))))))
 ;
-(defkazari mincho ((tate magaritate kagi)2 (tate magaritate kagi) 3)
+(defkazari mincho ((tate magaritate kagi) 2 (tate magaritate kagi) 3)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
@@ -273,20 +275,19 @@
       (bezier .,p5)
       (angle .,p2)      )))
 ;
-(defkazari mincho ((tate magaritate) 3 yoko 2)
+(defkazari mincho (yoko 2 (tate magaritate) 3)
   (let* ((p0 (svref cross 0))
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
 	 (p3 (svref cross 3))
-	 (len (metric2 p0 p2))
-	 (p4 (plus2 p0 (normlen2 len (diff2 p0 p1))))
-	 (p5 (plus2 p2 (normlen2 len (diff2 p2 p3)))))
-; 裏返しだった
-    `((angle .,(inter2 p2 p3 0.1))
-      (bezier .,p5)
+	 (len (metric2 p0 p1))
+	 (p4 (plus2 p0 (normlen2 len (diff2 p0 p2))))
+	 (p5 (plus2 p1 (normlen2 len (diff2 p1 p3)))))
+    `((angle .,p0)
       (bezier .,p4)
-      (angle .,p0))))
-
+      (bezier .,p5)
+      (angle .,(inter2 p1 p3 0.1))
+      )))
 ;
 #|
 (defkazari mincho (kozato 2 kozato 3)
@@ -310,18 +311,16 @@
     (angle .,p3))))
 |#
 ;    
-(defkazari mincho ((migi tate hidari tatehidari kokoro magaritate tasuki) 0
-		   yoko 1)
+(defkazari mincho (yoko 1 (migi tate hidari tatehidari kokoro magaritate tasuki) 0)
   (let* ((w (* mw kazariheight))
 	 (p0 (svref cross 0))
-	 (p1 (svref cross 1))
-	 (p2 (svref cross 2))
+	 (p2 (svref cross 1)) ;!!
+	 (p1 (svref cross 2)) ;!!
 	 (p3 (svref cross 3))
 	 (len (metric2 p3 p1))
 	 (len1 (max len (* 2 w))))
-    `((angle .,(plus2 p1 (normlen2 w (diff2 p1 p0))))
-      (angle .,(plus2 p1 (normlen2 len1 (diff2 p3 p1)))))))
-
+    `((angle .,(plus2 p1 (normlen2 len1 (diff2 p3 p1)))) 
+      (angle .,(plus2 p1 (normlen2 w    (diff2 p1 p0)))))))
 ;
 (defkazari mincho ((tate hidari tatehidari) 0 hidari 2)
   (let* ((minchoheight (* mw kazariheight)))
@@ -377,16 +376,6 @@
       (bezier .,(inter2 p8 p5 0.9))
       (bezier .,(inter2 p4 p5 0.9))
       (angle .,p4))))
-#|
-    `(
-      (angle .,p4)
-      (bezier .,(inter2 p4 p5 0.9))
-      (bezier .,(inter2 p8 p5 0.9))
-;      (angle .,p5)
-      (angle .,p8)
-      (angle .,p6)
-      (angle .,p7))))
-|#
 
 ;
 ;
@@ -457,7 +446,7 @@
     (niku3 p0 p1 p2 0.3 0.3 
 	   w0 (inter w0 w1 0.25)(inter w0 w1 0.75) w1)))
 ;
-;しんにょう
+; しんにょう
 ;
 (defelement mincho shin-nyuu
     (let* 
@@ -474,7 +463,7 @@
      (curve2 p0 (inter2 p0 p1 0.5)(inter2 p2 p1 0.9) p2
 	     w0 (inter w0 w1 0.2) (inter w0 w1 0.9) w1)))
 ;
-; まがりたて 
+; まがり縦
 ;
 (defelement mincho magaritate
   (let* ((dotsize (meshwidth mw))
