@@ -450,9 +450,9 @@
 		      (cons end1 (cdar (last ret))))
 	      (nconc1 (assq 'lines (cddr part2)) 
 		      (cons end2 (cdr (car ret))))
-	      (return (reverse ret)))))
+	      (return (setq ret (reverse ret)))))
 ;	      (return ret))))
-     (and ret (return)))
+       (and ret (return ret))))
 
    (cond
     (ret)		   ; defkazari があった場合、処理結果をそのまま返す
