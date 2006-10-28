@@ -54,8 +54,8 @@
 		  (ylimit1 (second region))
 		  (ylimit2 (fourth region)))
 	       ((>= i 3)
-		`(,(car prim) 
-		  ,(cadr prim) 
+		`(,(car prim)
+		  ,(cadr prim)
 		  (ylimit ,ylimit1 ,ylimit2).,(cddr nprim)))
 	       (setq ylimit (* ylimitval (- ylimit2 ylimit1)))
 	       (setq section1 (general-section nprim prim1 conv 
@@ -181,6 +181,9 @@
 	     ylen 
 	     (+ ylen (abs (- (cadr (nth (car ll) points))
 			     (cadr (nth (cadr ll) points))))))))))))
+;
+; プリミティブを構成する点を取り巻く最小の長方形を求める
+;
 (defun realregion (prim)
   (cond ((assq*cdr 'realregion (cddr prim)))
 	(t
@@ -333,15 +336,14 @@
 	  (t
 	   (let* ((region (realregion prim))
 		  (height (region-height region))
-		  (tateheight (tateheight prim)))
+		  (tateheight (tateheight prim region)))
 	     (cond ((zerop height) defunit)
 		   (t (/ (float height)(float tateheight)))))))))
 ;
 ; プリミティブ固有の高さを決定する
 ;
-(defun tateheight (prim)
-  (let* ((rregion (realregion prim))
-	 (xlen (prim-xlen prim rregion))
+(defun tateheight (prim &optional (rregion (realregion prim)))
+  (let* ((xlen (prim-xlen prim rregion))
 	 (height (- (fourth rregion) (second rregion)))
 	 (yokosort (yokosort prim))
 	 (yokokankaku (yokokankaku prim))
@@ -361,13 +363,12 @@
 	  (t
 	   (let* ((region (realregion prim))
 		  (width (region-width region))
-		  (yokowidth (yokowidth prim)))
+		  (yokowidth (yokowidth prim region)))
 	     (cond ((zerop width) defunit)
 		   (t (/ (float width)(float yokowidth)))))))))
 ;
-(defun yokowidth (prim)
-  (let* ((rregion (realregion prim))
-	 (ylen (prim-ylen prim rregion))
+(defun yokowidth (prim &optional (rregion (realregion prim)))
+  (let* ((ylen (prim-ylen prim rregion))
 	 (width (- (third rregion)(first rregion)))
 	 (tatekankaku (tatekankaku prim))
 	 (yokowidth (assq* 'yokowidth (cddr prim))))
@@ -437,7 +438,8 @@
 				 (> minkankaku kankaku))
 			     (setq minkankaku kankaku)))))))))))
 ;
-(defun inlink (e1 e2 points)
+; e1 の(端)点が e2 のリンク点に一致するかどうか
+(defun inlink (e1 e2 points)	; points は使っていない
   (let* ((points1 (cadr e1))
 	 (links2 (assq 'link (cddr e2)))
 	 (links2 (and links2 (cdr links2))))
