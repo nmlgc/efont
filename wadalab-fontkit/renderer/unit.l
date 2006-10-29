@@ -161,9 +161,7 @@
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (alist (cddr prim))
-	 (miny (cadr region))
-	 (maxy (cadddr region))
-	 (height (- maxy miny))
+	 (height (region-height region))
 	 (ylen (assq* 'ylen alist)))
     (cond 
      (ylen (cdr ylen))
@@ -367,6 +365,8 @@
 	     (cond ((zerop width) defunit)
 		   (t (/ (float width)(float yokowidth)))))))))
 ;
+; プリミティブ固有の幅を決定する
+;
 (defun yokowidth (prim &optional (rregion (realregion prim)))
   (let* ((ylen (prim-ylen prim rregion))
 	 (width (- (third rregion)(first rregion)))
@@ -375,9 +375,9 @@
     (cond (yokowidth (cdr yokowidth))
 	  ((and tatekankaku
 		(> (/ width tatekankaku 1.4) 
-			  (- ylen 1.0)))
+		   (- ylen 1.0)))
 	   (/ width tatekankaku 1.4))
-	  ((< ylen 2.0)1.0)
+	  ((< ylen 2.0) 1.0) ; (既に prim-ylen で調整済み故この行は蛇足)
 	  (t (- ylen 1.0)))))
 ;
 ; 縦画同士がいちばん接近している箇所の距離を返す
@@ -386,16 +386,18 @@
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (tates nil))
+    ; lines から縦画の類だけ抜き出して tates に格納
     (do ((l lines (cdr l)))
       ((atom l))
       (cond ((memq (caar l)
 		   '(tate tatehane tatehidari kokoro tsukurihane tasuki))
 	     (push (car l) tates))))
-    (cond (tates
+    ; 全ての「縦」画のペアに対し上端同士の距離を求め、その最小値を返す
+    (cond ((cdr tates) ;; (>= (length tates) 2) に同じ
 	   (do ((l tates (cdr l))
 		(minkankaku nil)
 		(p0 nil)(p1 nil))
-	     ((atom (cdr l))minkankaku)
+	     ((atom (cdr l)) minkankaku)
 	     (setq p0 (nth (car (cadar l)) points)
 		   p1 (nth (cadr (cadar l)) points))
 	     (do ((ll (cdr l) (cdr ll))
@@ -403,26 +405,32 @@
 	       ((atom ll))
 	       (setq p2 (nth (car (cadar ll)) points)
 		     p3 (nth (cadr (cadar ll)) points))
-	       (cond ((not (or (< (cadr p0)(cadr p1)(cadr p2))
-			       (< (cadr p3)(cadr p0)(cadr p1))))
+	       ; y 軸方向に重なり合う部分を持たないペアは除外する
+	       (cond ((and (<= (cadr p2)(cadr p1))
+			   (<= (cadr p0)(cadr p3)))
 ;		      (pprint (list p0 p1 p2 p3))
 		      (setq kankaku (abs (- (car p0)(car p2))))
 		      (cond ((or (null minkankaku)
 				 (> minkankaku kankaku))
 			     (setq minkankaku kankaku)))))))))))
+;
+; 横画同士がいちばん接近している箇所の距離を返す
+;
 (defun yokokankaku (prim)
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (yokos nil))
+    ; lines から yoko だけ抜き出して yokos に格納
     (do ((l lines (cdr l)))
       ((atom l))
-      (cond ((eq 'yoko (caar l))
+      (cond ((eq 'yoko (caar l)) ; migiue を入れた方がいいかも
 	     (push (car l) yokos))))
-    (cond (yokos
+    ; 全ての yoko のペアに対し左端同士の距離を求め、その最小値を返す
+    (cond ((cdr yokos) ;; (>= (length yokos) 2) に同じ
 	   (do ((l yokos (cdr l))
 		(minkankaku nil)
 		(p0 nil)(p1 nil))
-	     ((atom (cdr l))minkankaku)
+	     ((atom (cdr l)) minkankaku)
 	     (setq p0 (nth (car (cadar l)) points)
 		   p1 (nth (cadr (cadar l)) points))
 	     (do ((ll (cdr l) (cdr ll))
@@ -430,8 +438,9 @@
 	       ((atom ll))
 	       (setq p2 (nth (car (cadar ll)) points)
 		     p3 (nth (cadr (cadar ll)) points))
-	       (cond ((not (or (< (car p0)(car p1)(car p2))
-			       (< (car p3)(car p0)(car p1))))
+	       ; x 方向に重なり合う部分を持たないペアは除去する
+	       (cond ((and (<= (car p2)(car p1))
+			   (<= (car p0)(car p3)))
 ;		      (pprint (list p0 p1 p2 p3))
 		      (setq kankaku (abs (- (cadr p0)(cadr p2))))
 		      (cond ((or (null minkankaku)
