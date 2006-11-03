@@ -35,6 +35,7 @@ LISP=	lisp -batch -quiet -load
 FONTFORGE=	HOME=. /usr/local/bin/fontforge -script
 
 BUILDTTF=	${FONTFORGE} scripts/BuildTTF.pe
+TTFTOCID=	${FONTFORGE} scripts/compose/TTFtoCID.pe 
 
 SKEL_SRC=	makeall.l sazanami-patch.l \
 		../wadalab-fontkit/kanjidata/alljis.l \
@@ -91,11 +92,24 @@ oradano.sfd: src/outline/oradano/oradano.ttf
 ${BDF}:
 	(cd bdf/; make)
 
+cid: Sazanami-Mincho.cid
+
+Sazanami-Mincho.cid: sazanami-mincho.ttf src/outline/sazanami-nokanji/AJ12Generic.sfd src/outline/oradano/CID-supl.sfd Sznm-M-CIDK.sfd Oradano.cid
+	${TTFTOCID} $(.TARGET) $(.ALLSRC) || echo /bin/rm -f $(.TARGET)
+
+Sznm-M-CIDK.sfd: ${SKEL_SRC}
+	${LISP} ./makecid.l
+
+Oradano.cid: src/outline/oradano/oradano.ttf
+	${FONTFORGE} scripts/compose/OradanoCID.pe $(.ALLSRC) $(.TARGET)
+
 release: README
 	rm -rf ${DIST}
 	mkdir ${DIST}
 	cp README ${DIST}
 	cp -p sazanami-*.ttf ${DIST}
+	cp -p Sazanami-Mincho.cid ${DIST}/Sazanami-Mincho
+	cp -p Sazanami-Gothic.cid ${DIST}/Sazanami-Gothic
 	mkdir ${DIST}/doc
 	mkdir ${DIST}/doc/oradano
 	mkdir ${DIST}/doc/misaki
@@ -112,9 +126,10 @@ release: README
 	tar cvfy ${DIST}.tar.bz2 ${DIST}
 
 clean: 
-	rm -rf ${DIST} *.ttf *.core *~
+	rm -rf Sazanami-Mincho *.cid
+	rm -rf ${DIST} *.ttf *.core *.svg *~
 	(cd bdf/; make clean)
 
 allclean:
-	rm -rf ${DIST} *.ps *.sfd *.ttf *.core *.bz2 *~
+	rm -rf ${DIST} *.ps *.sfd *.ttf *.core *.bz2 *.svg *~
 	(cd bdf/; make clean)

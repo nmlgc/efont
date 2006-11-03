@@ -29,25 +29,18 @@
 ;
 ; $Id$
 
-(load "load.l")
+(and (equal (lisp-implementation-type) "CMU Common Lisp")
+     (setq *top-level-auto-declare* t))
 
-(setq allkanji (append '(仝 々) alljis1 alljis2 ibm-selected-kanji-nojis))
+(defvar base-directory)
+; コンパイラが通らない時は次の行をコメントアウト
+(defparameter source-load nil)
+(defun load-directory (dir)
+  (let* ((base-directory dir))
+	(load (concatenate 'string  base-directory "/" "load.l"))))
+(load-directory "../wadalab-fontkit/renderer/")
+(load-directory "../wadalab-fontkit/primdata/")
+(load-directory "../wadalab-fontkit/jointdata/")
+(load-directory "../wadalab-fontkit/kanjidata/")
 
-; 補助漢字がいらない場合は以下をコメントアウト
-(mapc #'(lambda (ku)
-	  (nconc allkanji (eval (intern (concatenate 'string "HOJO" ku)))))
-      allku-hojo)
-
-(setq minchowidth 11.0)
-(out-to-sfd-all allkanji 'mincho2 "Sznm-M-K.sfd" "Sazanami Mincho Medium"
-		:remove-overlap nil)
-
-(setq gothicwidth 13.0)
-(out-to-sfd-all allkanji 'gothic  "Sznm-G-K.sfd" "Sazanami Gothic Medium"
-		:remove-overlap nil)
-
-(setq gothicwidth 13.0)
-(out-to-sfd-all allkanji 'maru    "Sznm-O-K.sfd" "Sazanami MaruGothic Medium"
-		:remove-overlap nil)
-
-(quit)
+(load "sazanami-patch.l")
