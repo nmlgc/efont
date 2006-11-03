@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -80,7 +80,7 @@
   (mapcar #'flatten_outline orig))
 #|
 (defun flatten_outline (outline)
-  (do ((ll (append outline (list (car outline))) (cdr ll))
+  (do ((ll (append1 outline (car outline)) (cdr ll))
        (ret1))
       ((atom ll)(nreverse ret1))
       (match ll
@@ -93,7 +93,7 @@
 |#
 ; match なしバージョン
 (defun flatten_outline (outline)
-  (do ((ll (append outline (list (car outline))) (cdr ll))
+  (do ((ll (append1 outline (car outline)) (cdr ll))
        (ret1))
       ((atom ll)(nreverse ret1))
       (cond
@@ -1095,7 +1095,7 @@
 	  (t (push (car l) ret)))))
 
 (defun checkwinding (out)
-  (do ((l (cdr (append out (list (car out)))) (cdr l))
+  (do ((l (cdr (append1 out (car out))) (cdr l))
        (lastdir (diff2 (cdr (cadr out)) (cdr (car out))))
        (thetasum 0.0) (thisdir))
     ((atom (cdr l))

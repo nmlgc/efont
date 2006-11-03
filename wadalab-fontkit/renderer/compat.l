@@ -1,4 +1,4 @@
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -118,10 +118,10 @@
       ((atom l) nil)
       (and (consp (car l)) (eq (caar l) key)
 	   (return (car l)))))
-
 (defun memeq (key lst) (and (listp lst) (member key lst :test #'eq)))
 (or (fboundp 'memq)
     (defmacro memq (key lst) `(member ,key ,lst :test #'eq)))
+
 (or (fboundp 'remq)
     (defun remq (key lst) (if (listp lst) (remove key lst :test #'eq) lst)))
 
@@ -248,3 +248,6 @@
 
 (defun appendrev (a b)
   (append a (reverse b)))
+
+(defun head (n seq)
+  (subseq seq 0 n))

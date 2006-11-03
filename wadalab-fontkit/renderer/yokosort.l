@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@
 ; $Id$
 
 (defvar points)
-(defparameter  simple-thresh 0.25)
 ;
 (defun prinderr (l)
   (let ((*standard-output* *error-output*))
@@ -50,38 +49,44 @@
 	 )
 ;   (break)
     (setq spaces nil)
+    ; 各エレメントを yokolines か otherlines かのどちらかに分類する
     (do ((l lines (cdr l)))
       ((atom l))
       (cond ((eq (caar l) 'yoko)
 	     (push (car l) yokolines))
 	    (t (push (car l) otherlines))))
+    ; yokolines を y 座標の小さい順に並べ替える
     (setq yokolines (sort yokolines
 		      (function (lambda (x y)
-;				  (pprint `(x ,x)) 
-;			          (pprint `(y ,y)) 
+;				  (prinderr `(x ,x)) 
+;			          (prinderr `(y ,y)) 
 				  (let* ((p0 (nth (caadr x) points))
 					 (p1 (nth (caadr y) points)))
 				    (< (cadr p0) (cadr p1)))))))
 ;   (do ((l yokolines (cdr l)))
 ;     ((atom l))
 ;     (prinderr (list (nth (caadar l) points)(nth (cadadr (car l)) points))))
+    ;; リスト yokotree を構成する。
+    ;; 各要素は、(yokoストローク定義 親一覧 直親一覧の番号 nil) となる。
     (do ((l yokolines (cdr l))
 	 (i 0 (1+ i))
 	 (directparents nil nil)
 	 (parents nil nil))
       ((atom l)
-;      (prinderr (nreverse yokotree))
+;      (prinderr (reverse yokotree))
        (setq yokotree (nreverse yokotree))
        )
       (do ((ll yokotree (cdr ll))
-	   (j (1- i) (1- j)))
+	   (j (1- i) (1- j)))	; (i, j) は yokolines に含まれる 2 本のエレメントの全組合せを網羅する
 	((atom ll)
 ;	 (push `(,(car l) ,parents ,directparents nil) yokotree)) ; これだと (CMUCL で) nil が static に割り当てられ、定数的データ構造の書き換えが発生するらしいので次行に書き換えた
 	 (push (list (car l) parents directparents nil) yokotree))
-	(cond ((memeq j parents))
+	(cond ((memq j parents))
 	      ((child-of (car l) (caar ll) points)
 	       (push j directparents)
-	       (setq parents (add-parents parents (cons j (cadar ll))))))))
+	       (setq parents (union parents (cons j (cadar ll))))))))
+
+    ; yokotree の各要素の最終要素 (brother) をセットする
     (do ((l yokotree (cdr l))
 	 (directparents)
 	 (i 0 (1+ i)))
@@ -93,6 +98,7 @@
 	(setq parent (nth (car ll) yokotree))
 	(setq brother (cdddr parent))
 	(rplaca brother (cons i (car brother)))))
+
     (do ((l yokotree (cdr l))
 	 (i 0 (1+ i))
 	 (directparents nil)(directchildren nil))
@@ -189,32 +195,43 @@
 	   (setq  sum1 (+ sum1 (caar l)))))
       ))
 ;
+; prim に以下の疑似エレメントを追加した結果を ret に格納して返す。
 ;
+; エレメントの開始点 (上端) から、そのエレメントの含む各リンク点に
+; 向けて引いた線 (疑似エレメント) を (tate 開始点 リンク点) という形で
+; ret に挿入する。ただし、終了点(下端)に近すぎる位置 (エレメント長の 1/4
+; 以内) にリンク点があるとそのエレメントから作られる疑似エレメントの挿入
+; は途中で中断する。
 ;
+; 問題点1: link 点の列挙順 が (link 1 2 3) の時と (link 3 2 1) の時で
+;          返り値が変わる可能性がある。
+; 問題点2: tate だけでなく tatehane や tatehidari も列挙すべきでは?
 ;
-;
+(defparameter  simple-thresh 0.25)
 ;
 (defun simplify-prim (prim)
   (let* ((points (car prim))
 	 (lines (cadr prim))
-	 (link)(p0)(p1)(y)(y2)(ydiff)
+	 (link)(p0)(p1)(y0)(y1)(y)(ydiff)
 	 (alist (cddr prim)))
     (do ((l lines (cdr l))
 	 (ret nil))
       ((atom l)`(,points ,(nreverse ret) .,alist))
       (cond ((eq (caar l) 'tate)
 	     (setq link (assq 'link (cddar l)))
-	     (setq p0 (car (cadar l)) p1 (cadr (cadar l)))
-	     (setq y (cadr (nth p1 points)))
-	     (setq y2 (cadr (nth p0 points)))
-	     (setq ydiff (- y y2))
+	     ; p0 = 最初のエレメントの最初の点の番号, p1 = 2 番目の点の番号
+	     (setq p0 (car (cadar l))
+		   p1 (cadr (cadar l)))
+	     (setq y0 (cadr (nth p0 points))
+		   y1 (cadr (nth p1 points)))
+	     (setq ydiff (- y1 y0))
 	     (cond (link
 		    (do ((ll (cdr link) (cdr ll)))
 		      ((atom ll)
 		       (push (car l) ret))
-		      (setq y2 (cadr (nth (car ll) points)))
+		      (setq y (cadr (nth (car ll) points)))
 		      (cond ((> (* simple-thresh ydiff)
-				       (abs (- y y2)))
+				       (abs (- y1 y)))
 			     (push `(tate (,p0 ,(car ll)) 
 					  ,(remove (car ll) link))
 				   ret)
@@ -272,9 +289,11 @@
       '(otherend yokoend yokostart leftdown rightdown cross up))
 ;
 ; child-of
+; 	line1 が line0 の「子供」かどうか (x 軸への射影が重なり合うか)
+;       横線を比較対象としているので x00<x01, x10<x11 を仮定している。
 ;
 (defparameter eps 1.0e-4) ; utilispで10^-5を評価すると0.0001と等しくなった。
-
+;
 (defun child-of (line0 line1 points)
   (let* ((x00 (car (nth (caadr line0) points)))
 	 (x01 (car (nth (cadadr line0) points)))
@@ -285,15 +304,6 @@
     (cond ((< x01 (+ x10 eps)) nil)
 	  ((< x11 (+ x00 eps)) nil)
 	  (t))))
-;
-; add-parents
-;
-(defun add-parents (orig add)
-  (do ((l add (cdr l))
-       (ret orig))
-      ((atom l) ret)
-    (cond ((memeq (car l) orig))
-	  (t (push (car l) ret)))))
 ;
 ; yoko-other
 ;
@@ -383,7 +393,7 @@
 ;
 (defun match-pattern (pattern) 
   (let* ((sorted (patternsort pattern)))
-;    (prinderr pattern)
+;   (prinderr pattern)
     (do ((l partheight (cdr l))
 	 (flag)(matchp))
       ((atom l))

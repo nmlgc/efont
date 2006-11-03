@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,9 @@
 ;
 ; $Id$
 
-;
+; 部品の組合せ結果を返す。
+;  fonttype: mincho gothic など。
+;  affines: 
 (defun joint (fonttype affines prims &optional (alist))
   (do ((outlines (affinepart (applykanji (car prims)fonttype)(car affines)))
        (a (cdr affines)(cdr a))
@@ -39,7 +41,10 @@
 	  (appendpart outlines
 		      (affinepart (applykanji (car p) fonttype)(car a))))))
 ;
-; CLISP の ext:applyhook との衝突を避けるため名前を変更
+; プリミティブ定義の中に primhook を定義しておくことにより、文脈依存の
+; 部品差し替えができる。
+;
+; CLISP の ext:applyhook との衝突を避けるため名前を変更した
 ;
 (defun apply-hook (prim jointtype i n)
   (let* ((alist (cddr prim))
@@ -64,7 +69,7 @@
 	 (nprims)
 	 (affines)(newaffines)
 	 (yunits)(yunit1)
-	 (vals)(val)(ratio)
+	 (val)(ratio)
 	 (aprim)
 	 (param)(yscale)(centerp)
 	 (newalist `((xlimitratio . 1.0) .,alist))
@@ -135,26 +140,36 @@
  #'(lambda (fonttype prims)
      (let* ((nprims (mapcar #'(lambda (x) (applykanji x fonttype)) prims))
 	    (affines (affine-yoko-n nprims fonttype)))
-       `(joint ',affines ',prims nil)))
- 'expand)
+       `(joint ',affines ',prims nil))) ; 下の関数と違って joint に fonttype
+ 'expand)                               ; 引数が渡ってないけどいいのか?
 (defun yoko (fonttype prims)
   (let* ((nprims (mapcar #'(lambda (x) (applykanji x fonttype)) prims))
 	 (affines (affine-yoko-n nprims fonttype)))
     (joint fonttype affines nprims nil)))
+;
+; yoko-n の各部品に施すアフィン変換を算出する
+; (引数 alist は現在使われていない)
+;
 (defun affine-yoko-n (primlist fonttype &optional (alist))
   (let* ((n (length primlist))
-	 (nprims)
 	 (affines)(newaffines)
 	 (xunits)(xunit1)
-	 (vals)(val)(ratio)
-	 (param)(xscale)(centerp)
+	 (val)(ratio)
+	 (param)(xscale) ;(centerp)
 ;	 (newalist `((ylimitratio . 0.5)(xlimitratio . 0.1) .,alist))
 	 (realregion)(region)
 	 (yunit)(ylimit))
+  ; [1] 各部品の xunits, 全部品共通の yunit(=全部品中最小値), affines を求める
+  ;     予め同じ大きさの箱に収めることにより、外部の空白に影響されないように
+  ;     している。
+  ;     また、primlist に含まれる全部品を半角正方形に内接するように正規化する
+  ;     その時の変換行列を affines に格納する
+  ;     nprims には、個別の部品をフルサイズで格納する (ただし、文脈固有の
+  ;     最適化を施した差し替え部品が定義されていれば差し替える)
   (do ((l primlist (cdr l))
-       (i 0 (1+ i))(prim)
+       (i 0 (1+ i)) ; 現在の部品が何番目かを覚えておくためだけに使う
+       (nprims)
 ;       (yunitsum 0)
-       (aprim)
        (yunitmin)
        )
     ((atom l)
@@ -162,12 +177,17 @@
      (setq affines (nreverse affines))
 ;     (setq yunit (/ (float yunitsum)(float n)))
      (setq yunit yunitmin)
+     (setq primlist (nreverse nprims))
      )
-    (setq aprim (applykanji (car l) fonttype))
-    (setq aprim (apply-hook aprim 'yoko i n))
-    (and (prim-center aprim)(setq centerp 200))
-    (push (add-ylimit (add-unit aprim)) nprims)
+    (let ((aprim)) ; i 番目の部品に、必要な変形を施したもの
+      (setq aprim (applykanji (car l) fonttype))
+      (setq aprim (apply-hook aprim 'yoko i n))
+      (push (add-ylimit (add-unit aprim)) nprims)
+;      (and (prim-center aprim)(setq centerp 200)) ; yokoでは中心線は使わないはずなのでコメントアウト
+      ) ; これ以降 [2] の開始まで、aprim のことを (car nprims) で表していることに注意
 ;    (cond (
+    ; 水平方向はスケルトンの広がりを半角幅一杯に、垂直方向は ylimit に合わせて
+    ; サイズ調整するのに必要な変換行列を affines に格納
     (setq ylimit (assq 'ylimit (cddar nprims)))
     (setq realregion (realregion (car nprims)))
     (push (region2region `(,(first realregion) ,(cadr ylimit)
@@ -179,19 +199,19 @@
 ;	   (push (region-affine
 ;		  (virtual-region '(nil nil) '(0 0 200 400))
 ;		  (car nprims) `((ylimit 0 . 50).,newalist) '(0 0 200 400))
-					;		 affines)))
+;		 affines)))
 ;
 ;
 ;    (pprint (car nprims))(pprint (car affines))
-    (setq prim (affinepart (car nprims) (car affines)))
-    (push (xunit prim 200.0) xunits)
+    (setq prim (affinepart (car nprims) (car affines))) ; 現在着目中の部品を、左半分の長方形に収まるような変形を施した物
+    (push (xunit prim 200.0) xunits)			; の x 方向、y  方向の
 ;    (setq yunitsum (+ yunitsum (yunit prim 100.0)))
-    (setq yunit (yunit prim 100.0))
-    (and yunit 
+    (setq yunit (yunit prim 100.0))			; 複雑さを表す長さ単位
+    (and yunit
 	 (or (null yunitmin)(> yunitmin yunit))
 	 (setq yunitmin yunit))
     )
-  (setq primlist (nreverse nprims))
+  ; [2] 最初の部品を半角にし、次の部品を xunit の逆数比に応じた長方形にする
   (setq xunit1 (car xunits))
   (setq param  `((yunit 0 .,yunit)(xunit 0 .,xunit1)))
   (do ((l (cdr primlist) (cdr l))
@@ -200,19 +220,23 @@
        (affine)(prim)
        (lastprim (affinepart (car primlist)(car affines))))
     ((atom l))
-    (setq ratio (/ (float xunit1)(float (car xunit_l))))
+    ; 変換行列の幅成分に比例する ratio は xunit の逆数に比例することに注意.
+    (setq ratio (/ (float xunit1) (float (car xunit_l))))
+    ; 最初は 1000 だけ右にずらしておく。
     (setq affine 
 	  (times-affine (vector ratio 0 0 1 1000 0) (car affine_l)))
     (setq prim (affinepart (car l) affine))
 ;    (pprint (list param lastprim prim))
 ;    (setq val (- 1000
 ;		 (general-limit lastprim prim #(0 0 0 0 -1 0) param)))
+    ; どれだけ近づけるとぶつかるかの限界値を計算する
     (setq val (- 1001
 		 (general-limit lastprim prim #(0 0 0 0 -1 0) param)))
 ;    (pprint val)
     (push (times-affine (vector ratio 0 0 1 val 0)(car affine_l))
 	  newaffines)
     (setq lastprim (affinepart (car l)(car newaffines))))
+  ; [3]
   (setq xscale (/ 400.0 (+ val (* ratio 200.0))))
   (do ((l newaffines (cdr l))
        (ret `((xunit .,(* xscale xunit1))
@@ -234,7 +258,7 @@
 				  ,(caddr xlimit),(caddr ylimit))
 				'(15 15 385 385))))
     (affinepart prim affine)))
-;	   
+;
 ; たれ, かまえ
 ;
 (defun affine-tare (prim1 prim2 fonttype)
@@ -244,7 +268,7 @@
 		 (assq*cdr '(tare kamae) (cddr prim1))
 		 ))
 ;
-(putprop 
+(putprop
  'tare
  #'(lambda (fonttype prims)
      (let* ((nprims (mapcar #'(lambda (x) (applykanji x fonttype)) prims))
@@ -429,7 +453,7 @@
 	 (prim21 (affinepart prim2 affine1))
 	 (rc (region-center region))
 	 (rc (cond (center `(,center1 ,(cadr rc)))(t rc)))
-	 (conv1 (scaleconv rc))
+	 (conv1 (center-to-conv rc))
 	 (xunit1 (* xunit (svref affine1 0)))
 	 (yunit1 (* yunit (svref affine1 3)))
 	 (xlimitratio (cdr (or (assq 'xlimitratio alist) '(nil . 0.3))))
@@ -515,7 +539,7 @@
 					  (- dy (cadr rc1))
 					  affine21))))
 	 (prim25 (affinepart prim2 affine5))
-	 (conv5 (scaleconv rc1))
+	 (conv5 (center-to-conv rc1))
 	 (xunit5 (* xunit (svref affine5 0)))
 	 (yunit5 (* yunit (svref affine5 3)))
 	 (xlimit (* xlimitratio xunit5))
@@ -589,6 +613,9 @@
 		  minx))
 	    (setq minx x)))))))))
 ;
+; region1 を region2 に移すような変換行列を返す。
+; region1, region2 は (minx miny maxx maxy) からなる 4 要素の配列。
+;
 (defun region2region (region1 region2)
   (let* ((x11 (first region1))(y11 (second region1))
 	 (x21 (first region2))(y21 (second region2))
@@ -619,7 +646,11 @@
 		  (cy (- y21 (* y11 scaley))))
 	     (vector scalex 0 0 scaley cx cy))))))
 ;
-(defun scaleconv (center)
+; center を原点に平行移動するような変換を返す
+;
+; (もと scaleconv という名前だったが、行っているのは scale ではなく
+; translation なので関数名を変えた)
+(defun center-to-conv (center)
   (let* ((cx (car center))
 	 (cy (cadr center)))
     (vector 1 0 0 1 (minus cx) (minus cy))))

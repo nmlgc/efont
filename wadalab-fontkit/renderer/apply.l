@@ -43,9 +43,9 @@
 	    ((eq (car l) 'joint)
 ;	     (pprint l)(flush standard-output)
 	     (joint tag
-		    (cadr (second l))
+		    (second (second l))
 		    (mapcar #'(lambda (x) (applykanji x tag))
-			    (cadr (third l)))
+			    (second (third l)))
 		    (fourth l)))
 	    ((symbolp (car l))	; tate, yoko などの組合せ定義
 	     (funcall (car l) tag (cdr l)))

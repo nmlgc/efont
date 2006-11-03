@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -230,18 +230,23 @@
 
 ;
 ;
-; 対称と見なせるエレメント対
+; 対称形と見なせるエレメント(対)
 ;
-(defvar xsym1)
-(defvar xsym2)
-(setq xsym1
-  '(
-    (yoko 0 1)
-    (tate 0 1)
-    (tatehidari 0 1)
-    (tatehane 0 1)
-    (hidari 0 2)
-    (ten 0 1)))
+(defvar xsym1 '((yoko 0 1)
+		(tate 0 1)
+		(tatehidari 0 1)
+		(tatehane 0 1)
+		(hidari 0 2)
+		(ten 0 1)))
+;
+(defvar xsym2 '(((tate 0 1)(tate 0 1))
+		((ten 0 1)(hidari 0 2))
+		((yoko 0 1)(yoko 0 1))
+		((hidari 0 2)(migi 0 2))
+		((tatehidari 0 0)(tatehane 0 0))
+		((tatehidari 0 1)(tate 0 1))
+		((hidari 0 0)(kokoro 0 0))
+		((tate 0 1)(tatehane 0 1))))
 ;
 (defun element-center (cpoints points def)
   (do ((l def (cdr l))
@@ -262,22 +267,10 @@
 		   ,element))))))
 ;
 ;
-;
 (defvar xthresh)
 (defvar ythresh)
 ;(setq xthresh 20.0)
 ;(setq ythresh 25.0)
-;
-(setq xsym2 
-  '(
-    ((tate 0 1)(tate 0 1))
-    ((ten 0 1)(hidari 0 2))
-    ((yoko 0 1)(yoko 0 1))
-    ((hidari 0 2)(migi 0 2))
-    ((tatehidari 0 0)(tatehane 0 0))
-    ((tatehidari 0 1)(tate 0 1))
-    ((hidari 0 0)(kokoro 0 0))
-    ((tate 0 1)(tatehane 0 1))))
 ;
 (defun expand-section (section ythresh)
   `((,(- (caar section) ythresh) .,(+ (cdar section) ythresh))))
@@ -367,14 +360,6 @@
 	       (setq center (center-average mode-section))
 	       (cond ((find-tate-center mode-section center))
 		     (center)))))))))
-;
-(defun head (n list)
-  (do ((l list (cdr l))
-       (ret)
-       (i 1 (1+ i)))
-    ((or (atom l)(> i n))(nreverse ret))
-    (push (car l)ret)))
-    
 ;
 (defun mode-section (centers xthresh)
 ;  (pprint (list "in-mode-section" centers xthresh))

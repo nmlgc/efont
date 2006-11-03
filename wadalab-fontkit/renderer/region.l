@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,19 @@
 ;
 ; $Id$
 
+; section の補集合のうち、以下の条件を満たす区間(の閉包)を返す。
+; 1)  [-1.0, 0.0] に収まる区間がある場合、最小の物。
+; 2)  下端 xx が有限値かつ上端 yy が -1.0 より大きい負の値の場合:
+; 2-1)   -1.0 <= yy <= 0.0 の区間がある場合、yy が最大の物。
+; 2-2)   2-1), 5-2) に該当する区間がない場合、yy が最小の物。
+; 3)  [-∞, +∞] の場合、[-∞, 1.0] を返す。
+; 4)  [-∞, yy] (ここで 0.0 <= yy) を満たす区間がある場合、それを返す。
+; 5)  下端 xx が -∞ かつ上端 yy が -1.0 より大きい負の値の場合:
+; 5-1)   0.0 < yy の区間がある場合、その区間。
+; 5-2)   -1.0 <= -yy <= 0.0 の区間があり、2-1) に該当する区間がない場合、その区間。
+;
+; 以上のどれにも該当するものがないばあい、プログラムの実行は中断する。
+;
 (defun goodsection1 (section)
   (do ((l (notsection section) (cdr l))(ret)(xx)(yy))
     ((atom l)
@@ -37,15 +50,15 @@
      ret)
 ;	 (break)
     (cond
-     ((and (numberp (setq xx (rm-eq (caar l))))
-	   (numberp (setq yy (rm-eq (cdar l))))
+     ((and (numberp (setq xx (rm-eq (caar l)))) ; 区間の下端が-∞でなく
+	   (numberp (setq yy (rm-eq (cdar l))))	; 区間の上端が+∞でない場合
 	   (setq xx (float xx) yy (float yy))
 	   (cond ((and (<= -1.0 xx 0.0)(<= 0.0 yy))
 ;		  (pprint (car l))
 		  (return (car l)))
 		 ((and (<= -1.0 yy)(or (null ret)(<= yy 0.0)))
 		  (setq ret (car l))))))
-     ((and (null xx)
+     ((and (null xx)				; 区間の下端が -∞ の場合
 	   (numberp (setq yy (cond ((eq t (cdar l))
 				    1.0)
 				   (t (rm-eq (cdar l)))))))
@@ -83,7 +96,7 @@
 	   (t (region2region realregion region))))
 	 (rc (region-center region))
 	 (rc (cond (center `(,center1 ,(cadr rc)))(t rc)))
-	 (scalexy (scaleconv rc))
+	 (scalexy (center-to-conv rc))
 	 (scalex (vector 1 0 0 0 (minus (car rc)) 0))
 	 (scaley (vector 0 0 0 1 0 (minus (cadr rc))))
 	 (transx #(0 0 0 0 1 0))
@@ -164,6 +177,7 @@
 ;    (break)
     affine2))
 
+; 仮想エレメント (xlimit ..) と (ylimit ..) をエレメント一覧から取り除く
 (defun rmlimit (x)
   (let* ((elements (cadr x))(ret))
     (do ((l elements (cdr l)))
