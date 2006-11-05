@@ -59,7 +59,8 @@
      "out2sfd.l"
      "outline.l"
      "interpol.l"
-     "mincho2.l")))
+     "mincho2.l"
+     "out2svg.l")))
  (cond (source-load
 	(mapc #'(lambda (file) 
 		  (load (concatenate 'string base-directory "/" file)))

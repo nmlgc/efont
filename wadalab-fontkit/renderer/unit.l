@@ -198,6 +198,12 @@
 		   ((< maxx x)(setq maxx x)))
 	     (cond ((> miny y)(setq miny y))
 		   ((< maxy y)(setq maxy y))))))))
+;
+(defun realheight (skel)
+  (let ((bbox (realregion skel)))   (- (fourth bbox) (second bbox))))
+(defun realwidth (skel)
+  (let ((bbox (realregion skel)))   (- (third bbox)  (first bbox))))
+
 (defun affinelist (point trans)
   (let ((x (float (car point)))
 	(y (float (cadr point))))
