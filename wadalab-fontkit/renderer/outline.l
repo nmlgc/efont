@@ -55,9 +55,10 @@
 ;
 (defun makeoutline (orig)
   (let* ((all)(ass)(ret))
-    (do ((l (append_outs orig)(cdr l))(i 0)(j 0 (1+ j)))
+    (do ((l (append-outs (glyph2dfloat orig))(cdr l))
+	 (i 0)(j 0 (1+ j)))
       ((atom l))
-      (setq ret (append_self (car l)))
+      (setq ret (append-self (car l)))
 ;      (pprint (length ret))
       (do ((i1 (length ret)(1- i1)))
 	((<= i1 0))
@@ -68,18 +69,34 @@
 ;    (break)
 ;    (pprint ass)
 ;    (pprint all)
-    (unflatten_outlines 
-     (traceall 
-      (validate_flatten
-       (sort_flatten 
-	(compute_all_cross 
-	 (flatten_outlines all)))
-       ass)))))
+    (glyph2sfloat
+     (unflatten-outlines 
+      (traceall 
+       (validate-flatten
+	(sort-flatten 
+	 (compute-all-cross 
+	  (flatten-outlines all)))
+	ass))))))
 
-(defun flatten_outlines (orig)
-  (mapcar #'flatten_outline orig))
+; 輪郭線の各点を倍精度/単精度に変換する
+; 倍精度での演算により精度不足によるエラーの可能性が減る
+(defun glyph2dfloat (glyph)
+  (mapcar #'(lambda (contour)
+	      (mapcar #'(lambda (p) 
+			  `(,(car p) ,(dfloat (cadr p)) ,(dfloat (caddr p))))
+		      contour))
+	  glyph))
+(defun glyph2sfloat (glyph)
+  (mapcar #'(lambda (contour)
+	      (mapcar #'(lambda (p) 
+			  `(,(car p) ,(sfloat (cadr p)) ,(sfloat (caddr p))))
+		      contour))
+	  glyph))
+
+(defun flatten-outlines (orig)
+  (mapcar #'flatten-outline orig))
 #|
-(defun flatten_outline (outline)
+(defun flatten-outline (outline)
   (do ((ll (append1 outline (car outline)) (cdr ll))
        (ret1))
       ((atom ll)(nreverse ret1))
@@ -92,7 +109,7 @@
 	 (setq ll (cddr ll))))))
 |#
 ; match なしバージョン
-(defun flatten_outline (outline)
+(defun flatten-outline (outline)
   (do ((ll (append1 outline (car outline)) (cdr ll))
        (ret1))
       ((atom ll)(nreverse ret1))
@@ -111,10 +128,10 @@
 	      (push `((bezier (,x1 ,y1) (,x2 ,y2) (,x3 ,y3) (,x4 ,y4))) ret1)
 	      (setq ll (cddr ll)))))))
 
-(defun unflatten_outlines (orig)
-  (mapcar #'unflatten_outline orig))
+(defun unflatten-outlines (orig)
+  (mapcar #'unflatten-outline orig))
 #|
-(defun unflatten_outline (outline)
+(defun unflatten-outline (outline)
     (do ((ll outline(cdr ll))(ret1)(lastp))
       ((atom ll)
        (and ret1 
@@ -135,7 +152,7 @@
 	 (setq lastp p1)))))
 |#
 ; match なしバージョン
-(defun unflatten_outline (outline)
+(defun unflatten-outline (outline)
     (do ((ll outline(cdr ll))(ret1)(lastp))
       ((atom ll)
        (and ret1 
@@ -158,31 +175,31 @@
 	   (push `(angle .,p1) ret1)
 	   (setq lastp p1))))))
 
-(defun compute_all_cross (flatten)
+(defun compute-all-cross (flatten)
   (do ((l1 flatten (cdr l1))(i1 0 (1+ i1)))
     ((atom l1) flatten)
     (do ((l2 (car l1)(cdr l2))(j1 0 (1+ j1)))
       ((atom l2))
       (do ((l4 (cdr l2)(cdr l4))(j2 (1+ j1)(1+ j2)))
 	((or (atom l4)(and (zerop j1)(atom (cdr l4)))))
-	(compute_cross (car l2)(car l4) i1 j1 i1 j2))
+	(compute-cross (car l2)(car l4) i1 j1 i1 j2))
       (do ((l3 (cdr l1) (cdr l3))(i2 (1+ i1) (1+ i2)))
 	((atom l3))
 	(do ((l4 (car l3)(cdr l4))(j2 0 (1+ j2)))
 	  ((atom l4))
-	  (compute_cross (car l2)(car l4) i1 j1 i2 j2))))))
-(defun compute_cross (e1 e2 i1 j1 i2 j2)
+	  (compute-cross (car l2)(car l4) i1 j1 i2 j2))))))
+(defun compute-cross (e1 e2 i1 j1 i2 j2)
   (and (not (and (equal i1 i2)
 		 (or (equal (1- j1) j2)(equal j1 j2)(equal (1+ j1) j2))))
        (case (caar e1)
 	 (line
 	  (case (caar e2)
-	    (line (compute_lineline e1 e2 i1 j1 i2 j2))
-	    (bezier (compute_linebezier e1 e2 i1 j1 i2 j2))))
+	    (line (compute-lineline e1 e2 i1 j1 i2 j2))
+	    (bezier (compute-linebezier e1 e2 i1 j1 i2 j2))))
 	 (bezier
 	  (case (caar e2)
-	    (line (compute_linebezier e2 e1 i2 j2 i1 j1))
-	    (bezier (compute_bezierbezier e1 e2 i1 j1 i2 j2)))))))
+	    (line (compute-linebezier e2 e1 i2 j2 i1 j1))
+	    (bezier (compute-bezierbezier e1 e2 i1 j1 i2 j2)))))))
 (defun line2line (p10 p11 p20 p21)
 ;  (print 'line2line)
   (let* ((dp1 (diff2 p11 p10))(len1 (length2 dp1))
@@ -204,7 +221,7 @@
 		(flag (cond ((plusp stheta) -1)(t 1))))
 	   `(,cross ,sval ,tval ,flag))))))))
 
-(defun compute_lineline (e1 e2 i1 j1 i2 j2)
+(defun compute-lineline (e1 e2 i1 j1 i2 j2)
   (let* ((p10 (cadar e1))(p11 (caddar e1))
 	 (p20 (cadar e2))(p21 (caddar e2))
 	 (cross (line2line p10 p11 p20 p21)))
@@ -260,7 +277,7 @@
 		  (t1 (+ mint twidth1)))
 		 (append (line2bez a0 a1 b0 b4 b5 b6 mint twidth1)
 			 (line2bez a0 a1 b6 b7 b8 b3 t1 twidth1)))))))
-(defun compute_linebezier (e1 e2 i1 j1 i2 j2)
+(defun compute-linebezier (e1 e2 i1 j1 i2 j2)
   (let* ((a0 (cadar e1))(a1 (caddar e1))
 	 (b0 (cadar e2))(b1 (caddar e2))
 	 (b2 (fourth (car e2)))(b3 (fifth (car e2)))
@@ -352,7 +369,7 @@
 		    (bez2bez a6 a7 a8 a3 b0 b4 b5 b6 s1 mint twidth1)))))))
 
 ;
-(defun compute_bezierbezier (e1 e2 i1 j1 i2 j2)
+(defun compute-bezierbezier (e1 e2 i1 j1 i2 j2)
   (let* ((a0 (cadar e1))(a1 (caddar e1))
 	 (a2 (fourth (car e1)))(a3 (fifth (car e1)))
 	 (b0 (cadar e2))(b1 (caddar e2))
@@ -392,7 +409,7 @@
 		`((,tval ,(- flag) ,point ,i1 ,j1).,(cdr e2)))))))
 
 ; 各曲線セグメント上の交差点を t の順に並べる。
-(defun sort_flatten (outs)
+(defun sort-flatten (outs)
   (do ((l outs (cdr l))(ret))
     ((atom l)(nreverse ret))
     (do ((ll (car l)(cdr ll))(ret1))
@@ -416,7 +433,7 @@
 	   (rplaca (cdr (car l)) 0))
 	  (t
 	   (setq last (second (car l)))))))
-(defun set_alt (cross val outs)
+(defun set-alt (cross val outs)
   (let* ((point (third cross))
 	 (altline (nth (fourth cross) outs))
 	 (ret))
@@ -444,9 +461,9 @@
 	 (last (second (car sorted1))))
       ((atom l)
        (and (equal 1 start)(equal 1 last)
-	    (set_alt (car sorted) 0 outs)))
+	    (set-alt (car sorted) 0 outs)))
       (cond ((and (equal last 1) (equal 1 (second (car l))))
-	     (set_alt (car l) 0 outs))
+	     (set-alt (car l) 0 outs))
 	    (t
 	     (setq last (second (car l))))))))
 (defun validate_3 (sorted ass)
@@ -473,7 +490,7 @@
 	  ((equal flag -1)
 	   (push i tmp)))))
   
-(defun validate_out (out outs ass)
+(defun validate-out (out outs ass)
   (let* ((out (rm-invalid out))
 	 (i_sort))
     (do ((l out (cdr l))(i)(iassq))
@@ -486,27 +503,27 @@
     (mapcar #'(lambda (x) (validate_1 (cdr x))) i_sort)
     (setq out (rm-invalid out))
 ;    (and out (validate_2 out outs))
-;    (print "start-of-validate")
+;    (print "start_of_validate")
 ;    (pprint `(goyo ,out))
     (and out (validate_3 out ass))
 ;    (and out (validate_2 out outs))
 ;    (pprint `(soko ,out))
-;    (print "end-of-validate")
+;    (print "end_of_validate")
     ))
 
-(defun validate_flatten (outs ass)
+(defun validate-flatten (outs ass)
   (do ((l outs (cdr l))(ret))
     ((atom l)
 ;     (pprint outs)
      outs)
     (do ((ll (car l)(cdr ll))(ret1))
       ((atom ll)
-       (validate_out ret1 outs ass)
+       (validate-out ret1 outs ass)
 ;       (pprint ret1)
        )
       (setq ret1 (append ret1 (cdar ll))))))
      
-(defun search_first (out)
+(defun search-first (out)
   (do ((l out (cdr l))(ret))
     ((or ret (atom l))ret)
     (do ((ll (cdar l)(cdr ll)))
@@ -516,7 +533,7 @@
 (defun traceall (outs)
   (do ((l outs (cdr l))(ret)(start))
     ((atom l)ret)
-    (setq start (search_first (car l))) 
+    (setq start (search-first (car l))) 
     (cond 
      ((null start)
       (do ((ll (car l)(cdr ll))(ret1))
@@ -660,17 +677,17 @@
 ;
 ; 2つの直線で接するoutlineをくっつけていく．
 ;
-(defun append_outs (outline)
+(defun append-outs (outline)
   (do (
 ;       (l outline)
-       (l (correct_winding outline))
+       (l (correct-winding outline))
        (ret)(tmp))
     ((atom l)(nreverse ret))
     (setq tmp (car l))
     (do ((ll (cdr l)(cdr ll))(rest)(tmp1))
       ((atom ll)(push tmp ret)(setq l (nreverse rest)))
 ;      (pprint ll)
-      (cond ((setq tmp1 (append_out tmp (car ll)))
+      (cond ((setq tmp1 (append-out tmp (car ll)))
 	     (setq tmp tmp1)
 	     (setq ll (append ll rest))
 	     (setq rest nil)
@@ -681,7 +698,7 @@
 
 ; if appended return the appended outline 
 ; else return nil
-; (append_out '((angle 20.0 10.0)(angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)))
+; (append-out '((angle 20.0 10.0)(angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)))
 ;             '((angle 5.0 15.0)(angle 10.0 10.0)(angle 15.0 15.0)(angle 10.0 20.0)))
 ; -> ((angle 20.0 10.0)
 ;     (angle 15.0 15.0)
@@ -691,18 +708,18 @@
 ;     (angle 15.0 5.0))
 ;
 #|
-(defun append_out (out1 out2)
+(defun append-out (out1 out2)
   (let* ((top1 (car out1))(tmp)(l out1)(done))
     (loop
 ;     (pprint (car l))
      (match l
        ((('angle . p0)('angle . p1) . rest)
-	(setq tmp (append_out1 p0 p1 out2))
+	(setq tmp (append-out1 p0 p1 out2))
 	(and tmp (return (append (nreverse done) (list (car l)) tmp (cdr l))))
 	(push (car l) done)
 	(setq l (cdr l)))
        ((('angle . p0))
-	(setq tmp (append_out1 p0 (cdr top1) out2))
+	(setq tmp (append-out1 p0 (cdr top1) out2))
 	(and tmp (return (append (nreverse done) (list (car l)) tmp)))
 	(return nil))
        ((('angle . p0)('bezier . p1)('bezier . p2) . rest)
@@ -713,7 +730,7 @@
        (nil (return nil))))))
 |#
 ; match なしバージョン
-(defun append_out (out1 out2)
+(defun append-out (out1 out2)
   (let* ((top1 (car out1))(tmp)(l out1)(done))
     (loop
 ;     (pprint (car l))
@@ -723,13 +740,13 @@
       ((eq (caar l) 'angle)
        (cond 
 	((null (cdr l))
-	 (setq tmp (append_out1 (cdar l) (cdr top1) out2))
+	 (setq tmp (append-out1 (cdar l) (cdr top1) out2))
 	 (and tmp (return (append (nreverse done) (list (car l)) tmp)))
 	 (return nil))
 	(t
 	 (case (caadr l)
           (angle
-	    (setq tmp (append_out1 (cdar l) (cdadr l) out2))
+	    (setq tmp (append-out1 (cdar l) (cdadr l) out2))
 	    (and tmp 
 		 (return (append (nreverse done) (list (car l)) tmp (cdr l))))
 	    (push (car l) done)
@@ -744,19 +761,19 @@
 ; ないなら nilを返す
 ; ある場合は p1以下，p0までのoutlineを返す
 ;
-; (append_out1 '(10.0 10.0) '(15.0 15.0) 
+; (append-out1 '(10.0 10.0) '(15.0 15.0) 
 ;    '((angle 20.0 10.0)(angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)))
 ; -> ((angle 15.0 5.0)(20.0 10.0))
 ;
-; (append_out1 '(10.0 10.0) '(15.0 15.0) 
+; (append-out1 '(10.0 10.0) '(15.0 15.0) 
 ;    '((angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)(angle 20.0 10.0)))
 ; -> ((angle 15.0 5.0)(20.0 10.0))
 ;
-;(append_out1 '(15.0 15.0) '(10.0 10.0) 
+;(append-out1 '(15.0 15.0) '(10.0 10.0) 
 ; '((angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)(angle 20.0 10.0)))
 ; -> nil
 #|
-(defun append_out1 (p0 p1 out2)
+(defun append-out1 (p0 p1 out2)
 ;  (pprint `(,p0 ,p1 ,out2))
   (do ((l out2)(top (car out2))(lastl)(done))
     ((atom l) nil)
@@ -785,7 +802,7 @@
       (nil (return nil)))))
 |#
 ; match なしバージョン
-(defun append_out1 (p0 p1 out2)
+(defun append-out1 (p0 p1 out2)
 ;  (pprint `(,p0 ,p1 ,out2))
   (do ((l out2)(top (car out2))(lastl)(done))
     ((atom l) nil)
@@ -819,7 +836,7 @@
 	  (push (caddr l) done)
 	  (setq l rest))))))))
 ;
-(defun append_self (out1)
+(defun append-self (out1)
   (let* ((out (reverse (cons (car out1)(reverse out1)))))
     (do ((l out (cdr l))(ret))
       ((or ret (atom l)(atom (cdr l)))
@@ -833,11 +850,11 @@
 	       (rplacd l (cddr ll))
 	       (rplacd ll nil)
 ;	     (pprint (list out tmp))
-	       (return (setq ret (append (append_self out)
-				      (append_self tmp))))))))))
+	       (return (setq ret (append (append-self out)
+				      (append-self tmp))))))))))
 	     
 ;
-(defun self_bezier (a0 a1 a2 a3 &optional (mins 0.0)(twidth 1.0))
+(defun self-bezier (a0 a1 a2 a3 &optional (mins 0.0)(twidth 1.0))
   (and (line2line a0 a1 a3 a2)
        (let* ((a4 (times2 0.5 (plus2 a0 a1)))
 	      (a5 (times2 0.25 (plus2 a0 (times2 2.0 a1) a2)))
@@ -851,16 +868,16 @@
 		      #'(lambda (x) (> (abs (cddr x)) 0.001))
 		      (bez2bez a0 a4 a5 a6 a6 a5 a8 a3 mins mint twidth1))))
 	 (or (and cross (car cross))
-	     (self_bezier a0 a4 a5 a6 mins twidth1)
-	     (self_bezier a6 a7 a8 a3 mint twidth1)))))
+	     (self-bezier a0 a4 a5 a6 mins twidth1)
+	     (self-bezier a6 a7 a8 a3 mint twidth1)))))
 ;
-(defun rm_self_bezier (flatten)
+(defun rm-self-bezier (flatten)
   (do ((l flatten (cdr l))(ret))
     ((atom l)(nreverse ret))
     (match (caar l)
       (('line p0 p1) (push (car l) ret))
       (('bezier p0 p1 p2 p3)
-       (let* ((res (self_bezier p0 p1 p2 p3)))
+       (let* ((res (self-bezier p0 p1 p2 p3)))
 	 (cond (res
 ;		(pprint `(res ,res))
 		(let* ((crossp (car res))
@@ -883,7 +900,7 @@
 	       (t (push (car l) ret))))))))
 ; cannot compile with iwasaki ban compiler
 #|
-(defun rm_self_bezier (flatten)
+(defun rm-self-bezier (flatten)
   (do ((l flatten (cdr l))(ret))
     ((atom l)(nreverse ret))
     (case (caaar l)
@@ -893,7 +910,7 @@
 	      (p1 (third (caar l)))
 	      (p2 (fourth (caar l)))
 	      (p3 (fifth (caar l)))
-	      (res (self_bezier p0 p1 p2 p3)))
+	      (res (self-bezier p0 p1 p2 p3)))
 	 (cond (res
 ;		(pprint `(res ,res))
 		(let* ((crossp (car res))
@@ -917,7 +934,7 @@
 |#
 ;
 #|
-(defun self_cross (e i j)
+(defun self-cross (e i j)
   (case (caar e)
     (line)
     (bezier
@@ -925,22 +942,22 @@
 	    (p1 (third (car l)))
 	    (p2 (fourth (car l)))
 	    (p3 (fifth (car l)))
-	    (res (self_bezier p0 p1 p2 p3))
+	    (res (self-bezier p0 p1 p2 p3))
 	    (cross (car res))(sval (cadr res))(tval (cddr res)))
        (rplacd e `((,sval ,flag ,cross ,i ,j)
 		   (,tval ,(- flag) ,cross ,i ,j)
 		   .,(cdr e)))))))
 |#
 ;
-(defun compute_self_cross (flatten)
+(defun compute-self-cross (flatten)
   (do ((l2 flatten (cdr l2))(i1 0)(j1 0 (1+ j1)))
     ((atom l2)flatten)
-;    (self_cross (car l2) i1 j1)
+;    (self-cross (car l2) i1 j1)
     (do ((l4 (cdr l2)(cdr l4))(j2 (1+ j1)(1+ j2)))
       ((or (atom l4)(and (zerop j1)(atom (cdr l4)))))
-      (compute_cross (car l2)(car l4) i1 j1 i1 j2))))
+      (compute-cross (car l2)(car l4) i1 j1 i1 j2))))
 ;
-(defun loop_len (flatten)
+(defun loop-len (flatten)
   (do ((sum 0)
        (l flatten (cdr l)))
     ((atom l) sum)
@@ -1002,16 +1019,16 @@
 	      `((bezier ,fromp ,(plus2 fromp dp0),(diff2 top dp1),top))))))))
 	      
 ;
-(defun rm_self_loop (outline)
-  (let* ((flatten (compute_self_cross
-		   (rm_self_bezier (flatten_outline outline))))
+(defun rm-self-loop (outline)
+  (let* ((flatten (compute-self-cross
+		   (rm-self-bezier (flatten-outline outline))))
 	 (sorted (mapcar
 		  #'(lambda (x) 
 		      (cons (car x) 
 			    (sort (copy-list (cdr x))
 				  #'(lambda (y z) (< (car y)(car z))))))
 		  flatten))
-	 (loop_len (loop_len sorted)))
+	 (loop-len (loop-len sorted)))
 ;    (pprint sorted)
     (do ((l sorted (cdr l))(alllen 0)(tmplen))
       ((atom l))
@@ -1052,13 +1069,13 @@
 		    (t
 		     (rplaca (cdr (car ll)) -2)
 		     (rplaca (cdr pos) 2)))
-;	      (pprint `(len ,len loop_len ,loop_len))
+;	      (pprint `(len ,len loop-len ,loop-len))
 	      ))))
 ;    (pprint sorted)
     (do ((l sorted (cdr l))(ret)(wait)(unflatten))
       ((atom l)
 ;       (pprint (reverse ret))
-       (setq unflatten (unflatten_outline (mapcar #'car (nreverse ret))))
+       (setq unflatten (unflatten-outline (mapcar #'car (nreverse ret))))
        (nreverse (cdr (nreverse unflatten))))
       (do ((ll (cdar l)(cdr ll))(start 0))
 	((atom ll)
@@ -1074,17 +1091,17 @@
 	       
 ;	(and (eq (second (car ll) -3))
 ;	     (push 
-;    (setq unflatten (unflatten_outline (mapcar #'car flatten)))
+;    (setq unflatten (unflatten-outline (mapcar #'car flatten)))
 ;    (and (member-if #'cdr flatten)
 ;	 (pprint sorted))
 ;    (nreverse (cdr (nreverse unflatten)))))
 
 ;
-(defun rm_self_loop_all (outlines)
-  (mapcar #'rm_self_loop outlines))
+(defun rm-self-loop-all (outlines)
+  (mapcar #'rm-self-loop outlines))
 ;
-(defun correct_winding (outline)
-  (do ((l (rm_self_loop_all outline)(cdr l))(ret))
+(defun correct-winding (outline)
+  (do ((l (rm-self-loop-all outline)(cdr l))(ret))
     ((atom l) (nreverse ret))
     (cond ((minusp (checkwinding (car l)))
 ;	   (break)
