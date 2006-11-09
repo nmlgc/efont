@@ -107,7 +107,8 @@
       (cond ((null directparents)(push (list nil i) spaces))
 	    (t
 	     (do ((ll directparents (cdr ll))
-		  (parent nil)(pair nil))
+		  ;(parent nil)
+		  (pair nil))
 	       ((atom ll))
 	       (setq pair (list (car ll) i))
 	       (cond ((member pair spaces))

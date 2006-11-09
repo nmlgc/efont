@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2006
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,8 @@
 ; ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;
 ; $Id$
+
+(defparameter *allow-large-integers-in-type1* nil)
 
 (defparameter crypt_r 4330)
 (defconstant crypt_c1 52845)
@@ -76,7 +78,6 @@
 	(t
 	 (print `(error ,val) *terminal-io*)
 	 (break))))
-(defparameter *allow-large-integers-in-type1* nil)
 ;
 ; Adobe Type1 Font Format の出力
 ; (他から呼ばれていない)
@@ -86,7 +87,7 @@
 	 (cond (fontfile (open fontfile :direction :output))
 	       (t *standard-output*))))
     (do ((l klist (cdr l))
-	 (outline)
+;	 (outline)
 	 (kanji))
       ((atom l))
       (setq kanji (car l))

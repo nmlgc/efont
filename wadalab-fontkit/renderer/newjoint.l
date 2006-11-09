@@ -72,7 +72,7 @@
 	 (val)(ratio)
 	 (aprim)
 	 (param)(yscale)(centerp)
-	 (newalist `((xlimitratio . 1.0) .,alist))
+	; (newalist `((xlimitratio . 1.0) .,alist))
 	 (xunit)(xlimit))
   (do ((l primlist (cdr l))
        (i 0 (1+ i))

@@ -273,9 +273,7 @@
 (defun dump-skeleton-to-svg (chardef filename &key (no-frame nil)
 				                   (no-bboxes nil)
 						   (no-highlight nil))
-  (let* ((skel (applykanji chardef 'mincho2))
-	 (points (car skel))
-	 (lines (cadr skel)))
+  (let ((skel (applykanji chardef 'mincho2)))
     (with-svg-output (o filename :no-frame no-frame)
       (cond (no-bboxes
 	     )

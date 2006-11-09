@@ -83,7 +83,7 @@
 	 (lendp2_3 (expt lendp2 3))
 	 (a1 (plus2 p1 l1))
 	 (a2 (plus2 p3 l3))
-	 (b1 (diff2 p1 l1))
+	 (b1 (diff2 p1 (times2 rightside-head-flare l1)))
 	 (b2 (diff2 p3 (times2 rightside-tail-flare l3)))
 	 (da1 (plus2 
 	       dp1
@@ -202,7 +202,7 @@
 	 (p1 (svref cross 1))
 	 (p2 (svref cross 2))
 	;(p3 (svref cross 3))
-	 (d0 (norm2 (diff2 p2 p0)))
+	;(d0 (norm2 (diff2 p2 p0)))
 	 (len (metric2 p1 p0))
 ;	 (sintheta (* 0.5 (car d0)))
 	 (sintheta 0))
@@ -291,8 +291,8 @@
 	 (m (plus2 (times2 0.5 (plus2 x y))
 		   (times2 0.1 (list (cadr diff)(minus (car diff)))))))
 	(gothic3 x m y w)))
-
 ;	(niku3 x m y 0.3 0.3 w w w (* 1.1 w))))
+
 ;
 ; ½ÄËÀ¤ÎÄêµÁ
 ;
