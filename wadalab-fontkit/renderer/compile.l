@@ -50,23 +50,24 @@
 	(> (file-write-date file) (file-write-date binary-file)))))
 
 (defun compile-file-if-updated (file)
+;; デバッグ用の設定
+;  (declare (optimize (debug 3)
+;	    (compilation-speed 0)
+;	    (spped 1)
+;	    (safety 0)
+;	    (inhibit-warnings 3))
   (and (updated file)
-	(compile-file file :verbose nil :print nil :progress nil
-		           :trace-file nil)))
-
-;       (with-compilation-unit
-;	 (declare (optimize (debug 3)
-;			    (compilation-speed 0)
-;			    (spped 1)
-;			    (safety 0)
-;			    (inhibit-warnings 3))
-;))
+       (compile-file file :verbose nil :print nil :progress nil
+		          :trace-file nil)))
 
 (mapcar #'compile-file-if-updated
-   '("compat.l" "lib.l" "pack.l" "yokosort.l" "mincho.l" "apply.l"
-     "skel2list.l" "sym.l" "type1.l" "gothic.l" "newjoint.l" "center.l" 
-     "hiranew.l" "limit.l" "limitrule.l" "unit.l" "transform.l" "maru.l" 
-     "region.l" "out2ps.l" "out2sfd.l" "outline.l" "interpol.l" "mincho2.l"
-     "out2svg.l"))
+  '("compat.l" "lib.l"  "pack.l" 
+    "limit.l" "limitrule.l" "transform.l" "region.l"
+    "unit.l" "yokosort.l" "center.l" "newjoint.l" "apply.l"
+    "outline.l" "skel2list.l" "type1.l"
+    "mincho.l" "gothic.l" "maru.l"  "interpol.l" "mincho2.l"
+    "out2ps.l" "out2sfd.l" "out2svg.l"
+;    "hiranew.l" "sym.l"
+    ))
 
 (quit)
