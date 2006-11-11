@@ -200,9 +200,9 @@
 		   ((< maxy y)(setq maxy y))))))))
 ;
 (defun realheight (skel)
-  (let ((bbox (realregion skel)))   (- (fourth bbox) (second bbox))))
+  (region-height (realregion skel)))
 (defun realwidth (skel)
-  (let ((bbox (realregion skel)))   (- (third bbox)  (first bbox))))
+  (region-width (realregion skel)))
 
 (defun affinelist (point trans)
   (let ((x (float (car point)))
