@@ -71,13 +71,13 @@
     (format ,(car form) "</svg>~%")))
 
 ;-----------------------------------------------------------------------------
-; dump-glyph-to-svg: アウトライングリフを SVG に書き出す
+; dump-outline-to-svg: アウトライングリフを SVG に書き出す
 ;-----------------------------------------------------------------------------
 ; キーワード引数 :no-frame が t なら枠を書き出さない
 ;                :fill が t なら文字をアウトラインでなく塗り潰して表示する
 ; FontForge に取り込むときには両方とも t にするとよい。
 ;
-(defun dump-glyph-to-svg (glyph filename &key (no-frame nil) (fill nil))
+(defun dump-outline-to-svg (filename glyph &key (no-frame nil) (fill nil))
   (with-svg-output (o filename :no-frame no-frame)
     (dolist (outline glyph)
       (let ((fill-color   (if fill svg-fill-color svg-no-fill-color))
@@ -99,26 +99,26 @@
       (format o "z\"/>~%"))))
 
 ;
-(defun horizontal-line (y stream)
+(defun svg-horizontal-line (o y)
   (let ((hline
-	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M0 ~Al400 0\"/>~%"))
-    (format stream hline y)))
+	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M0 ~Ah400\"/>~%"))
+    (format o hline y)))
 ;
-(defun vertical-line (x stream)
+(defun svg-vertical-line (o x)
   (let ((vline
-	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M~A 0l0 400\"/>~%"))
-    (format stream vline x)))
+	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M~A 0v400\"/>~%"))
+    (format o vline x)))
 
-(defun print-bbox (bbox color stream)
-  (format stream
+(defun svg-bbox (o bbox color)
+  (format o
 	  " <rect fill=\"~A\" stroke=\"~A\" stroke-width=\"~A\" fill-opacity=\"~A\""
 	  color color svg-bbox-linewidth svg-bbox-opacity)
-  (format stream
+  (format o
 	  "x=\"~A\" y=\"~A\" width=\"~A\" height=\"~A\"/>~%"
 	  (first bbox) (second bbox)
 	  (- (third bbox) (first bbox)) (- (fourth bbox) (second bbox))))
 
-(defun yoko-bboxes (chardef stream)
+(defun svg-yoko-bboxes (o chardef)
   (let* ((nprims (mapcar #'(lambda (x) (applykanji x 'mincho2)) (cdr chardef)))
 	 (affines (affine-yoko-n nprims 'mincho2))
 	 (hen (car affines))
@@ -126,18 +126,18 @@
 	 (hen-bbox (append (affine '(0 0) hen) (affine '(400 400) hen)))
 	 (tsukuri-bbox (append (affine '(0 0) tsukuri) 
 			       (affine '(400 400) tsukuri))))
-    (print-bbox hen-bbox (first svg-bbox-colors) stream)
-    (print-bbox tsukuri-bbox (second svg-bbox-colors) stream)))
+    (svg-bbox o hen-bbox (first svg-bbox-colors))
+    (svg-bbox o tsukuri-bbox (second svg-bbox-colors))))
 ;
-(defun tate-bboxes (chardef stream)
+(defun svg-tate-bboxes (o chardef)
   (let* ((nprims (mapcar #'(lambda (x) (applykanji x 'mincho2)) (cdr chardef)))
 	 (affines (affine-tate-n nprims 'mincho2))
 	 (kammuri (car affines))
 	 (ashi (cadr affines))
 	 (kammuri-bbox (append (affine '(0 0) kammuri) (affine '(400 400) kammuri)))
 	 (ashi-bbox (append (affine '(0 0) ashi) (affine '(400 400) ashi))))
-    (print-bbox kammuri-bbox (first svg-bbox-colors) stream)
-    (print-bbox ashi-bbox (second svg-bbox-colors) stream)))
+    (svg-bbox o kammuri-bbox (first svg-bbox-colors))
+    (svg-bbox o ashi-bbox (second svg-bbox-colors))))
 
 (defun jointtype (chardef)
   (cond ((atom chardef)        nil)
@@ -236,28 +236,26 @@
 
 ; エレメント (漢字を構成する 1 本 1 本の線) を書き出す
 ;
-(defun dump-skel-elems (skel stream 
-			&key (highlight-function
-			      svg-skeleton-default-highlight-function))
+(defun svg-skel-elems (o skel &key (highlight-function
+			            svg-skeleton-default-highlight-function))
   (let* ((points (car skel))
 	 (lines (cadr skel))
 	 (nearest (funcall highlight-function skel))
-	 (color)
-	 )
+	 (color))
     (do ((l lines (cdr l))
 	 (i 0 (1+ i)))
 	((atom l))
       (setq color (cond ((member (caar l) '(xlimit ylimit)) svg-limit-color)
 			((member i nearest) svg-skel-highlight-color)
 			(t svg-skel-color)))
-      (format stream
+      (format o
 	      " <polyline stroke-width=\"~A\" stroke=\"~A\" fill=\"none\" points=\""
 	      svg-skel-linewidth color)
       (mapcar #'(lambda (point-number)
 		  (let ((p (nth point-number points)))
-		    (format stream "~A ~A " (car p) (cadr p))))
+		    (format o "~A ~A " (car p) (cadr p))))
 	      (cadar l))
-      (format stream "\"/>~%"))))
+      (format o "\"/>~%"))))
 
 ;-----------------------------------------------------------------------------
 ; dump-skeleton-to-svg: スケルトンを SVG に書き出す
@@ -270,7 +268,7 @@
 ; 紫色で強調表示する.
 ; no-frames を指定すると外枠を書き出さない。
 ;
-(defun dump-skeleton-to-svg (chardef filename &key (no-frame nil)
+(defun dump-skeleton-to-svg (filename chardef &key (no-frame nil)
 				                   (no-bboxes nil)
 						   (no-highlight nil))
   (let ((skel (applykanji chardef 'mincho2)))
@@ -278,11 +276,11 @@
       (cond (no-bboxes
 	     )
 	    ((eq 'yoko (jointtype chardef))
-	     (vertical-line (* 400.0 (hen-tsukuri-rate chardef)) o)
-	     (yoko-bboxes chardef o))
+	     (svg-vertical-line o (* 400.0 (hen-tsukuri-rate chardef)))
+	     (svg-yoko-bboxes o chardef))
 	    ((eq 'tate (jointtype chardef))
-	     (horizontal-line (* 400.0 (kammuri-ashi-rate chardef)) o)
-	     (tate-bboxes chardef o)))
+	     (svg-horizontal-line o (* 400.0 (kammuri-ashi-rate chardef)))
+	     (svg-tate-bboxes o chardef)))
       (if no-highlight
-	  (dump-skel-elems skel o :highlight-function #'no-highlight)
-	(dump-skel-elems skel o)))))
+	  (svg-skel-elems o skel :highlight-function #'no-highlight)
+	(svg-skel-elems o skel)))))
