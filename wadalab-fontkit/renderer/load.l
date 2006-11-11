@@ -59,8 +59,8 @@
      "out2ps.l"
      "out2sfd.l"
      "out2svg.l"
-;     "hiranew.l"
-;     "sym.l"
+     "hiranew.l"
+     "sym.l"
      )))
  (cond (source-load
 	(mapc #'(lambda (file) 

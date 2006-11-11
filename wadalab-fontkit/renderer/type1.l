@@ -46,12 +46,6 @@
 	       (string (hex1 (logand 15 (ash h -4))))
 	       (string (hex1 (logand 15 h)))))
 ;
-(defun long-hex-image (n)
- (cond ((< n 16) (string (hex1 n)))
-	(t (concatenate 'string
-			(long-hex-image (div n 16))
-			(string (hex1 (rem n 16)))))))
-;
 (defun putc_crypt (c)
   (let ((cipher (logand 255 (logxor c (ash crypt_r -8)))))
     (setq crypt_r (rem (+ crypt_c2 (* crypt_c1 (+ cipher crypt_r))) 65536))
@@ -91,9 +85,9 @@
 	 (kanji))
       ((atom l))
       (setq kanji (car l))
-      (format t "~A~A ; ~A~%"
-	      (long-hex-image (logand 127 (char-int (char kanji 0))))
-	      (long-hex-image (logand 127 (char-int (char kanji 1))))
+      (format t "~X~X ; ~A~%"
+	      (logand 127 (char-int (char kanji 0)))
+	      (logand 127 (char-int (char kanji 1)))
 	      kanji)
       (princ (out2type1 (makeoutline
 			 (skeleton2list (applykanji (car l)) tag)))))))

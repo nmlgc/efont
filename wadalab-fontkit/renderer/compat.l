@@ -59,6 +59,9 @@
     (defmacro sfloat (n) `(coerce ,n 'single-float))
     (defun convert-string-to-bytes (str charset) str)))
 
+(defun to-hex-string (number)
+  (format nil "~X" number))
+
 (defun jiscode (kanji)
   (let ((kanjistr (symbol-name kanji))
 	(kstr))
@@ -66,13 +69,13 @@
 	(let ((bytes (convert-string-to-bytes kanjistr EUC-JP)))
 	  (cond ((and (= 2 (length bytes))
 		      (logand 128 (aref bytes 0)))
-		 (setq kstr (long-hex-image 
+		 (setq kstr (to-hex-string
 			     (+ (logand 127 (aref bytes 1))
 				(* 256 (logand 127 (aref bytes 0)))))))
 		((and (= 7 (length bytes))
 		      (= 49 (aref bytes 0)) (= 45 (aref bytes 1)))
 		 (setq kstr
-		       (long-hex-image
+		       (to-hex-string
 			(+ (logand 127 
 				 (+ 32 
 				    (* 100 (aref bytes 5))
@@ -87,14 +90,14 @@
 		 (setq kstr "2121"))))
       (cond ((and (= 2 (length kanjistr)) ;;; cmucl
 		  (logand 128 (char-int (char kanjistr 0))))
-	     (setq kstr (long-hex-image 
+	     (setq kstr (to-hex-string
 			 (+ (logand 127 (char-int (char kanjistr 1)))
 			    (* 256 (logand 127 
 					   (char-int (char kanjistr 0))))))))
 	    ((and (= 7 (length kanjistr))
 		  (string-equal (subseq kanjistr 0 2) "1-"))
 	     (setq kstr
-		   (long-hex-image
+		   (to-hex-string
 		    (+ (logand 127 (+ 32 (parse-integer
 					  (subseq kanjistr 5 7))))
 		       (* 256 (logand 127 (+ 32 (parse-integer
@@ -251,3 +254,4 @@
 
 (defun head (n seq)
   (subseq seq 0 n))
+

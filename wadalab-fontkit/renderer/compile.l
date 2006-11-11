@@ -67,7 +67,7 @@
     "outline.l" "skel2list.l" "type1.l"
     "mincho.l" "gothic.l" "maru.l"  "interpol.l" "mincho2.l"
     "out2ps.l" "out2sfd.l" "out2svg.l"
-;    "hiranew.l" "sym.l"
+    "hiranew.l" "sym.l"
     ))
 
 (quit)
