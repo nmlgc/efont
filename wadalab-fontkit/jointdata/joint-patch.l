@@ -27,7 +27,7 @@
 ;
 ; $Id$
 
-(defmacro defjoint (type code body) `(setq ,code ,body))
+;(defmacro defjoint (type code body) `(setq ,code ,body))
 (subfont mincho-patch mincho)
 (subfont gothic-patch gothic)
 (subfont maru-patch maru)
