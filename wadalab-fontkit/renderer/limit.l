@@ -443,8 +443,7 @@
 ; revconv 逆変換を求める
 ;
 (defun revconv (conv)
-  (let* ((rmat (rmat conv))
-	 (ret (copy-seq rmat)))
+  (let* ((rmat (rmat conv)))
     (vector (svref rmat 0) (svref rmat 1)
 	    (svref rmat 2) (svref rmat 3)
 	    (minus (+ (* (svref conv 4)(svref rmat 0))
@@ -713,6 +712,7 @@
       (setq p1 (nth (car l) points)))))
 
 (defun element-limit1 (e1 p1 e2 p2 param)
+  (declare (ignore param))
   (let* ((points1)
 	 (points2)
 	 (limitflag (or (member (car e1) '(xlimit ylimit))
@@ -833,6 +833,7 @@
 ;
 ; 与えるパラメータはpointarrayを2つとvectorarray
 ;
+
 ; 組合わせのためだけに存在する仮想的なxlimit, ylimit
 ; というエレメントを除く
 ;
@@ -841,3 +842,10 @@
     ((atom l)`(,(car prim) ,(nreverse ret).,(cddr prim)))
     (or (memq (caar l) '(xlimit ylimit))
 	(push (car l) ret))))
+
+; 仮想エレメント (xlimit ..) と (ylimit ..) をエレメント一覧から取り除く
+(defun rmlimit (x)
+  (let* ((elements (cadr x))(ret))
+    (do ((l elements (cdr l)))
+      ((atom l) `(,(car x) ,(nreverse ret) .,(cddr x)))
+      (or (memq (caar l) '(xlimit ylimit)) (push (car l) ret)))))

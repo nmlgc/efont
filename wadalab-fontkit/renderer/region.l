@@ -176,10 +176,3 @@
 	 (affine2 (times-affine (scale-affine limit1 conv) affine1)))
 ;    (break)
     affine2))
-
-; 仮想エレメント (xlimit ..) と (ylimit ..) をエレメント一覧から取り除く
-(defun rmlimit (x)
-  (let* ((elements (cadr x))(ret))
-    (do ((l elements (cdr l)))
-      ((atom l) `(,(car x) ,(nreverse ret) .,(cddr x)))
-      (or (memq (caar l) '(xlimit ylimit)) (push (car l) ret)))))

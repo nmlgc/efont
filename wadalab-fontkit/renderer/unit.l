@@ -454,7 +454,8 @@
 			     (setq minkankaku kankaku)))))))))))
 ;
 ; e1 の(端)点が e2 のリンク点に一致するかどうか
-(defun inlink (e1 e2 points)	; points は使っていない
+(defun inlink (e1 e2 points)
+  (declare (ignore points))
   (let* ((points1 (cadr e1))
 	 (links2 (assq 'link (cddr e2)))
 	 (links2 (and links2 (cdr links2))))
@@ -522,7 +523,7 @@
 (defun findunit (prim)
   (let* ((points (car prim))
 	 (elements (cadr prim))
-	 (alist (cddr prim))
+	; (alist (cddr prim))
 	 (unit)
 	 (crossunit)
 	 (nocrossunit)
@@ -781,6 +782,7 @@
 	  (t (standardunit e1 points1 e2 points2)))))
 ;
 (defun point-relation (p1 element points)
+  (declare (ignore points)
   (let ((epoints (cadr element))
 	(lpoints (assq 'link (cddr element))))
     (cond ((eq p1 (car epoints))
@@ -794,7 +796,7 @@
 ;
 (defun element-relation (e1 e2 points)
   (let* ((points1 (cadr e1))
-	 (links1 (assq 'link (cddr e1)))
+	; (links1 (assq 'link (cddr e1)))
 	 (points2 (cadr e2))
 	 (links2 (assq 'link (cddr e2)))
 	 (cross (cond ((or (memeq (car points1) links2)

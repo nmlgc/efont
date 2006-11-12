@@ -38,6 +38,7 @@
       (in-package charset)
       (export (intern "EUC-JP"))
       (in-package common-lisp-user)))
+(defvar EUC-JP)
 
 ; CMUCL に日本語シンボルを読ませる
 ; (http://www.geocities.co.jp/SiliconValley-SanJose/7474/cmuclMemo.html#0012)
@@ -57,7 +58,9 @@
   (progn
     (defmacro dfloat (n) `(coerce ,n 'double-float)) 
     (defmacro sfloat (n) `(coerce ,n 'single-float))
-    (defun convert-string-to-bytes (str charset) str)))
+    (defun convert-string-to-bytes (str charset) 
+      (declare (ignore charset))
+      str)))
 
 (defun to-hex-string (number)
   (format nil "~X" number))
@@ -113,15 +116,29 @@
 (defun minus (a) (- a))
 
 ; Common Lisp の assq, memq は真リストしか引数に取れないので、名前を変える
+
 (or (fboundp 'assq)
     (defmacro assq (key obj) `(assoc ,key ,obj :test #'eq)))
+
 ; obj がドットリストでも動くように変更するとこうなる。
 (defun assq* (key obj)
   (do ((l obj (cdr l)))
       ((atom l) nil)
       (and (consp (car l)) (eq (caar l) key)
 	   (return (car l)))))
+;
+(defun assq*cdr (key list)
+  (cond ((consp key)
+	 (do ((l key (cdr l))(assq*))
+	   ((atom l))
+	   (setq assq* (assq* (car l) list))
+	   (and assq* (return (cdr assq*)))))
+	(t
+	 (let ((assq* (assq* key list)))
+	   (and assq* (cdr assq*))))))
+;
 (defun memeq (key lst) (and (listp lst) (member key lst :test #'eq)))
+
 (or (fboundp 'memq)
     (defmacro memq (key lst) `(member ,key ,lst :test #'eq)))
 
@@ -232,9 +249,9 @@
 	    `(let ((,vals ,list))
 	       (cond ,@(mapcar #'(lambda (form)
 				   (let ((vars (car form)))
-					 `((match-or-not-0 ',vars ,vals)
-					   (let* (,@(bind0 vars vals))
-					     ,@(cdr form)))))
+				     `((match-or-not-0 ',vars ,vals)
+				       (let* (,@(bind0 vars vals))
+					 ,@(cdr form)))))
 			       forms))))))
 
 ;-----------------------------------------------------------------------------

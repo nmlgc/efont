@@ -34,6 +34,7 @@
        (< (second region) (cadr point) (fourth region))))
 
 (defun transprim (fonttype param prim)
+  (declare (ignore fonttype))
   (let* ((prim (applykanji prim))
 	 (elements (cadr prim))
 	 (alist (cddr prim))
@@ -158,6 +159,7 @@
     `(,(car newprim) ,(cadr newprim) .,(remassoc 'hook (cddr newprim)))))
 ;
 (defun add-center (fonttype list)
+  (declare (ignore fonttype))
   (let* ((center (car list))
 	 (prim (cadr list))
 	 (nprim (applykanji prim)))
@@ -169,6 +171,7 @@
     `(,(car nprim),(cadr nprim)(center).,(cddr nprim))))
 
 (defun changexunit (fonttype list)
+  (declare (ignore fonttype))
   (let* ((scale (car list))
 	 (prim (cadr list))
 	 (nprim (add-unit (applykanji prim)))

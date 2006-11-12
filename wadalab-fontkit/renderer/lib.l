@@ -633,31 +633,6 @@
 |#
 
 ;
-; mincho.l の kokorohane でのみ使用する。
-;
-(defun newbez (p0 p1 b0 b1 b2 b3)
-  (let* ((crosses (cross2bez p0 p1 b0 b1 b2 b3))
-	 (t1 (cdr crosses))(t2 (* t1 t1))(t3 (* t2 t1))
-	 (db0 (times2 3.0 (diff2 b1 b0)))
-	 (db3 (times2 3.0 (diff2 b3 b2)))
-	 (n1 (plus2
-	      (times2 t3 (plus2 (times2 2.0 (diff2 b0 b3))
-				db0 db3))
-	      (times2 t2 (diff2 (times2 3.0 (diff2 b3 b0))
-				(plus2 (times2 2.0 db0) db3)))
-	      (times2 t1 db0)
-	      b0))
-	 (dn1 (plus2
-	       (times2 t2 (plus2 (times2 6.0 (diff2 b0 b3))
-				 (times2 3.0 (plus2 db0 db3))))
-	       (times2 t1 (diff2 (times2 6.0 (diff2 b3 b0))
-				 (plus2 (times2 4.0 db0) (times2 2.0 db3))))
-	       db0)))
-    `(,b0 
-      ,(plus2 b0 (times2 (/ t1 3.0) db0))
-      ,(diff2 n1 (times2 (/ t1 3.0) dn1))
-      ,n1)))
-;
 ; ひらがななどを定義する点を滑らかに繋ぐ
 ;
 (defun tenhokan (points 
@@ -977,6 +952,24 @@
 (defun normwidth (dotsize)
   (* 0.5 meshsize (- dotsize 0.5)))
 
+;
+; plistにfonttypeがあるときはそちらの定義を
+; そうで無いときはsymbol valueを参照する
+;
+(defun get-def (symbol fonttype)
+  (do ((l fonttype (get l 'parent))(def))
+    ((null l)
+     (and (boundp symbol)(eval symbol)))
+    (and (setq def (get symbol l))(return def))))
+
+;
+; atm (シンボルや数値) が pattern のメンバーかどうか
+;
+(defun eq_member (atm pattern)
+  (cond ((eq pattern '*) t)
+	((atom pattern) (eq atm pattern))
+	(t (memq atm pattern))))
+
 ;-----------------------------------------------------------------------------
 ; フォント定義言語の処理定義
 ;-----------------------------------------------------------------------------
@@ -1016,8 +1009,8 @@
 ; nil の場合、setq するのと同じである (このへんの解釈は defprimitive と同じ)
 ; 実際の使用例では fonttype には常に書体名が指定され、nil による指定の例はない
 ; 実際に defjoint が行われているのは、jointdata/joint-{maru,patch}.l の
-; 2 ファイルのみ。前者は load.l で取り込まれていないし、後者は
-; (defmacro defjoint (type code body) `(setq ,code ,body)) という定義で
+; 2 ファイルのみ。前者は load.l で取り込まれていないし、後者は joint-patch.l で
+; (defmacro defjoint (type code body) `(setq ,code ,body)) という定義によって
 ; 上書きされているので、以下の定義が使用されることはないと思われる。
 (defmacro defjoint (fonttype name data)
   (cond (fonttype `(putprop ',name ,data ',fonttype))

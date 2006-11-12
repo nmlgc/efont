@@ -307,16 +307,6 @@
 		  (affine-kamae (car nprims)(cadr nprims) fonttype)
 		  nprims nil)))))
 ;
-(defun assq*cdr (key list)
-  (cond ((consp key)
-	 (do ((l key (cdr l))(assq*))
-	   ((atom l))
-	   (setq assq* (assq* (car l) list))
-	   (and assq* (return (cdr assq*)))))
-	(t
-	 (let ((assq* (assq* key list)))
-	   (and assq* (cdr assq*))))))
-;
 (defun affine-kamae2 (prim1 prim2 prim3 fonttype)
   (let* ((nprim1 `(,(car prim1) ,(cadr prim1) (center).,(cddr prim1)))
 	 (affine1 (affine-inner2 nprim1 prim2 nil '(150 130)
@@ -761,6 +751,7 @@
 (defun region-center (region)
   `(,(* 0.5 (+ (first region)(third region)))
     ,(* 0.5 (+ (second region)(fourth region)))))
+
 ; scale-affine
 ; x+(Ax+c)t のtを代入する
 (defun scale-affine (limit affine)
