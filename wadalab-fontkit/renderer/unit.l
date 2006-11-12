@@ -782,7 +782,7 @@
 	  (t (standardunit e1 points1 e2 points2)))))
 ;
 (defun point-relation (p1 element points)
-  (declare (ignore points)
+  (declare (ignore points))
   (let ((epoints (cadr element))
 	(lpoints (assq 'link (cddr element))))
     (cond ((eq p1 (car epoints))
