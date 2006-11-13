@@ -52,10 +52,10 @@
 (defun compile-file-if-updated (file)
 ;; デバッグ用の設定
 ;  (declare (optimize (debug 3)
-;	    (compilation-speed 0)
-;	    (spped 1)
-;	    (safety 0)
-;	    (inhibit-warnings 3))
+;		      (compilation-speed 0)
+;		      (spped 1)
+;		      (safety 0)
+;		      (inhibit-warnings 3)))
   (and (updated file)
        (compile-file file :verbose nil :print nil :progress nil
 		          :trace-file nil)))
