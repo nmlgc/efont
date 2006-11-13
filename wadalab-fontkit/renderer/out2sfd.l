@@ -1404,12 +1404,12 @@ EndChar
 ;
 ; skeleton file output as EPS
 ;
-(defun skeleton2eps (o skeleton)
-  (output-skel2eps-header o)
+(defun skeleton2eps (skeleton)
+  (output-skel2eps-header)
   (output-skel2eps-body oskeleton)
   )
 
-(defun output-skel2eps-header (o)
+(defun output-skel2eps-header ()
   (princ 
 "%PS-2.0
 gsave
@@ -1451,23 +1451,23 @@ gsave
 } def
 0 800 translate 2.5 -2.5 scale
 
-") o)
+"))
 
-(defun output-skel2eps-stroke (o stroke points)
+(defun output-skel2eps-stroke (stroke points)
   (let* ((stroke-name (car stroke))
 	 (point-indexes (cadr stroke)))
-    (format o "~A newstroke~%" (symbol-name stroke-name))
+    (format t "~A newstroke~%" (symbol-name stroke-name))
     (let ((p (nth (car point-indexes) points)))
-      (format o "~A ~A moveto~%" (car p) (cadr p)))
+      (format t "~A ~A moveto~%" (car p) (cadr p)))
     (mapcar #'(lambda (pindex)
 		(let ((p (nth pindex points)))
-		  (format o "~A ~A lineto~%" (car p) (cadr p))))
+		  (format t "~A ~A lineto~%" (car p) (cadr p))))
 	    (cdr point-indexes))
-    (format o "stroke~%~%grestore~%")))
+    (format t "stroke~%~%grestore~%")))
 
-(defun output-skel2eps-joints (o points)
-  (format o "~%")
-  (mapcar #'(lambda (p) (format o "~A ~A newjoint~%" (car p) (cadr p)))
+(defun output-skel2eps-joints (points)
+  (format t "~%")
+  (mapcar #'(lambda (p) (format t "~A ~A newjoint~%" (car p) (cadr p)))
 	  (remove-if-not #'(lambda (pt) 
 			     (member '(LINK-OK T) (cddr pt) :test #'equal))
 			 points)))
@@ -1486,24 +1486,24 @@ gsave
 
 ;;; FontForge での取り込み用にレンダリング結果を出力
 ;
-(defun print-point (o pt)
-  (format o "~A ~A " (* 2.5 (car pt)) (+ 800 (* -2.5 (cadr pt)))))
+(defun print-point (pt)
+  (format t "~A ~A " (* 2.5 (car pt)) (+ 800 (* -2.5 (cadr pt)))))
 
-(defun print-path (o path) 
-  (format o "newpath~%")
-  (print-point o (cdar path))
-  (format o "moveto~%")
+(defun print-path (path) 
+  (format t "newpath~%")
+  (print-point (cdar path))
+  (format t "moveto~%")
   (do* ((pth (cdr path) (cdr pth))
 	(pt (car pth) (car pth))
 	(iscurve nil))
        ((atom pth))
-    (print-point o (cdr pt))
+    (print-point (cdr pt))
     (and (eq 'ANGLE (car pt))
-	 (format o (if iscurve "curveto~%" "lineto~%")))
+	 (format t (if iscurve "curveto~%" "lineto~%")))
     (setq iscurve (eq 'BEZIER (car pt))))
-  (format o "closepath~%fill~%~%"))
+  (format t "closepath~%fill~%~%"))
 
-(defun outline2eps (o outline)
-  (format o "0 setlinewidth~%~%")
-  (mapcar #'(lambda (path) (print-path o path))
+(defun outline2eps (outline)
+  (format t "0 setlinewidth~%~%")
+  (mapcar #'(lambda (path) (print-path path))
 	  outline))
