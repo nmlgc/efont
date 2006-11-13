@@ -1907,88 +1907,87 @@
      last->ptindex = 0;
  
      for ( base=head; base!=NULL && base->next!=NULL; base = pt ) {
---- fontforge/cvgetinfo.c.orig	Thu Sep 28 05:50:35 2006
-+++ fontforge/cvgetinfo.c	Sun Nov 12 11:51:32 2006
-@@ -88,6 +88,11 @@
+--- fontforge/cvgetinfo.c.orig	Mon Nov 13 14:27:56 2006
++++ fontforge/cvgetinfo.c	Tue Nov 14 04:18:44 2006
+@@ -88,6 +88,13 @@
  #define CID_DeltaCurvature	2045
  #define CID_TabSet	2100
  
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +#define CID_StrokeType  1001
 +#define CID_Width	1002
++#endif
 +#endif
 +
  #define CID_X		3001
  #define CID_Y		3002
  #define CID_NameList	3003
-@@ -1767,7 +1772,15 @@
+@@ -1767,7 +1774,19 @@
  return( true );
  }
  
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +extern GTextInfo stroketypelist[30];
 +#endif
++#endif
 +
  static int PI_Ok(GGadget *g, GEvent *e) {
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +    int err=false;
++#endif
 +#endif
 +
      if ( e->type==et_controlevent && e->u.control.subtype == et_buttonactivate ) {
  	GIData *ci = GDrawGetUserData(GGadgetGetWindow(g));
  
-@@ -1777,6 +1790,12 @@
+@@ -1777,6 +1796,14 @@
  	PI_FigureNext(ci);
  	PI_FigurePrev(ci);
  
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	ci->curspl->width = GetReal8(ci->gw,CID_Width,_("Width"), &err);
 +	ci->curspl->stroketype = (int) (GGadgetGetListItemSelected(GWidgetGetControl(ci->gw,CID_StrokeType))->userdata);
 +	ci->cv->sc->parent->last_stroketype = ci->curspl->stroketype;
 +#endif
++#endif
 +
  	ci->done = true;
  	/* All the work has been done as we've gone along */
      }
-@@ -1930,9 +1949,9 @@
- 	strcpy( buffer, _("Curvature: ?"));
-     GGadgetSetTitle8(GWidgetGetControl(ci->gw,CID_PrevCurvature),buffer);
-     if ( kappa!=CURVATURE_ERROR && kappa2!=CURVATURE_ERROR )
--	sprintf( buffer, "∆: %g", (kappa-kappa2)*emsize );
-+	sprintf( buffer, "[2],H[0],F(B: %g", (kappa-kappa2)*emsize );
-     else
--	strcpy( buffer, "∆: ?");
-+	strcpy( buffer, "[2],H[0],F(B: ?");
-     GGadgetSetTitle8(GWidgetGetControl(ci->gw,CID_DeltaCurvature),buffer);
- }
- 
-@@ -2510,7 +2529,14 @@
+@@ -2510,7 +2537,15 @@
  	*varray[11], *harray1[4], *harray2[6], *hvarray1[25], *hvarray2[25],
  	*hvarray3[16], *harray3[11];
      GTextInfo label[54], mlabel[11];
-+#ifdef FONTFORGE_CONFIG_CLWFK
++
++#ifdef FONTFORGE_CONFIG_CLWFK_BUGS_ARE_NOT_FIXED_YET
 +    GGadgetCreateData sgcd[6];
 +    GTextInfo slabel[6];
-+    GTabInfo aspects[6];
 +    char buffer[30];
++    GTabInfo aspects[5];
 +#else
      GTabInfo aspects[4];
 +#endif
      static GBox cur, nextcp, prevcp;
      extern Color nextcpcol, prevcpcol;
      GWindow root;
-@@ -2561,6 +2587,10 @@
+@@ -2561,6 +2596,12 @@
  	memset(&hgcd,0,sizeof(hgcd));
  	memset(&h2gcd,0,sizeof(h2gcd));
  	memset(&mgcd,0,sizeof(mgcd));
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	memset(&sgcd,0,sizeof(sgcd));
 +	memset(&slabel,0,sizeof(slabel));
 +#endif
++#endif
  	memset(&mlabel,0,sizeof(mlabel));
  	memset(&aspects,0,sizeof(aspects));
  	memset(&pb,0,sizeof(pb));
-@@ -2723,7 +2753,7 @@
+@@ -2723,7 +2764,7 @@
  	hvarray1[l++] = &gcd[j];
  	++j;
  
@@ -1997,7 +1996,7 @@
  	label[j].text_is_1byte = true;
  	gcd[j].gd.label = &label[j];
  	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
-@@ -2836,7 +2866,7 @@
+@@ -2836,7 +2877,7 @@
  	hvarray2[l++] = &gcd[j];
  	++j;
  
@@ -2006,68 +2005,77 @@
  	label[j].text_is_1byte = true;
  	gcd[j].gd.label = &label[j];
  	gcd[j].gd.pos.x = gcd[j-1].gd.pos.x+gcd[j-1].gd.pos.width+2; gcd[j].gd.pos.y = gcd[j-3].gd.pos.y; 
-@@ -2855,7 +2885,7 @@
- 	hvarray2[l++] = &gcd[j]; hvarray2[l++] = GCD_ColSpan; hvarray2[l++] = GCD_ColSpan;
- 	++j;
+@@ -3023,6 +3064,55 @@
+ 	h2gcd[0].gd.u.list = SCHintList(cv->sc,NULL);
+ 	h2gcd[0].creator = GListCreate;
  
--	label[j].text = (unichar_t *) "∆: -0.00000000";
-+	label[j].text = (unichar_t *) "[2],H[0],F(B: -0.00000000";
- 	label[j].text_is_1byte = true;
- 	gcd[j].gd.label = &label[j];
- 	gcd[j].gd.pos.x = 130; gcd[j].gd.pos.y = gcd[j-1].gd.pos.y;
-@@ -3131,6 +3161,52 @@
- 	mgcd[j].creator = GGroupCreate;
- 	++j;
- 
++#if 0
 +#ifdef FONTFORGE_CONFIG_CLWFK
-+	j = 0;
++	slabel[0].text = (unichar_t *) _("Stroke Type:");
++	slabel[0].text_is_1byte = true;
++	sgcd[0].gd.label = &slabel[0];
++	sgcd[0].gd.pos.x = 7; sgcd[0].gd.pos.y = 7+3+5; 
++	sgcd[0].gd.pos.width = PI_Width-8;
++	sgcd[0].gd.pos.height = hgcd[0].gd.pos.height+10+24;
++	sgcd[0].gd.flags = gg_enabled|gg_visible;
++	sgcd[0].creator = GLabelCreate;
 +
-+	slabel[j].text = (unichar_t *) _("Stroke Type:");
-+	slabel[j].text_is_1byte = true;
-+	sgcd[j].gd.label = &slabel[j];
-+	sgcd[j].gd.pos.x = 7; sgcd[j].gd.pos.y = 7+3+5; 
-+	sgcd[j].gd.flags = gg_enabled|gg_visible;
-+	sgcd[j++].creator = GLabelCreate;
-+
-+	sgcd[j].gd.pos.x = 80; sgcd[j].gd.pos.y = gcd[j-1].gd.pos.y-5;
-+	sgcd[j].gd.pos.width = 100;
-+	sgcd[j].gd.flags = gg_enabled|gg_visible;
-+	sgcd[j].gd.cid = CID_StrokeType;
-+	sgcd[j].gd.u.list = stroketypelist;
++	sgcd[1].gd.pos.x = 80; sgcd[1].gd.pos.y = gcd[0].gd.pos.y-5;
++	sgcd[1].gd.pos.width = 100;
++	sgcd[1].gd.flags = gg_enabled|gg_visible;
++	sgcd[1].gd.cid = CID_StrokeType;
++	sgcd[1].gd.u.list = stroketypelist;
 +	for ( k=0; ; k++) {
 +	    if (stroketypelist[k].text == NULL)
 +	break;
 +	    stroketypelist[k].selected = (k == spl->stroketype);
 +	    stroketypelist[k].disabled = false;
 +	}
-+	sgcd[j++].creator = GListButtonCreate;
++//	sgcd[1].gd.handle_controlevent = PI_StrokeTypeSel;
++	sgcd[1].creator = GListButtonCreate;
 +
-+	slabel[j].text = (unichar_t *) _("Width:");
-+	slabel[j].text_is_1byte = true;
-+	sgcd[j].gd.label = &slabel[j];
-+	sgcd[j].gd.pos.x = 7; sgcd[j].gd.pos.y = sgcd[j-1].gd.pos.y+32;
-+	sgcd[j].gd.flags = gg_enabled|gg_visible;
-+	sgcd[j++].creator = GLabelCreate;
++	slabel[2].text = (unichar_t *) _("Width:");
++	slabel[2].text_is_1byte = true;
++	sgcd[2].gd.label = &slabel[2];
++	sgcd[2].gd.pos.x = 7; sgcd[2].gd.pos.y = sgcd[1].gd.pos.y+40;
++	sgcd[2].gd.flags = gg_enabled|gg_visible;
++	sgcd[2].creator = GLabelCreate;
 +
 +	sprintf( buffer, "%.3f", spl->width );
-+	slabel[j].text = (unichar_t *) buffer;
-+	slabel[j].text_is_1byte = true;
-+	sgcd[j].gd.label = &slabel[j];
-+	sgcd[j].gd.pos.x = 80; sgcd[j].gd.pos.y = sgcd[j-1].gd.pos.y-5;
-+	sgcd[j].gd.pos.width = 80;
-+	sgcd[j].gd.flags = gg_enabled|gg_visible;
-+	sgcd[j].gd.cid = CID_Width;
-+	sgcd[j++].creator = GTextFieldCreate;
++	slabel[3].text = (unichar_t *) buffer;
++	slabel[3].text_is_1byte = true;
++	sgcd[3].gd.label = &slabel[3];
++	sgcd[3].gd.pos.x = 80; sgcd[3].gd.pos.y = sgcd[2].gd.pos.y-5;
++	sgcd[3].gd.pos.width = 80;
++	sgcd[3].gd.flags = gg_enabled|gg_visible;
++	sgcd[3].gd.cid = CID_Width;
++	sgcd[3].creator = GTextFieldCreate;
++
++	sgcd[4].gd.pos.x = 2; sgcd[4].gd.pos.y = 2;
++	sgcd[4].gd.pos.width = pos.width-4; sgcd[4].gd.pos.height = pos.height-4;
++	sgcd[4].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
++	sgcd[4].creator = GGroupCreate;
++#endif
++#endif
++
+ 	j = 0;
+ 
+ 	aspects[j].text = (unichar_t *) _("Location");
+@@ -3036,6 +3126,14 @@
+ 	aspects[j].text = (unichar_t *) _("Active Hints");
+ 	aspects[j].text_is_1byte = true;
+ 	aspects[j++].gcd = h2gcd;
++
 +#if 0
++#ifdef FONTFORGE_CONFIG_CLWFK
++	aspects[j].text = (unichar_t *) _("CLWFK");
++	aspects[j].text_is_1byte = true;
++	aspects[j++].gcd = sgcd;
 +#endif
-+	sgcd[j].gd.pos.x = 2; sgcd[j].gd.pos.y = 2;
-+	sgcd[j].gd.pos.width = pos.width-4; sgcd[j].gd.pos.height = pos.height-4;
-+	sgcd[j].gd.flags = gg_enabled|gg_visible|gg_pos_in_pixels;
-+	sgcd[j].creator = GGroupCreate;
 +#endif
- 	marray[0] = &mgcd[0]; marray[1] = NULL;
- 	marray[2] = &mb[2]; marray[3] = NULL;
- 	marray[4] = &mb[3]; marray[5] = NULL;
+ 
+ 	j = 0;
+ 
 --- fontforge/cvimages.c.orig	Fri Jan 13 11:25:42 2006
 +++ fontforge/cvimages.c	Sun Mar 12 11:41:24 2006
 @@ -72,6 +72,9 @@
