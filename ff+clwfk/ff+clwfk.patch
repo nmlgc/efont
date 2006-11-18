@@ -2188,7 +2188,7 @@
  		cv->drawmode = layer==0 ? dm_grid : dm_back;
  		layer2.active = layer;
 --- fontforge/cvpointer.c.orig	Mon Jul 24 11:54:21 2006
-+++ fontforge/cvpointer.c	Sun Nov 12 11:58:04 2006
++++ fontforge/cvpointer.c	Sat Nov 18 23:47:40 2006
 @@ -504,6 +504,34 @@
  return( false );
  }
@@ -2224,7 +2224,32 @@
  void CVMouseDownPointer(CharView *cv, FindSel *fs, GEvent *event) {
      int needsupdate = false;
      int dowidth, dovwidth, nearcaret;
-@@ -591,6 +619,10 @@
+@@ -577,10 +605,24 @@
+ 	    if ( !fs->p->sp->selected ) needsupdate = true;
+ 	    fs->p->sp->selected = true;
+ 	} else if ( fs->p->spline!=NULL ) {
++#ifdef FONTFORGE_CONFIG_CLWFK
++	    if (event->u.mouse.state&ksm_control) {
++		if (!fs->p->spl->first->selected &&
++		    !fs->p->spl->last->selected) needsupdate = true;
++		fs->p->spl->first->selected = !fs->p->spl->first->selected;
++		fs->p->spl->last->selected = !fs->p->spl->last->selected;
++	    } else {
++		if ( !fs->p->spline->to->selected &&
++		     !fs->p->spline->from->selected ) needsupdate = true;
++		fs->p->spline->to->selected = !fs->p->spline->to->selected;
++		fs->p->spline->from->selected = !fs->p->spline->from->selected;
++	    }
++#else
+ 	    if ( !fs->p->spline->to->selected &&
+ 		    !fs->p->spline->from->selected ) needsupdate = true;
+ 	    fs->p->spline->to->selected = true;
+ 	    fs->p->spline->from->selected = true;
++#endif
+ 	} else if ( fs->p->img!=NULL ) {
+ 	    if ( !fs->p->img->selected ) needsupdate = true;
+ 	    fs->p->img->selected = true;
+@@ -591,6 +633,10 @@
  	    if ( !fs->p->ap->selected ) needsupdate = true;
  	    fs->p->ap->selected = true;
  	}
@@ -2235,7 +2260,7 @@
      } else if ( event->u.mouse.clicks<=1 ) {
  	if ( fs->p->nextcp || fs->p->prevcp )
  	    /* Nothing to do */;
-@@ -611,16 +643,28 @@
+@@ -611,16 +657,28 @@
  	    needsupdate = true;
  	    fs->p->ap->selected = !fs->p->ap->selected;
  	}
@@ -2264,7 +2289,7 @@
  	    }
  	} else if ( fs->p->ref!=NULL || fs->p->img!=NULL ) {
  	    /* Double clicking on a referenced character doesn't do much */
-@@ -920,6 +964,9 @@
+@@ -920,6 +978,9 @@
  		if ( mergess->first->prev==NULL && (!mergess->first->selected ||
  			!mergess->last->selected)) {
  		    if ( !mergess->first->selected && activess->first->selected &&
@@ -2274,7 +2299,7 @@
  			    Nearish(mergess->first->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -927,6 +974,9 @@
+@@ -927,6 +988,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->first->selected &&
@@ -2284,7 +2309,7 @@
  			    Nearish(mergess->last->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->last->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -934,6 +984,9 @@
+@@ -934,6 +998,9 @@
    goto restart;
  		    }
  		    if ( !mergess->first->selected && activess->last->selected &&
@@ -2294,7 +2319,7 @@
  			    Nearish(mergess->first->me.x-activess->last->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->last->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->last,activess,
-@@ -941,6 +994,9 @@
+@@ -941,6 +1008,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->last->selected &&
