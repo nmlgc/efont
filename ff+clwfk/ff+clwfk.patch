@@ -2188,7 +2188,7 @@
  		cv->drawmode = layer==0 ? dm_grid : dm_back;
  		layer2.active = layer;
 --- fontforge/cvpointer.c.orig	Mon Jul 24 11:54:21 2006
-+++ fontforge/cvpointer.c	Sat Nov 18 23:47:40 2006
++++ fontforge/cvpointer.c	Sun Nov 19 00:37:54 2006
 @@ -504,6 +504,34 @@
  return( false );
  }
@@ -2289,7 +2289,42 @@
  	    }
  	} else if ( fs->p->ref!=NULL || fs->p->img!=NULL ) {
  	    /* Double clicking on a referenced character doesn't do much */
-@@ -920,6 +978,9 @@
+@@ -635,10 +693,34 @@
+ 		    }
+ 	}
+     } else if ( event->u.mouse.clicks==3 ) {
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( event->u.mouse.state&ksm_control ) {
++	    if ( fs->p->spl!=NULL ) {
++		SplinePointList *p=NULL, *t;
++		if ( fs->p->spl!=NULL ) {
++		    for ( t=cv->layerheads[cv->drawmode]->splines; t!=NULL && t!=fs->p->spl; t=t->next )
++			p = t;
++		    for ( t=cv->layerheads[cv->drawmode]->splines; t->next!=NULL; t=t->next );
++		    t->next = fs->p->spl;
++		    if ( p==NULL )
++			cv->layerheads[cv->drawmode]->splines = fs->p->spl->next;
++		    else
++			p->next = fs->p->spl->next;
++		    fs->p->spl->next = NULL;
++		}
++		GDrawBeep(NULL);
++	    }
++	} else
++#endif
+ 	if ( CVSetSel(cv,1)) needsupdate = true;
+ 		/* don't select width or anchor points for three clicks */
+ 		/*  but select all points, refs */
+     } else {
++#ifdef FONTFORGE_CONFIG_CLWFK
++	if ( event->u.mouse.state&ksm_control && fs->p->spl!=NULL )
++	    GDrawBeep(NULL);
++	else
++#endif
+ 	/* Select everything */
+ 	if ( CVSetSel(cv,-1)) needsupdate = true;
+     }
+@@ -920,6 +1002,9 @@
  		if ( mergess->first->prev==NULL && (!mergess->first->selected ||
  			!mergess->last->selected)) {
  		    if ( !mergess->first->selected && activess->first->selected &&
@@ -2299,7 +2334,7 @@
  			    Nearish(mergess->first->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -927,6 +988,9 @@
+@@ -927,6 +1012,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->first->selected &&
@@ -2309,7 +2344,7 @@
  			    Nearish(mergess->last->me.x-activess->first->me.x,fudge) &&
  			    Nearish(mergess->last->me.y-activess->first->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->first,activess,
-@@ -934,6 +998,9 @@
+@@ -934,6 +1022,9 @@
    goto restart;
  		    }
  		    if ( !mergess->first->selected && activess->last->selected &&
@@ -2319,7 +2354,7 @@
  			    Nearish(mergess->first->me.x-activess->last->me.x,fudge) &&
  			    Nearish(mergess->first->me.y-activess->last->me.y,fudge)) {
  			CVMergeSplineSets(cv,activess->last,activess,
-@@ -941,6 +1008,9 @@
+@@ -941,6 +1032,9 @@
    goto restart;
  		    }
  		    if ( !mergess->last->selected && activess->last->selected &&
