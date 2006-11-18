@@ -2802,8 +2802,8 @@
      { "CorrectDirection", bCorrectDirection },
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
---- fontforge/sfd.c.orig	Sat Mar 25 06:54:58 2006
-+++ fontforge/sfd.c	Mon Apr  3 10:34:44 2006
+--- fontforge/sfd.c.orig	Mon Oct  9 03:29:01 2006
++++ fontforge/sfd.c	Sun Nov 19 00:01:00 2006
 @@ -28,6 +28,9 @@
  #include "splinefont.h"
  #include "gdraw.h"
@@ -2830,7 +2830,7 @@
  	    if ( order2 ) {
  		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
  		    putc(',',sfd);
-@@ -2369,11 +2380,23 @@
+@@ -2462,11 +2473,23 @@
  		pt->ttfindex = 0xffff;
  	    else
  		pt->ttfindex = ttfindex++;
@@ -2854,7 +2854,7 @@
  	    } else if ( ch!=',' )
  		ungetc(ch,sfd);
  	    else {
-@@ -4861,10 +4884,10 @@
+@@ -5005,10 +5028,10 @@
  #endif
      break;
  	} else if ( strmatch(tok,"BeginChars:")==0 ) {
@@ -2868,7 +2868,7 @@
  	    else
  		++realcnt;		/* value saved is max glyph, not glyph cnt */
  #if defined(FONTFORGE_CONFIG_GDRAW)
-@@ -4877,10 +4900,10 @@
+@@ -5021,10 +5044,10 @@
  	    if ( cidmaster!=NULL ) {
  		sf->map = cidmaster->map;
  	    } else {
@@ -2881,7 +2881,7 @@
      break;
  #if HANYANG
  	} else if ( strmatch(tok,"BeginCompositionRules")==0 ) {
-@@ -5336,3 +5359,975 @@
+@@ -5496,3 +5519,970 @@
      fclose(sfd);
  return( ret );
  }
@@ -3199,7 +3199,6 @@
 +    static SkelStroke sbuf[256];
 +    int s = 0, p;	/* count of stroke and point (in the stroke) */
 +    int type;
-+    int link_found;	/* only first (link ...) is recognized */
 +
 +    if (!openParenExists(file))
 +return NULL;
@@ -3220,7 +3219,6 @@
 +	    }
 +	    sbuf[s].num_points = p;
 +	    sbuf[s].is_link = 0;
-+	    link_found = false;
 +	    while (openParenExists(file)) {
 +		if (getToken(file,buf,bufsize) == NULL)
 +return NULL;
@@ -3228,12 +3226,9 @@
 +		    for (; !closeParenExists(file); p++) {
 +			if (getNumeral(file,buf,bufsize) == NULL)
 +return NULL;
-+			if ( !link_found ) {
-+			    sbuf[s].point_index[p] = strtod(buf,NULL);
-+			    sbuf[s].num_points = p + 1;
-+			    sbuf[s].is_link |= (1<<p);
-+			    link_found = true;
-+			}
++			sbuf[s].point_index[p] = strtod(buf,NULL);
++			sbuf[s].num_points = p + 1;
++			sbuf[s].is_link |= (1<<p);
 +		    }
 +		} else if (strcasecmp(buf,"widthratio") ==0) {
 +		    if (!tokCharExists(file,'.') || getNumeral(file,buf,bufsize) == NULL)
