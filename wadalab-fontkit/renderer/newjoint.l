@@ -29,6 +29,32 @@
 ;
 ; $Id$
 
+(defun increase-point-numbers (lines offset)
+  (labels ((increase (n) (+ n offset))
+	   (inc-all (lst) (mapcar #'increase lst))
+	   (inc-cdr (lst) (cons (car lst) (inc-all (cdr lst))))
+	   (inc-line (lst) (list-nonnull (car lst)
+					 (inc-all (cadr lst))
+					 (and (caddr lst) 
+					      (inc-cdr (caddr lst))))))
+     (mapcar #'inc-line lines)))
+
+; 2 個のプリミティブ定義を結合する (2 番目の prim の点番号は付け換える)
+;
+(defun appendpart (prim0 prim1 &optional (newalist))
+  (let* ((points0 (car prim0))
+	 (lines0 (cadr prim0))
+;	 (primalist0 (cddr prim0))
+	 (base (length points0))
+	 (points1 (car prim1))
+	 (lines1 (cadr prim1))
+;	 (primalist1 (cddr prim1))
+	 )
+    `(,(append points0 points1)
+      ,(append lines0 (increase-point-number lines1 base))
+;	 .,(append newalist primalist0 primalist1)
+      .,newalist)))
+
 ; 部品の組合せ結果を返す。
 ;  fonttype: mincho gothic など。
 ;  affines: 

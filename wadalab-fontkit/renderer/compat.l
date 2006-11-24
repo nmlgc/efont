@@ -272,3 +272,5 @@
 (defun head (n seq)
   (subseq seq 0 n))
 
+(defun list-nonnull (&rest args)
+  (remove-if #'null args))
