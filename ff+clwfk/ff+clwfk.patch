@@ -3014,7 +3014,7 @@
      { "AddATT", bAddATT },
      { "DefaultATT", bDefaultATT },
 --- fontforge/sfd.c.orig	Mon Oct  9 03:29:01 2006
-+++ fontforge/sfd.c	Sun Nov 19 00:01:00 2006
++++ fontforge/sfd.c	Sat Nov 25 10:28:10 2006
 @@ -28,6 +28,9 @@
  #include "splinefont.h"
  #include "gdraw.h"
@@ -3041,7 +3041,7 @@
  	    if ( order2 ) {
  		if ( sp->ttfindex!=0xfffe && sp->nextcpindex!=0xfffe ) {
  		    putc(',',sfd);
-@@ -2462,11 +2473,23 @@
+@@ -2462,11 +2473,27 @@
  		pt->ttfindex = 0xffff;
  	    else
  		pt->ttfindex = ttfindex++;
@@ -3057,7 +3057,11 @@
 +#ifdef FONTFORGE_CONFIG_CLWFK
 +	    } else if ( ch=='#' ) {
 +		int type;
++		char *p;
 +		getname(sfd,tok);
++		p = strchr(tok,',');
++		if ( p!=NULL )
++		    *p = '\0';
 +		for (type=0; type<num_enum_stroke; type++)
 +		    if (strcmp(stroketypes[type],tok)==0)
 +			cur->stroketype = type;
@@ -3065,7 +3069,7 @@
  	    } else if ( ch!=',' )
  		ungetc(ch,sfd);
  	    else {
-@@ -5005,10 +5028,10 @@
+@@ -5005,10 +5032,10 @@
  #endif
      break;
  	} else if ( strmatch(tok,"BeginChars:")==0 ) {
@@ -3079,7 +3083,7 @@
  	    else
  		++realcnt;		/* value saved is max glyph, not glyph cnt */
  #if defined(FONTFORGE_CONFIG_GDRAW)
-@@ -5021,10 +5044,10 @@
+@@ -5021,10 +5048,10 @@
  	    if ( cidmaster!=NULL ) {
  		sf->map = cidmaster->map;
  	    } else {
@@ -3092,7 +3096,7 @@
      break;
  #if HANYANG
  	} else if ( strmatch(tok,"BeginCompositionRules")==0 ) {
-@@ -5496,3 +5519,970 @@
+@@ -5496,3 +5523,970 @@
      fclose(sfd);
  return( ret );
  }
@@ -4601,6 +4605,16 @@
  /*									      */
  /* This command takes two strings which specify general expressions in x and y*/
  /*  and applies the specified transformations to the splines.  Note: Each     */
+--- fontforge/prefs.c.orig	Fri Nov 24 15:44:01 2006
++++ fontforge/prefs.c	Fri Nov 24 15:44:16 2006
+@@ -756,6 +756,7 @@
+     if ( loc==NULL ) loc = getenv("LC_CTYPE");
+     /*if ( loc==NULL ) loc = getenv("LC_MESSAGES");*/
+     if ( loc==NULL ) loc = getenv("LANG");
++    loc = NULL;
+ 
+     if ( loc==NULL )
+ return( e_iso8859_1 );
 --- plugins/Makefile.in.orig	Fri Aug 25 11:29:08 2006
 +++ plugins/Makefile.in	Mon Oct 16 13:17:26 2006
 @@ -20,7 +20,7 @@
