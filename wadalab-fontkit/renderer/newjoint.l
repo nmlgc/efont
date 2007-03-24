@@ -51,7 +51,7 @@
 ;	 (primalist1 (cddr prim1))
 	 )
     `(,(append points0 points1)
-      ,(append lines0 (increase-point-number lines1 base))
+      ,(append lines0 (increase-point-numbers lines1 base))
 ;	 .,(append newalist primalist0 primalist1)
       .,newalist)))
 
