@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,13 @@
 (defparameter ylimitval 0.15)
 ;
 (defun add-ylimit (prim)
-  (cond ((assq* 'ylimit (cddr prim))
+  (cond ((assq 'ylimit (cddr prim))
 	 prim)
 	(t
 	 (let* ((nprim (add-unit prim))
 		(yunit (yunit nprim))
 		(region (realregion nprim))
-		(height (- (fourth region)(second region))))
+		(height (region-height region)))
 	   (cond 
 	    ((zerop height)
 	     `(,(car prim) ,(cadr prim)
@@ -175,10 +175,9 @@
 	       (t 2.0)))
 	(do ((ll (cadar l) (cdr ll)))
 	    ((atom (cdr ll)))
-	    (setq 
-	     ylen 
-	     (+ ylen (abs (- (cadr (nth (car ll) points))
-			     (cadr (nth (cadr ll) points))))))))))))
+	    (incf ylen 
+		  (abs (- (cadr (nth (car ll) points))
+			  (cadr (nth (cadr ll) points)))))))))))
 ;
 ; プリミティブを構成する点を取り巻く最小の長方形を求める
 ;
@@ -339,20 +338,21 @@
 	     (cond ((zerop width) defunit)
 		   (t (/ (float width)(float yokowidth)))))))))
 ;
-; プリミティブ固有の幅を決定する
+; プリミティブ固有の幅 (最小値は 1.0) を決定する
 ;
 (defun yokowidth (prim &optional (rregion (realregion prim)))
-  (let* ((ylen (prim-ylen prim rregion))
-	 (width (- (third rregion)(first rregion)))
-	 (tatekankaku (tatekankaku prim))
-	 (yokowidth (assq* 'yokowidth (cddr prim))))
+  (let ((yokowidth (assq* 'yokowidth (cddr prim))))
     (cond (yokowidth (cdr yokowidth))
-	  ((and tatekankaku
-		(> (/ width tatekankaku 1.4) 
-		   (- ylen 1.0)))
-	   (/ width tatekankaku 1.4))
-	  ((< ylen 2.0) 1.0) ; (既に prim-ylen で調整済み故この行は蛇足)
-	  (t (- ylen 1.0)))))
+	  (t
+	   (let* ((ylen (prim-ylen prim rregion))
+		  (width (region-width rregion))
+		  (tatekankaku (tatekankaku prim)))
+	     (cond ((and tatekankaku
+			 (> (/ width tatekankaku 1.4) 
+			    (- ylen 1.0)))
+		    (/ width tatekankaku 1.4))
+		   ((< ylen 2.0) 1.0) ; prim が「一」の場合だけ
+		   (t (- ylen 1.0))))))))
 ;
 ; 縦画同士がいちばん接近している箇所の距離を返す
 ;
