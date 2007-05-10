@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -610,7 +610,7 @@
   (cond 
    ((null res) nil)
    (t
-    (let* ((sortres (sort (copy-list (rmbigres res)) (function >)))
+    (let* ((sortres (sort (copy-list (rmbigres res)) #'>))
 	   (ret (list (check-res (+ (max (abs (* 0.5 (car sortres))) 1)
 				    (car sortres))
 				 a0 a1 b0 b1))))
@@ -649,7 +649,7 @@
   (cond 
    ((null res) nil)
    (t
-    (let* ((sortres (sort (copy-list (rmbigres res)) (function >)))
+    (let* ((sortres (sort (copy-list (rmbigres res)) #'>))
 	   (ret (list (check-res (+ (max (abs (* 0.5 (car sortres))) 1)
 				    (car sortres))
 				 a0 a1 b0 b1))))
@@ -776,10 +776,10 @@
   (section2s (general-section prim1 prim2 conv param)))
 ;
 (defun add0vector (points)
-  (mapcar (function (lambda (x) (list x '(0 0)))) points))
+  (mapcar #'(lambda (x) (list x '(0 0))) points))
 ;
 (defun addvector (points conv)
-  (mapcar (function (lambda (x) (list x (affine x conv)))) points))
+  (mapcar #'(lambda (x) (list x (affine x conv))) points))
 ;
 (defun general-section (prim1 prim2 conv param)
   (general-section1 (cons (add0vector (car prim1)) (cdr prim1))

@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -1057,7 +1057,7 @@
   (let ((sym (gensym)))
     `(progn
        (defun ,sym (cross)
-	 (funcall (function (lambda (cross) ,kazari-generator)) cross))
+	 (funcall #'(lambda (cross) ,kazari-generator) cross))
        (putprop 'allkazari
 		`(,',`,(append joint-pattern (cons sym nil))
 		  . ,(get 'allkazari ',typeface))
@@ -1076,7 +1076,6 @@
 	(t
 	 `(putprop ',elements
 		   (cons (cons ',type 
-			       (function (lambda (points &optional (alist))
-					   ,body)))
+			       #'(lambda (points &optional (alist)) ,body))
 			 (get ',elements 'type1))
 		   'type1))))

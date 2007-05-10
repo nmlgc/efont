@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -350,10 +350,9 @@
 		 (push center2 centers))))
 ;	(pprint (list "center2" centers))
 	(setq mode-section 
-	      (mode-section 
-	       (sort centers 
-		 (function (lambda (x y)(< (car x)(car y)))))
-	       xthresh))
+	      (mode-section (sort centers 
+				  #'(lambda (x y)(< (car x)(car y))))
+			    xthresh))
 ;	(pprint (list "mode-section" mode-section))
 	(cond ((> (nelements mode-section) 
 		  (* nelements 0.5))

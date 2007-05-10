@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -960,8 +960,7 @@
 ;   (setq mw minchowidth)
   prim))
 ;
-(deftypehook mincho
-  (function mincho-prim))
+(deftypehook mincho #'mincho-prim)
 ;
 (def-type1-hint mincho tate
   (let* ((p0 (car points))

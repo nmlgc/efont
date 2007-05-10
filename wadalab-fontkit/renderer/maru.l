@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2004
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,7 @@
 ; $Id$
 
 (defvar marur)
-(deftypehook gothic
-  (function gothic-prim))
+(deftypehook gothic #'gothic-prim)
 (subfont maru gothic)
 (setq circle-ratio (/ (* 4.0 (- (sqrt 2) 1)) 3.0))
 (defkazari maru ((tate hidari  tatehidari kokoro magaritate tasuki tatehane tsukurihane kagi) 0
@@ -191,8 +190,7 @@
     (setq marur (marur prim))
     prim))
 ;
-(deftypehook maru
-  (function maru-prim))
+(deftypehook maru #'maru-prim)
 ;
 ; ½ÄÄ·¤Í
 ;

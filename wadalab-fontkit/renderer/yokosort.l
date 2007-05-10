@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2003-2006
+; Copyright (c) 2003-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -57,12 +57,12 @@
 	    (t (push (car l) otherlines))))
     ; yokolines を y 座標の小さい順に並べ替える
     (setq yokolines (sort yokolines
-		      (function (lambda (x y)
-;				  (prinderr `(x ,x)) 
-;			          (prinderr `(y ,y)) 
-				  (let* ((p0 (nth (caadr x) points))
-					 (p1 (nth (caadr y) points)))
-				    (< (cadr p0) (cadr p1)))))))
+			  #'(lambda (x y)
+;			       (prinderr `(x ,x)) 
+;			       (prinderr `(y ,y)) 
+			      (let* ((p0 (nth (caadr x) points))
+				     (p1 (nth (caadr y) points)))
+				(< (cadr p0) (cadr p1))))))
 ;   (do ((l yokolines (cdr l)))
 ;     ((atom l))
 ;     (prinderr (list (nth (caadar l) points)(nth (cadadr (car l)) points))))
@@ -377,9 +377,9 @@
        (ret nil))
     ((atom l)(nreverse ret))
     (push (cons (sort (caar l) 
-		  (function (lambda (x y)
-			      (> (length (memeq (car x) partorder))
-				 (length (memeq (car y) partorder))))))
+		      #'(lambda (x y)
+			  (> (length (memq (car x) partorder))
+			     (length (memq (car y) partorder)))))
 		(cdar l))
 	  ret)))
 ;
@@ -387,8 +387,8 @@
 (defun patternsort (l)
     (sort (copy-list l)
       (function (lambda (x y)
-		  (> (length (memeq (caaddr x) partorder))
-		     (length (memeq (caaddr y) partorder)))))))
+		  (> (length (memq (caaddr x) partorder))
+		     (length (memq (caaddr y) partorder)))))))
 ;
 ; match-pattern
 ;
