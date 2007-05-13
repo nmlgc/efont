@@ -35,6 +35,14 @@
 (defvar minchowidth nil)
 (defvar meshsize nil)
 
+(declaim (inline 
+   absdiff length2 norm2 times2 normlen2 metric2 _plus2 plus2 diff2
+   inter inter2 mul2 rot90 rot270 rot degree costheta sintheta arccos1
+   theta rev4 rmat affine identity-trans nmovexy movexy nmovex movex
+   nmovey movey nscalexy scalexy scalex nscaley scaley rotate
+   affine-outline line2 _f niku3 gridxy gridhalfxy grid girdx gridy
+   meshwidth normwidth get-def))
+
 (defun absdiff (x y) (abs (- x y)))
 
 ;-----------------------------------------------------------------------------
@@ -219,50 +227,81 @@
      (+ (svref trans 5) (* x (svref trans 1)) (* y (svref trans 3))))))
 ;
 ; 変換行列 (恒等・平行移動・拡大縮小・回転) を返す関数群
+; (頭に n がつくのは破壊的操作)
 ;
 (defun identity-trans ()
   (vector 1.0 0.0 0.0 1.0 0.0 0.0))
 
+(defun nmovexy (x y trans)
+  (let ((X (float x)) (Y (float y)))
+    (setf (svref trans 4) (+ (svref trans 4) X))
+    (setf (svref trans 5) (+ (svref trans 5) Y)))
+  trans)
 (defun movexy (x y &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 4) (+ (svref ret 4) (float x)))
-    (setf (svref ret 5) (+ (svref ret 5) (float y)))
-    ret))
+    (nmovexy x y ret)))
 
+(defun nmovex (x trans)
+  (let ((X (float x)))
+    (setf (svref trans 4) (+ (svref trans 4) X)))
+  trans)
 (defun movex (x &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 4) (+ (svref ret 4) (float x)))
-    ret))
+    (nmovex x ret)))
 
+(defun nmovey (y trans)
+  (let ((Y (float y)))
+    (setf (svref trans 5) (+ (svref trans 5) Y)))
+  trans)
 (defun movey (y &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 5) (+ (svref ret 5) (float y)))
-    ret))
+    (nmovey y ret)))
 
+(defun nscalexy (x y trans)
+  (let ((X (float x)) (Y (float y)))
+    (setf (svref trans 0) (+ (svref trans 0) X))
+    (setf (svref trans 1) (+ (svref trans 1) Y))
+    (setf (svref trans 2) (+ (svref trans 2) X))
+    (setf (svref trans 3) (+ (svref trans 3) Y))
+    (setf (svref trans 4) (+ (svref trans 4) X))
+    (setf (svref trans 5) (+ (svref trans 5) Y)))
+  trans)
 (defun scalexy (x y &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 0) (* (svref ret 0) (float x)))
-    (setf (svref ret 1) (* (svref ret 1) (float y)))
-    (setf (svref ret 2) (* (svref ret 2) (float x)))
-    (setf (svref ret 3) (* (svref ret 3) (float y)))
-    (setf (svref ret 4) (* (svref ret 4) (float x)))
-    (setf (svref ret 5) (* (svref ret 5) (float y)))
-    ret))
+    (nscalexy x y ret)))
 
+(defun nscalex (x trans)
+  (let ((X (float x)))
+    (setf (svref trans 0) (+ (svref trans 0) X))
+    (setf (svref trans 2) (+ (svref trans 2) X))
+    (setf (svref trans 4) (+ (svref trans 4) X)))
+  trans)
 (defun scalex (x &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 0) (* (svref ret 0) (float x)))
-    (setf (svref ret 2) (* (svref ret 2) (float x)))
-    (setf (svref ret 4) (* (svref ret 4) (float x)))
-    ret))
+    (nscalex x ret)))
 
+(defun nscaley (y trans)
+  (let ((Y (float y)))
+    (setf (svref trans 1) (+ (svref trans 1) Y))
+    (setf (svref trans 3) (+ (svref trans 3) Y))
+    (setf (svref trans 5) (+ (svref trans 5) Y)))
+  trans)
 (defun scaley (y &optional (trans (identity-trans)))
   (let ((ret (copy-seq trans)))
-    (setf (svref ret 1) (* (svref ret 1) (float y)))
-    (setf (svref ret 3) (* (svref ret 3) (float y)))
-    (setf (svref ret 5) (* (svref ret 5) (float y)))
-    ret))
+    (nscaley y ret)))
 
+(defun times-affine (a b)
+  (let* ((a11 (svref a 0))(a12 (svref a 2))(a13 (svref a 4))
+	 (a21 (svref a 1))(a22 (svref a 3))(a23 (svref a 5))
+	 (b11 (svref b 0))(b12 (svref b 2))(b13 (svref b 4))
+	 (b21 (svref b 1))(b22 (svref b 3))(b23 (svref b 5))
+	 (n11 (+ (* a11 b11)(* a12 b21)))
+	 (n12 (+ (* a11 b12)(* a12 b22)))
+	 (n13 (+ a13 (* a11 b13)(* a12 b23)))
+	 (n21 (+ (* a21 b11)(* a22 b21)))
+	 (n22 (+ (* a21 b12)(* a22 b22)))
+	 (n23 (+ a23 (* a21 b13)(* a22 b23))))
+    (vector n11 n21 n12 n22 n13 n23)))
 ;
 (defun rotate (theta &optional (trans (identity-trans)))
   (let* ((costheta (cos theta))
