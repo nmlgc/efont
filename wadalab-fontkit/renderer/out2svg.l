@@ -1,6 +1,6 @@
 ; Copyright (c) 1990-2003
 ;	Wada Laboratory, the University of Tokyo. All rights reserved.
-; Copyright (c) 2006
+; Copyright (c) 2006-2007
 ;	Electronic Font Open Laboratory (/efont/). All rights reserved.
 ;
 ; Redistribution and use in source and binary forms, with or without
@@ -46,8 +46,18 @@
   "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>
 <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.0\">
 ")
+
+(defvar global-shift
+  "<g transform=\"translate(50, 50)\">
+")
+
 (defvar black-rect
-  "<rect stroke=\"black\" fill=\"none\" stroke-width=\"1\" x=\"0\" y=\"0\" width=\"400\" height=\"400\"/>")
+  "<rect stroke=\"black\" fill=\"none\" stroke-width=\"1\"
+     x=\"0\" y=\"0\" width=\"400\" height=\"400\"/>")
+
+(defvar glyph-fitting ; normkanji の (15 15 385 385) に対応
+  "<g transform=\"scale(0.925, 0.925),translate(15, 15)\">
+")
 
 ; 書き出す SVG ファイルを用意する (with-open-file の SVG に特化した版)
 ;
@@ -65,10 +75,11 @@
   `(with-open-file (,(car form) ,(cadr form)
 		    :direction :output :if-exists :supersede)
     (format ,(car form) "~A" xml-header)
+    (format ,(car form) "~A" global-shift)
     (or (and (eq ,(caddr form) ':no-frame) ,(cadddr form))
 	(format ,(car form) " ~A~%" black-rect))
     (progn ,@args)
-    (format ,(car form) "</svg>~%")))
+    (format ,(car form) "</g>~%</svg>~%")))
 
 ;-----------------------------------------------------------------------------
 ; dump-outline-to-svg: アウトライングリフを SVG に書き出す
@@ -79,11 +90,12 @@
 ;
 (defun dump-outline-to-svg (filename glyph &key (no-frame nil) (fill nil))
   (with-svg-output (o filename :no-frame no-frame)
+    (format o " ~A" glyph-fitting)
     (dolist (outline glyph)
       (let ((fill-color   (if fill svg-fill-color svg-no-fill-color))
 	    (stroke-width (if fill 0              1))
 	    (stroke-color (if fill "none"         svg-stroke-color)))
-	(format o " <path fill=\"~A\" stroke-width=\"~A\" stroke=\"~A\" d=\""
+	(format o "  <path fill=\"~A\" stroke-width=\"~A\" stroke=\"~A\" d=\""
 		fill-color stroke-width stroke-color))
       (format o "M~F ~F" (cadar outline) (caddar outline))
       (do ((pts (cdr outline) (if (eq (caar pts) 'angle)
@@ -96,25 +108,26 @@
 		  (second (second pts)) (third (second pts))
 		  (second (or (third pts) (first outline)))
 		   (third (or (third pts) (first outline))))))
-      (format o "z\"/>~%"))))
+      (format o "z\"/>~%"))
+    (format o " </g>~%")))
 
 ;
 (defun svg-horizontal-line (o y)
   (let ((hline
-	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M0 ~Ah400\"/>~%"))
+	 "  <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M0 ~Ah400\"/>~%"))
     (format o hline y)))
 ;
 (defun svg-vertical-line (o x)
   (let ((vline
-	 " <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M~A 0v400\"/>~%"))
+	 "  <path stroke=\"gray\" fill=\"none\" width=\"2\" d=\"M~A 0v400\"/>~%"))
     (format o vline x)))
 
 (defun svg-bbox (o bbox color)
   (format o
-	  " <rect fill=\"~A\" stroke=\"~A\" stroke-width=\"~A\" fill-opacity=\"~A\""
+	  "  <rect fill=\"~A\" stroke=\"~A\" stroke-width=\"~A\" fill-opacity=\"~A\"~%"
 	  color color svg-bbox-linewidth svg-bbox-opacity)
   (format o
-	  "x=\"~A\" y=\"~A\" width=\"~A\" height=\"~A\"/>~%"
+	  "       x=\"~A\" y=\"~A\" width=\"~A\" height=\"~A\"/>~%"
 	  (first bbox) (second bbox)
 	  (- (third bbox) (first bbox)) (- (fourth bbox) (second bbox))))
 
@@ -242,20 +255,22 @@
 	 (lines (cadr skel))
 	 (nearest (funcall highlight-function skel))
 	 (color))
+    (format o "  <g stroke-width=\"~A\" fill=\"none\">~%" svg-skel-linewidth)
     (do ((l lines (cdr l))
 	 (i 0 (1+ i)))
 	((atom l))
       (setq color (cond ((member (caar l) '(xlimit ylimit)) svg-limit-color)
 			((member i nearest) svg-skel-highlight-color)
 			(t svg-skel-color)))
-      (format o
-	      " <polyline stroke-width=\"~A\" stroke=\"~A\" fill=\"none\" points=\""
-	      svg-skel-linewidth color)
+      (format o "   <polyline stroke=\"~A\"~%       points=\""
+	      color)
       (mapcar #'(lambda (point-number)
 		  (let ((p (nth point-number points)))
 		    (format o "~A ~A " (car p) (cadr p))))
 	      (cadar l))
-      (format o "\"/>~%"))))
+      (format o "\"/>~%"))
+    (format o "   </g>~%")))
+
 
 ;-----------------------------------------------------------------------------
 ; dump-skeleton-to-svg: スケルトンを SVG に書き出す
@@ -273,6 +288,7 @@
 						   (no-highlight nil))
   (let ((skel (applykanji chardef 'mincho2)))
     (with-svg-output (o filename :no-frame no-frame)
+      (format o " ~A" glyph-fitting)
       (cond (no-bboxes
 	     )
 	    ((eq 'yoko (jointtype chardef))
@@ -283,4 +299,6 @@
 	     (svg-tate-bboxes o chardef)))
       (if no-highlight
 	  (svg-skel-elems o skel :highlight-function #'no-highlight)
-	(svg-skel-elems o skel)))))
+	(svg-skel-elems o skel))
+      (format o "  </g>~%"))))
+
