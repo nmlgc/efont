@@ -39,7 +39,7 @@
    absdiff length2 norm2 times2 normlen2 metric2 _plus2 plus2 diff2
    inter inter2 mul2 rot90 rot270 rot degree costheta sintheta arccos1
    theta rev4 rmat affine identity-trans nmovexy movexy nmovex movex
-   nmovey movey nscalexy scalexy scalex nscaley scaley rotate
+   nmovey movey nscalexy scalexy scalex nscaley scaley revconv rotate
    affine-outline line2 _f niku3 gridxy gridhalfxy grid girdx gridy
    meshwidth normwidth get-def))
 
@@ -302,6 +302,18 @@
 	 (n22 (+ (* a21 b12)(* a22 b22)))
 	 (n23 (+ a23 (* a21 b13)(* a22 b23))))
     (vector n11 n21 n12 n22 n13 n23)))
+;
+; revconv 逆変換を求める
+;
+(defun revconv (conv)
+  (let ((rmat (rmat conv)))
+    (vector (svref rmat 0) (svref rmat 1)
+	    (svref rmat 2) (svref rmat 3)
+	    (minus (+ (* (svref conv 4) (svref rmat 0))
+		      (* (svref conv 5) (svref rmat 1))))
+	    (minus (+ (* (svref conv 4) (svref rmat 2))
+		      (* (svref conv 5) (svref rmat 3)))))))
+
 ;
 (defun rotate (theta &optional (trans (identity-trans)))
   (let* ((costheta (cos theta))
