@@ -1,0 +1,81 @@
+東風フォント代用品作成キット2003-08-09版について     狩野 宏樹 <kanou@khdd.net>
+
+● 概要
+このキットは、東風フォントの代用品(substitution)を作成するために
+開発されました。
+漢字のアウトライン部分を取り除き、他のフォントから補うための PfaEdit 
+スクリプト ReplaceKanji.pe と、それを呼び出すためのシェルスクリプト、
+フォントの構築に必要な修正データかららなります。
+
+●前バージョンよりの修正点
+・ベースとなる PfaEdit が、030803 バージョンになりました。
+・PfaEdit のビットマップ読み込み時に文字が欠落するバグへの彌縫策の
+  ため、BDF ファイルを取り込んでいたのを取り止めました。
+・ゴシックの 21 ドットを作成しました。20 ドットの下駄ばきバージョンです。
+・縦書きグリフに置き換わらない問題を解決するためのパッチを作成しました。
+・ギリシャ文字Δ・Ωが文字落ちしていたため、GreekFixup = 1 に修正しました。
+・既に解決された問題に対してはパッチを削除しました。
+・内田明さんの作成されたフォントの取り込みは、sasage-mono フォント
+  (http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/)
+  を、Oradano Mincho フォント
+  (http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/)
+  に切替えました。
+・シェルスクリプト makefont.sh を実行しても、ソースとなるフォントを
+  書き換えないようにしました。中間結果のフォントは別の名前で書き出され
+  ます。
+
+● ReplaceKanji.pe の使い方
+まず、PfaEdit をインストールする必要があります。
+本キット同梱の 030803.diff を 030803 版に当てた物か、オリジナルの
+配布元にこのパッチが取り込まれた後のバージョンを使用してください。
+
+・東風ゴシックから漢字を抜き取る場合:
+pfaedit -script ReplaceKanji.pe kochi-gothic.ttf
+・東風ゴシックから漢字を抜き取り、他のソースで置き換える場合:
+pfaedit -script ReplaceKanji.pe kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd  oradano.ttf
+どちらの場合も、出力ファイル名は kochi-gothic-subst.ttf となります。
+
+代用フォントの作成作業は、同梱の makefont.sh で行いました。
+カレントディレクトリに置く必要のあるソースファイルは以下のとおりです。
+
+kochi-mincho.ttf
+kochi-gothic.ttf
+Gothic-Fix.sfd
+Mincho-Fix.sfd
+kg20m-u.bdf
+kg21m-u.bdf
+wadalab-gothic-descent-1024.sfd
+wadalab-mincho-descent-1024.sfd
+oradano.ttf
+
+k20gm-u.bdf は、k20gm.bdf にパッチ patches/kg20m.bdf.patch を当てて
+作成してください。それを k21gm-u.bdf にコピーし、patches/kg21m.bdf.patch
+を当ててください。その後、PfaEdit が実行可能なことを確認したうえで
+makefont.sh を実行すれば Shrink.pe, ReplaceKanjis.pe を実行して、
+ファイルを作成します。
+
+makefont.sh の冒頭にコメントアウトされている一連のコマンド操作により、
+ファイルの配置ができるはずです。
+
+● 置き換えに使用したフォントファイル
+makefont.sh を実行するのに必要なファイルは以下から入手してください。
+
+和田研フォントを em=1000 から 1024 へとリサイズ変換し、1 ファイルにまとめた物
+(赤垣さんによる)
+http://www.fdiary.net/~kazuhiko/tmp/wadalab-gothic-descent-1024.sfd.bz2
+http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
+
+この中にはアウトラインパスが乱れているものがあるので、それを正しく作り直した
+Gothic-Fix.sfd, Mincho-Fix.sfd (本アーカイブ内に同梱) を併用してください。
+
+内田明さんの作られた、JIS X 0213:2000 の非漢字を含むフォント
+http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
+
+山内千里さんが作成された、Ayu20 Gothic 1.4
+http://x-tt.sourceforge.jp/ayu.html
+(k20gm.bdf が必要です)
+
+● 利用上の注意
+name テーブルに含まれたフォント情報は、オリジナルのフォントから変更
+されません。オリジナルと共存できない・情報が不正確であるなどの問題を
+認識してご利用ください。
