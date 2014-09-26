@@ -1,0 +1,9 @@
+if ($argc > 1)
+	Select($1)
+	shift
+endif
+
+to = $1
+from = getycenter()
+Move(0, to - from)
+

@@ -1,0 +1,9 @@
+if ($argc > 1)
+	Select($1)
+endif
+
+Rotate(-90, 0,_BOTTOM)
+lsb = CharInfo("LBearing")
+Rotate(90, 0,_BOTTOM)
+
+return(lsb)

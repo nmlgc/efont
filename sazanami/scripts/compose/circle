@@ -1,0 +1,10 @@
+lig = $1
+if ($argc >= 4)
+	mag = $3
+else
+	mag = 70
+endif
+shift
+
+copy($1,lig); cscale(mag)
+append(_CIRCLE,lig); zenkaku()

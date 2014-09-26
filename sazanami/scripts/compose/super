@@ -1,0 +1,3 @@
+Select($1); w = CharInfo("Width")
+Scale(_SCRIPTX,_SCRIPTY, 0,0); Move(0,_SUPRAISE)
+SetWidth(w)

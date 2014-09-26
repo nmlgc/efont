@@ -1,0 +1,7 @@
+if ($argc >= 2) 
+	Select($1);
+endif
+
+w = CharInfo("Width");
+rotate(-90); centerinzenkaku(); rotate(90);
+SetWidth(w);

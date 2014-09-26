@@ -1,0 +1,170 @@
+#!/usr/local/bin/pfaedit -script
+
+# Copyright (c) 2003-2004
+#	Electronic Font Open Laboratory (/efont/). All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the Wada Laboratory, the University of Tokyo nor
+#    the names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY ELECTRONIC FONT OPEN LABORATORY (/EFONT/) AND
+# CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+# NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE LABORATORY OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# $Id$
+
+# Merge3bitmaps.pe size ISO8859-1.bdf JISX0208.bdf JISX0201.bdf result.bdf
+
+if ($argc <= 5)
+	Print("usage:")
+	Print("	Merge3bitmaps.pe size ISO8859-1.bdf JISX0208.bdf JISX0201.bdf result.bdf");
+	Quit()
+endif
+
+size = $1; ISO8859_1 = $2; JISX0208 = $3; JISX0201 = $4; result = $5
+
+Open(ISO8859_1)
+Select(0x0,0x1F, 0x7F,0x9F); Clear()
+Reencode("iso10646-1")
+Generate(ISO8859_1:t:r + ".bdf", "bdf", 0)
+SetCharCnt(65536)
+Close()
+
+Open(JISX0201)
+Select(0x0,0x1F, 0x7F,0xA0, 0xE0,0xFF); Clear()
+Reencode("iso10646-1")
+Generate(JISX0201:t:r + ".bdf", "bdf", 0)
+SetCharCnt(65536)
+Close()
+
+Open(JISX0208)
+
+# 引用符は全角を優先。
+Select(kuten(1, 38)); SetCharName("uni2018")
+Select(kuten(1, 39)); SetCharName("uni2019")
+Select(kuten(1, 40)); SetCharName("uni201C")
+Select(kuten(1, 41)); SetCharName("uni201D")
+
+# う゛
+c = kuten(4, 84); if (InFont(c)); Select(c); SetCharName("uni3094"); endif
+
+## 13 区の NEC 外字
+# 丸数字
+c = kuten(13, 1); if (InFont(c)); Select(c); SetCharName("uni2460"); endif
+c = kuten(13, 2); if (InFont(c)); Select(c); SetCharName("uni2461"); endif
+c = kuten(13, 3); if (InFont(c)); Select(c); SetCharName("uni2462"); endif
+c = kuten(13, 4); if (InFont(c)); Select(c); SetCharName("uni2463"); endif
+c = kuten(13, 5); if (InFont(c)); Select(c); SetCharName("uni2464"); endif
+c = kuten(13, 6); if (InFont(c)); Select(c); SetCharName("uni2465"); endif
+c = kuten(13, 7); if (InFont(c)); Select(c); SetCharName("uni2466"); endif
+c = kuten(13, 8); if (InFont(c)); Select(c); SetCharName("uni2467"); endif
+c = kuten(13, 9); if (InFont(c)); Select(c); SetCharName("uni2468"); endif
+c = kuten(13,10); if (InFont(c)); Select(c); SetCharName("uni2469"); endif
+c = kuten(13,11); if (InFont(c)); Select(c); SetCharName("uni246A"); endif
+c = kuten(13,12); if (InFont(c)); Select(c); SetCharName("uni246B"); endif
+c = kuten(13,13); if (InFont(c)); Select(c); SetCharName("uni246C"); endif
+c = kuten(13,14); if (InFont(c)); Select(c); SetCharName("uni246D"); endif
+c = kuten(13,15); if (InFont(c)); Select(c); SetCharName("uni246E"); endif
+c = kuten(13,16); if (InFont(c)); Select(c); SetCharName("uni246F"); endif
+c = kuten(13,17); if (InFont(c)); Select(c); SetCharName("uni2470"); endif
+c = kuten(13,18); if (InFont(c)); Select(c); SetCharName("uni2471"); endif
+c = kuten(13,19); if (InFont(c)); Select(c); SetCharName("uni2472"); endif
+c = kuten(13,20); if (InFont(c)); Select(c); SetCharName("uni2473"); endif
+# ローマ数字
+c = kuten(13,21); if (InFont(c)); Select(c); SetCharName("uni2160"); endif
+c = kuten(13,22); if (InFont(c)); Select(c); SetCharName("uni2161"); endif
+c = kuten(13,23); if (InFont(c)); Select(c); SetCharName("uni2162"); endif
+c = kuten(13,24); if (InFont(c)); Select(c); SetCharName("uni2163"); endif
+c = kuten(13,25); if (InFont(c)); Select(c); SetCharName("uni2164"); endif
+c = kuten(13,26); if (InFont(c)); Select(c); SetCharName("uni2165"); endif
+c = kuten(13,27); if (InFont(c)); Select(c); SetCharName("uni2166"); endif
+c = kuten(13,28); if (InFont(c)); Select(c); SetCharName("uni2167"); endif
+c = kuten(13,29); if (InFont(c)); Select(c); SetCharName("uni2168"); endif
+c = kuten(13,30); if (InFont(c)); Select(c); SetCharName("uni2169"); endif
+# 合字
+c = kuten(13,32); if (InFont(c)); Select(c); SetCharName("uni3349"); endif # ミリ
+c = kuten(13,33); if (InFont(c)); Select(c); SetCharName("uni3314"); endif # キロ
+c = kuten(13,34); if (InFont(c)); Select(c); SetCharName("uni3322"); endif # センチ
+c = kuten(13,35); if (InFont(c)); Select(c); SetCharName("uni334D"); endif # メートル
+c = kuten(13,36); if (InFont(c)); Select(c); SetCharName("uni3318"); endif # グラム
+c = kuten(13,37); if (InFont(c)); Select(c); SetCharName("uni3327"); endif # トン
+c = kuten(13,38); if (InFont(c)); Select(c); SetCharName("uni3303"); endif # アール
+c = kuten(13,39); if (InFont(c)); Select(c); SetCharName("uni3336"); endif # ヘクタール
+c = kuten(13,40); if (InFont(c)); Select(c); SetCharName("uni3351"); endif # リットル
+c = kuten(13,41); if (InFont(c)); Select(c); SetCharName("uni3357"); endif # ワット
+c = kuten(13,42); if (InFont(c)); Select(c); SetCharName("uni330D"); endif # カロリー
+c = kuten(13,43); if (InFont(c)); Select(c); SetCharName("uni3326"); endif # ドル
+c = kuten(13,44); if (InFont(c)); Select(c); SetCharName("uni3323"); endif # セント
+c = kuten(13,45); if (InFont(c)); Select(c); SetCharName("uni332B"); endif # パーセント
+c = kuten(13,46); if (InFont(c)); Select(c); SetCharName("uni334A"); endif # ミリバール
+c = kuten(13,47); if (InFont(c)); Select(c); SetCharName("uni333B"); endif # ページ
+c = kuten(13,48); if (InFont(c)); Select(c); SetCharName("uni339C"); endif # mm
+c = kuten(13,49); if (InFont(c)); Select(c); SetCharName("uni339D"); endif # cm
+c = kuten(13,50); if (InFont(c)); Select(c); SetCharName("uni339E"); endif # km
+c = kuten(13,51); if (InFont(c)); Select(c); SetCharName("uni338E"); endif # mg
+c = kuten(13,52); if (InFont(c)); Select(c); SetCharName("uni338F"); endif # kg
+c = kuten(13,53); if (InFont(c)); Select(c); SetCharName("uni33C4"); endif # cc
+c = kuten(13,54); if (InFont(c)); Select(c); SetCharName("uni33A1"); endif # m^2
+
+c = kuten(13,63); if (InFont(c)); Select(c); SetCharName("uni337B"); endif # 平成
+
+c = kuten(13,64); if (InFont(c)); Select(c); SetCharName("uni301D.vert"); endif
+c = kuten(13,65); if (InFont(c)); Select(c); SetCharName("uni301E.vert"); endif
+
+c = kuten(13,66); if (InFont(c)); Select(c); SetCharName("uni2116"); endif # No.
+c = kuten(13,67); if (InFont(c)); Select(c); SetCharName("uni33CD"); endif # KK
+c = kuten(13,68); if (InFont(c)); Select(c); SetCharName("uni2121"); endif # Tel
+
+c = kuten(13,69); if (InFont(c)); Select(c); SetCharName("uni32A4"); endif
+c = kuten(13,70); if (InFont(c)); Select(c); SetCharName("uni32A5"); endif
+c = kuten(13,71); if (InFont(c)); Select(c); SetCharName("uni32A6"); endif
+c = kuten(13,72); if (InFont(c)); Select(c); SetCharName("uni32A7"); endif
+c = kuten(13,73); if (InFont(c)); Select(c); SetCharName("uni32A8"); endif
+
+c = kuten(13,74); if (InFont(c)); Select(c); SetCharName("uni3231"); endif # (株)
+c = kuten(13,75); if (InFont(c)); Select(c); SetCharName("uni3232"); endif # (有)
+c = kuten(13,76); if (InFont(c)); Select(c); SetCharName("uni3239"); endif # (代)
+c = kuten(13,77); if (InFont(c)); Select(c); SetCharName("uni337E"); endif # 明治
+c = kuten(13,78); if (InFont(c)); Select(c); SetCharName("uni337D"); endif # 大正
+c = kuten(13,79); if (InFont(c)); Select(c); SetCharName("uni337C"); endif # 昭和
+
+c = kuten(13,80); if (InFont(c)); Clear(); endif
+c = kuten(13,81); if (InFont(c)); Clear(); endif
+c = kuten(13,82); if (InFont(c)); Clear(); endif
+c = kuten(13,83); if (InFont(c)); Select(c); SetCharName("uni222E"); endif
+c = kuten(13,84); if (InFont(c)); Clear(); endif
+c = kuten(13,85); if (InFont(c)); Clear(); endif
+c = kuten(13,86); if (InFont(c)); Clear(); endif
+c = kuten(13,87); if (InFont(c)); Clear(); endif
+c = kuten(13,88); if (InFont(c)); Select(c); SetCharName("uni221F"); endif
+c = kuten(13,89); if (InFont(c)); Select(c); SetCharName("uni22BF"); endif
+c = kuten(13,90); if (InFont(c)); Clear(); endif
+c = kuten(13,91); if (InFont(c)); Clear(); endif
+c = kuten(13,92); if (InFont(c)); Clear(); endif
+
+Reencode("iso10646-1")
+#if (result == "ayu-gothic.bdf" || result == "ayu-mincho.bdf" || result == "kappa.bdf")
+#	SetCharCnt(65510)
+#endif
+
+Import(ISO8859_1:t:r + "-" + size + ".bdf")
+Import(JISX0201:t:r + "-"+ size + ".bdf")
+
+Generate(result, "bdf", 0)
+Close()

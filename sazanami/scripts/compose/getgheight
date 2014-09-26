@@ -1,0 +1,5 @@
+if ($argc > 1)
+	Select($1)
+endif
+
+gh = gettop() - getbottom(); return(gh)

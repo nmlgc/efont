@@ -1,0 +1,5 @@
+if ($argc >= 2)
+	Move(-$1, 0)
+else
+	Move(-_FW,0)
+endif

@@ -1,0 +1,12 @@
+# set top of bbox to Y.
+#
+# settop(y)
+# settop(gid, Y)
+
+if ($argc >= 3)
+	top = gettop($1); y = $2
+else
+	top = gettop(); y = $1
+endif
+
+dy = y - top;  up(dy)

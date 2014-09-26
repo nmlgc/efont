@@ -1,0 +1,8 @@
+setVariables()
+
+i = 0x390; while (i <= 0x451)
+	if (WorthOutputting(i))
+		Select(i); zenkaku(); CenterInWidth()
+	endif
+	i++
+endloop

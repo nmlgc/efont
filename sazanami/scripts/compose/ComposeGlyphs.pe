@@ -1,0 +1,221 @@
+# Copyright (c) 2004-2005
+#	Electronic Font Open Laboratory (/efont/). All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the Wada Laboratory, the University of Tokyo nor
+#    the names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY ELECTRONIC FONT OPEN LABORATORY (/EFONT/) AND
+# CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+# NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE LABORATORY OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# $Id$
+
+setVariables()
+
+if (!DrawsSomething("exclamdown")) 
+	copy("exclam", "exclamdown"); hcrotate(180)
+endif
+if (!DrawsSomething("cent") && DrawsSomething("uniFFE0"))
+	copy("uniFFE0", "cent")
+	xscaletogwidth(_HW-_10th); centerinhankaku()
+endif
+if (!DrawsSomething("sterling") && DrawsSomething("uniFFE1"))
+	copy("uniFFE1", "sterling");
+	xscaletogwidth(_HW-_20th); centerinhankaku()
+endif
+# currency 欠
+if (!DrawsSomething("yen"))
+	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
+endif
+if (!DrawsSomething("brokenbar"))
+	copy("bar", "brokenbar"); up(_FW+_QW); Paste()
+	yscaletogheight(getgheight("bar")); alignycenter("brokenbar", "bar")
+endif
+# section, dieresis ∈ JIS X 0208
+if (!DrawsSomething("copyright") && \
+     DrawsSomething(_CIRCLE) && DrawsSomething("uniFF23"))
+	circle("copyright", "uniFF23"); Scale(64, 0,_TOP); centerinhankaku()
+endif
+if (!DrawsSomething("ordfeminine"))
+	copy("underscore", "ordfeminine"); down(_40th)
+	append("a", "ordfeminine")
+	super("ordfeminine"); yscale(110)
+endif
+if (!DrawsSomething("guillemotleft"))
+	copy("less", "guillemotleft"); right(_5th); PasteInto(); left(_10th,0)
+	Scale(60); centerinhankaku()
+endif
+if (!DrawsSomething("logicalnot") && DrawsSomething("uniFFE2"))
+	copy("uniFFE2", "logicalnot"); xscaletogwidth(_HW-_10th);
+	centerinhankaku(); left(_100th)
+endif
+if (!DrawsSomething("softhyphen"))
+	copy("hyphen", "softhyphen")
+endif
+if (!DrawsSomething("registered") && \
+     DrawsSomething(_CIRCLE) && DrawsSomething("uniFF32"))
+	circle("registered", "uniFF32"); Scale(64, 0,_TOP); centerinhankaku()
+endif
+if (!DrawsSomething("macron"))
+	copy("underscore", "macron"); settop("macron", _FW)
+endif
+# degree plusminus ∈ JIS X 0208
+if (!DrawsSomething("uni00B2"))
+	copy("two", "uni00B2"); super("uni00B2")
+endif
+if (!DrawsSomething("uni00B3"))
+	copy("three", "uni00B3"); super("uni00B3")
+endif
+# acute ∈ JIS X 0208
+# mu 欠
+# paragraph ∈ JIS X 0208
+if (!DrawsSomething("periodcentered") && DrawsSomething("uniFF65"))
+	copy("uniFF65", "periodcentered")
+endif
+# cedilla 欠
+if (!DrawsSomething("uni00B9"))
+	copy("one", "uni00B9"); super("uni00B9")
+endif
+if (!DrawsSomething("ordmasculine"))
+	copy("underscore", "ordmasculine"); down(_40th)
+	append("o", "ordmasculine")
+	super("ordmasculine"); yscale(110)
+endif
+if (!DrawsSomething("guillemotright"))
+	copy("greater", "guillemotright")
+	right(_5th); PasteInto(); left(_10th,0)
+	Scale(60); centerinhankaku()
+endif
+if (!DrawsSomething("onequarter"))
+	hdfrac("onequarter", "one", "four"); up(_5th)
+endif
+if (!DrawsSomething("onehalf"))
+	hdfrac("onehalf", "one", "two"); up(_5th)
+endif
+if (!DrawsSomething("threequarters"))
+	hdfrac("threequarters", "three", "four"); up(_5th)
+endif
+if (!DrawsSomething("questiondown"))
+	copy("question", "questiondown"); hcrotate(180)
+endif
+
+#------------------------------------------------------------------------------
+# アクセント記号の定義
+#------------------------------------------------------------------------------
+# Spacing Modifier Letters のコードポイントを使用する
+uml   = 0u00A8
+acute = 0u02CA
+circ  = 0u02C6
+caron = 0u02C7
+macr  = 0u02C9
+grave = 0u02CB
+ring  = 0u02DA
+tilde = 0u02DC	# SMALL TILDE
+
+copy("acute", acute); centerinhankaku()
+# 東風の grave は逆アポストロフィ形なので、acute を左右反転する
+copy(acute, grave); HFlip(); CorrectDirection()	; centerinhankaku()
+copy("asciicircum", circ)
+copy(circ, caron); VFlip(); CorrectDirection()
+copy("degree", ring); centerinhankaku()
+copy("asciitilde", tilde); centerinhankaku()
+
+#------------------------------------------------------------------------------
+# Latin-1 の欧文 (欠けている物のみ)
+#------------------------------------------------------------------------------
+# 大文字
+_accented("Agrave",      "A", grave)
+_accented("Aacute",      "A", acute)
+_accented("Acircumflex", "A", circ)
+_accented("Atilde",      "A", tilde)
+_accented("Adieresis",   "A", uml)
+_accented("Aring",       "A", ring)
+# AE, Ccedil 欠
+_accented("Egrave",      "E", grave)
+_accented("Eacute",      "E", acute)
+_accented("Ecircumflex", "E", circ)
+_accented("Edieresis",   "E", uml)
+_accented("Igrave",      "I", grave)
+_accented("Iacute",      "I", acute)
+_accented("Icircumflex", "I", circ)
+_accented("Idieresis",   "I", uml)
+
+# Eth = 'D' + '-'
+if (!DrawsSomething("Eth"))
+	copy("hyphen", "Eth"); Scale(70,120); left(_6th)
+	append("D", "Eth"); right(_6th); RemoveOverlap(); centerinhankaku()
+endif
+
+_accented("Ntilde",      "N", tilde)
+_accented("Ograve",      "O", grave)
+_accented("Oacute",      "O", acute)
+_accented("Ocircumflex", "O", circ)
+_accented("Otilde",      "O", tilde)
+_accented("Odieresis",   "O", uml)
+
+if (!DrawsSomething("Oslash"))
+	copy("O", "Oslash"); append("slash", "Oslash"); RemoveOverlap()
+endif
+
+_accented("Ugrave",      "U", grave)
+_accented("Uacute",      "U", acute)
+_accented("Ucircumflex", "U", circ)
+_accented("Udieresis",   "U", uml)
+_accented("Yacute",      "Y", acute)
+# Thorn, szlig 欠
+
+# 小文字
+_accented("agrave",      "a", grave)
+_accented("aacute",      "a", acute)
+_accented("acircumflex", "a", circ)
+_accented("atilde",      "a", tilde)
+_accented("adieresis",   "a", uml)
+_accented("aring",       "a", ring)
+# ae, ccedil 欠
+_accented("egrave",      "e",        grave)
+_accented("eacute",      "e",        acute)
+_accented("ecircumflex", "e",        circ)
+_accented("edieresis",   "e",        uml)
+_accented("igrave",      "dotlessi", grave)
+_accented("iacute",      "dotlessi", acute)
+_accented("icircumflex", "dotlessi", circ)
+_accented("idieresis",   "dotlessi", uml)
+# eth 欠
+_accented("ntilde",      "n", tilde)
+_accented("ograve",      "o", grave)
+_accented("oacute",      "o", acute)
+_accented("ocircumflex", "o", circ)
+_accented("otilde",      "o", tilde)
+_accented("odieresis",   "o", uml)
+
+# oslash
+if (!DrawsSomething("oslash"))
+	_w = getgwidth ("o")
+	copy("slash", "oslash"); Scale(80,75, _w,0); centerinwidth(_w)
+	append("o", "oslash"); RemoveOverlap()
+endif
+
+_accented("ugrave",      "u", grave)
+_accented("uacute",      "u", acute)
+_accented("ucircumflex", "u", circ)
+_accented("udieresis",   "u", uml)
+_accented("yacute",      "y", acute)
+# thorn 欠
+_accented("ydieresis",   "y", uml)

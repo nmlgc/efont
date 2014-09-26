@@ -1,0 +1,85 @@
+README			this file.
+
+_xxx		prefix '_' in funcion name mean doing xxx() only if target is missing.
+
+makeroman		make roman numeral
+
+copy		copy
+append		append
+
+up			go up
+down		go down
+left		go left
+right		go right
+
+scale		scale around left-bottom of em square
+xscale		scale horizontally around left-bottom of em square
+yscale		scale vertically around left-bottom of em square
+cscale		scale around center of em square
+crotate		rotate around center of em square
+
+gettop		get top of glyph bounding box.
+settop		set top of a glyph to given y.
+aligntop	align top of a glyph with given target.
+getbottom	get bottom of glyph bbox.
+setbottom	not yet.
+alignbottom	not yet.
+getleft		get leftmost point of glyph bbox.
+setleft		not yet.
+alignleft	not yet.
+getright	get right most point of glyph bbox.
+setright	not yet.
+alignright	not yet.
+getgwidth	get glyph width (from lsb to rsb).
+setgwidth	set glyph width by scaling.
+
+zenkaku		set width fullwidth(em)
+hankaku		set width halfwidth(en)
+
+reverse		reverse outline (outside to inside, inside to outside)
+prerotate	make glyph prerotated for vertical writing
+
+accented	build accented glyph
+super		build superscript
+sub			build subscript
+
+-- build composite glyph (first argument is the composite CID)
+
+h2			horizontal two.
+hh2			horizontal two (both halfwidth)
+v2			vertical two.
+d2			diagonal two.
+vd2			diagonal two (for vertical writing)
+hh3			horizontal three (each are halfwidth)
+h21			horizontal 2-1 block.
+tr			2-1 trianglar.
+v21			vertical 2-1 block
+vtr			2-1 trianglar (for vertical)
+h22			horizontal 2-2 block
+v22			vertical 2-2 block
+h23, v23	horizontal and vertical 2-3 block
+h32, v32	horizontal and vertical 3-2 block
+h33, v33	horizontal and vertical 3-3 block
+h34, v34	horizontal and vertical 3-4 block
+h44, v44	horizontal and vertical 4-4 block
+vpar		vertical two (first is parenthesis)
+vparl		vertical two (first is parenthesis, second is aligned left)
+vparr		vertical two (first is parenthesis, second is aligned right)
+vren		vertical two (second is parenthesis)
+vrenl		vertical two (first is aligned left, second is parenthesis)
+vrenr		vertical two (is aligned right, second is parenthesis)
+
+frac		fraction (components and result are fullwidth)
+hfrac		fraction (components and result are halfwidth)
+dfrac		vulgar fraction (fraction with diagonal fractional bar)
+hdfrac		vulgar fraction (fraction with diagonal fractional bar, halfwidth)
+
+circle			glyph surrounded by a circle
+blackcircle		white glyph within a black circle
+square			glyph surrounded by a square
+blacksquare		white glyph within a black square
+rsquare			glyph surrounded by a square with rounded corners
+blackrsquare	white glyph within a black square with rounded corners
+paren			glyph surrounded by a horizontal parenthesis
+
+fwdig_p		fullwidth digits with period

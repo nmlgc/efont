@@ -1,0 +1,92 @@
+# Copyright (c) 2004
+#	Electronic Font Open Laboratory (/efont/). All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright notice,
+#    this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+#    this list of conditions and the following disclaimer in the documentation
+#    and/or other materials provided with the distribution.
+# 3. Neither the name of the Wada Laboratory, the University of Tokyo nor
+#    the names of its contributors may be used to endorse or promote products
+#    derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY ELECTRONIC FONT OPEN LABORATORY (/EFONT/) AND
+# CONTRIBUTORS ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+# NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+# PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE LABORATORY OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+# ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+# $Id$
+
+# This file is encoded in UTF-8.
+
+Build = "20040629"	# enter date when you release the font
+
+en_US = 0x401; ja_JP = 0x411
+
+style= $1
+
+if (style == "min")
+    jFontFamilyName = "さざなみ明朝"
+    eFontFamilyName = "Sazanami Mincho"
+    PostScriptName = "Sazanami-Mincho-Regular"
+else
+    jFontFamilyName = "さざなみゴシック"
+    eFontFamilyName = "Sazanami Gothic"
+    PostScriptName = "Sazanami-Gothic-Regular"
+endif
+
+FontSubfamilyName = "Regular"
+eFontName = eFontFamilyName + " " + FontSubfamilyName
+jFontName = jFontFamilyName + FontSubfamilyName
+
+eUniqueFontID = eFontName + " #" + Build
+#jUniqueFontID = jFontName + " #" + Build
+
+eManufacturerName = "Electronic Font Open Laboratory (/efont/)"
+jManufacturerName = "電子書体オープンラボ(/efont/)"
+eDesigner = "Kanji autodesign by CLWFK (Non-kanji glyphs by Yasuyuki Furukawa)"
+jDesigner = "CLWFKによる漢字自動デザイン(非漢字は古川泰之氏)"
+jSampleText = "波のように広がっていくことを願って「漣」と命名されました"
+
+CopyrightNotice = "(C) 1990-2003 Wada Laboratory, Univ. of Tokyo. 2003-04 /efont/. All rights reserved."
+
+SetFontNames(PostScriptName, eFontFamilyName, eFontName, FontSubfamilyName, CopyrightNotice)
+
+# SetTTFName(ja_JP, 0, jCopyrightNotice)
+SetTTFName(en_US, 1, eFontFamilyName)
+SetTTFName(ja_JP, 1, jFontFamilyName)
+SetTTFName(en_US, 2, FontSubfamilyName)
+SetTTFName(ja_JP, 2, FontSubfamilyName)
+SetTTFName(en_US, 3, eUniqueFontID)
+#SetTTFName(ja_JP, 3, jUniqueFontID)
+SetTTFName(en_US, 4, eFontName)
+SetTTFName(ja_JP, 4, jFontName)
+# SetTTFName(ja_JP, 5, jVersionString)
+# SetTTFName(en_US, 6, PostScriptName)	# 無効
+SetFontNames(PostScriptName)
+# SetTTFName(ja_JP, 7, jTradeMark)
+SetTTFName(en_US, 8, eManufacturerName)
+SetTTFName(ja_JP, 8, jManufacturerName)
+SetTTFName(en_US, 9, eDesigner)
+SetTTFName(ja_JP, 9, jDesigner)
+# SetTTFName(ja_JP, 10, jDescription)
+# SetTTFName(ja_JP, 11, jUrlVerdor)
+# SetTTFName(ja_JP, 12, jUrlDesigner)
+# SetTTFName(ja_JP, 13, jLicenseInformation)
+# SetTTFName(ja_JP, 14, jLicenseInfoURL)
+# 15 is reserved.
+# SetTTFName(ja_JP, 16, jPreferredFamily)
+# SetTTFName(ja_JP, 17, jPreferredSubfamily)
+# SetTTFName(ja_JP, 18, jCompatibleFullNameForMacintosh)
+SetTTFName(ja_JP, 19, jSampleText)
+# SetTTFName(ja_JP, 20, jPostScriptCidName)

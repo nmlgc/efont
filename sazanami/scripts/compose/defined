@@ -1,0 +1,1 @@
+return(InFont($1) && (getgwidth($1) > 0))

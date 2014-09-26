@@ -1,0 +1,8 @@
+if ($argc > 2) 
+	Select($1);
+	_w = $2;
+else
+	_w = $1;
+endif
+
+SetWidth(_w); CenterInWidth(); SetWidth(_w)

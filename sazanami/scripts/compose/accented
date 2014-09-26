@@ -1,0 +1,17 @@
+// ad hoc
+
+result = $1; shift
+
+# use result as temporary register
+copy($1,result); h = gettop(); w = CharInfo("Width");
+copy($2,result); accbase = getbottom()
+
+right((w - CharInfo("Width")) / 2);
+
+if (accbase - h < _40th) 
+	up(h + _40th - accbase)
+elseif (accbase - h > _10th)
+	down(accbase - h - _10th);
+endif
+
+append($1, result); SetWidth(w)
