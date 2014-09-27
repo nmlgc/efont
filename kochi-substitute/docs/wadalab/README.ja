@@ -1,139 +1,139 @@
- ���Υǥ��쥯�ȥ�β��ˤ�, ���ĸ�����ʬ�ʲ������줿����������ȥ�
-�ե���Ȥ����դ�������줿�����ȥ饤��ե���Ȥ�, PostScript��type1��
-���Ǥ����Ƥ���ޤ�. 
+ このディレクトリの下には, 和田研漢字分科会で製作された漢字スケルトン
+フォントに肉付けて得られたアウトラインフォントを, PostScriptのtype1形
+式でおいてあります. 
 
-�ե������̾���ϼ��Τ褦�ʰ�̣������ޤ�. 
+ファイルの名前は次のような意味を持ちます. 
 
 wadalab-mincho           : -0              : -8                     : .4
-������ȥ�ե���Ȥ�̾�� : JIS��������� : ���դ�(����)�ѥ�᡼�� : �С�������ֹ�
+スケルトンフォントの名前 : JIS第一第二水準 : 肉付け(太さ)パラメータ : バージョン番号
 
- JIS���������δ�����, ʿ��̾, �Ҳ�̾�ˤĤ��ƤϽ��Τ��Ȥ˼��Υե���
-������äƤ��ޤ�. 
+ JIS第一第二水準の漢字と, 平仮名, 片仮名については書体ごとに次のファイ
+ルに入っています. 
 
-wadalab-mincho-0-8.?.tar.gz:  ����ī��
-wadalab-mincho-0-12.?.tar.gz: ����ī��
-wadalab-gothic-0-13.?.tar.gz: ��ѥ����å��� 
-wadalab-maru-0-8.?.tar.gz:    �ٴݥ����å���
+wadalab-mincho-0-8.?.tar.gz:  細明朝体
+wadalab-mincho-0-12.?.tar.gz: 中明朝体
+wadalab-gothic-0-13.?.tar.gz: 中角ゴシック体 
+wadalab-maru-0-8.?.tar.gz:    細丸ゴシック体
 
- �����Υե������Ÿ�������, �����ʬ����줿PostScript�ե����뤬��
-���ޤ�. �����Υե������, ���Τޤ�ɽ�����뤳�Ȥ��Ǥ��ޤ�. 
+ これらのファイルを展開すると, 区毎に分けられたPostScriptファイルがで
+きます. これらのファイルは, そのまま表示することができます. 
 
- JISX208���������ʬ��wadalab-sym.?.tar.gz������Ƥ���ޤ�. 
+ JISX208の非漢字部分はwadalab-sym.?.tar.gzに入れてあります. 
 
- �軰���δ���(JISX0212)��, ����2���Τ����֤��Ƥ���ޤ�. 
+ 第三水準の漢字(JISX0212)は, 現在2書体だけ置いてあります. 
 
-wadalab-mincho-1-8.tar.gz: ����ī��
-wadalab-maru-1-8.tar.gz:   �ٴݥ����å���
+wadalab-mincho-1-8.tar.gz: 細明朝体
+wadalab-maru-1-8.tar.gz:   細丸ゴシック体
 
- ���Υե���Ȥ�Ȥ�����Υġ���Ȥ���, �ʲ��Υġ��뤬�Ѱդ��Ƥ���ޤ�. 
+ このフォントを使うためのツールとして, 以下のツールが用意してあります. 
 
-1. Metafont�ؤ��Ѵ�
+1. Metafontへの変換
 
- tools/wftomf.c�Ǥ�. 
- (��, type1tomf.c�Ȥ���̾�����֤��Ƥ��ä���Τ�Ʊ���Ǥ�)�ҥ�Ⱦ����
-��θ��������, Metafont�Υ��������������ޤ�.
+ tools/wftomf.cです. 
+ (昔, type1tomf.cという名前で置いてあったものと同じです)ヒント情報も
+考慮した形の, Metafontのソースを生成します.
 
-2. Type1��PFA�������Ѵ�����ץ������
+2. Type1のPFA形式に変換するプログラム
 
-tools/wftopfa.c�Ǥ�. 
-�������碌������ʤΤ�, ���������PFA�ե������Family Hint�ʤ�
-�Ϥ�����������ͤˤʤäƤ��ޤ�.
+tools/wftopfa.cです. 
+形式を合わせるだけなので, 生成されるPFAファイルのFamily Hintなど
+はいいかげんな値になっています.
 
-3.  Type1��PFA�����ˤ��Ƥ��鹹��NTT���ܸ�TeX�ǻȤ���pk�ե�������Ѵ�����
-����Υġ���
+3.  Type1のPFA形式にしてから更にNTT日本語TeXで使えるpkファイルに変換する
+ためのツール
 
-tools/wftodm.c�Ǥ�. 
+tools/wftodm.cです. 
 wftodm -FontBase dg jis*.ps goth-*.ps
-�Τ褦�˼¹Ԥ����, dgjk[a-z].pfa���Υե����뤬�Ǥ��ޤ�. �����ps2pk��
-�����ġ�����Ѵ������, �Ƽ���礭����pk�ե�������뤳�Ȥ��Ǥ��ޤ�. 
-����, ���ߤΥС�������ps2pk��FontMatrix�˴����ˤ��б����Ƥ��ʤ��Τ�, 
-���ܸ줬����äȾ�ˤ����Ȥ�������������ޤ�. 
+のように実行すると, dgjk[a-z].pfa等のファイルができます. これをps2pkと
+いうツールで変換すると, 各種の大きさのpkファイルを作ることができます. 
+ただ, 現在のバージョンのps2pkはFontMatrixに完全には対応していないので, 
+日本語がちょっと上にずれるという難点があります. 
 
-4.  ����@omron���󤫤�, BDF�������Ѵ�������ˡ��Ҳ𤷤Ƥ��������ޤ���. 
-tools/bdfmerge.c�Υ�������ʬ�ˤ�����ˡ��, �ץ��������ʬ�ˤϤ������
-�Ȥ�bdf��ޡ������뿷��@astem���󤬺�ä��ץ�����ब���äƤ��ޤ�.
+4.  栗林@omronさんから, BDF形式に変換する方法を紹介していただきました. 
+tools/bdfmerge.cのコメント部分にその方法が, プログラム部分にはその中で
+使うbdfをマージする新井@astemさんが作ったプログラムが入っています.
 
- wadalab-mincho-1-8.tar.gz �����Ѵ����ƺ��줿16, 24�ɥåȤ�BDF������
-�ե���Ȥ�~ftp/Font/bdf�ʲ����֤��Ƥ���ޤ�. 
+ wadalab-mincho-1-8.tar.gz から変換して作られた16, 24ドットのBDF形式の
+フォントが~ftp/Font/bdf以下に置いてあります. 
 
-5. ���ζ���������ؤ��Ѵ�
+5. 書体倶楽部形式への変換
 
- tools/wftovf.c�Ǥ�. 
+ tools/wftovf.cです. 
 wftovf -base min12 -thresh 15.0 jis*.ps min*.ps
-�Τ褦�˼¹Ԥ����, min12.vf1, min12.vf2�Ȥ����ե����뤬�Ǥ��ޤ�. 3��
-Bezier����������ʬ�ؤ��Ѵ���ԤʤäƤ���Τ�, -thresh���ͤ��礭������
-���ʼ�������ޤ���, ���������ե�������礭���Ͼ������ʤ�ޤ�. MS-DOS
-+DOS-extender�Ǽ¹Ԥ������, MSDOS��define���ƥ���ѥ��뤷�Ʋ�����. 
+のように実行すると, min12.vf1, min12.vf2というファイルができます. 3次
+Bezier曲線から線分への変換を行なっているので, -threshの値を大きくする
+と品質は落ちますが, 生成されるファイルの大きさは小さくなります. MS-DOS
++DOS-extenderで実行する時は, MSDOSをdefineしてコンパイルして下さい. 
 
-6. Postscriptʣ��ե���ȤȤ��Ƥλ���
+6. Postscript複合フォントとしての使用
 
- pfa�ե�������ä�, �ƶ�Υե���Ȥ��Ȥ�����֤ˤʤäƤ����, 
+ pfaファイルを作って, 各区のフォントが使える状態になっていれば, 
 
 tools/Wadalab-mincho-0-12.ps
 
-��Ŭ�����ѹ�����, Ŭ���ʥǥ��쥯�ȥ���֤�, ���뤤��include����Ф�, 
-ʣ��ե����(Wadalab-mincho-0-12, Wadalab-mincho-0-12-V,
-Wadalab-mincho-0-12-RKSJ, Wadalab-mincho-0-12-EUC)���Ȥ���褦�ˤʤ��
-��.
+を適当に変更して, 適当なディレクトリに置く, あるいはincludeすればば, 
+複合フォント(Wadalab-mincho-0-12, Wadalab-mincho-0-12-V,
+Wadalab-mincho-0-12-RKSJ, Wadalab-mincho-0-12-EUC)が使えるようになりま
+す.
 
-7. Ghostscript����λ���(�����٤�)
+7. Ghostscriptからの使用(時代遅れ)
 
- Ghostscript������Ѥ���ˤ�, 5�ν��ζ�����������Ѵ�������ˡ�⤢���
-����, ������ʤ�����ˤ�PFA�������Ѥ����ۤ����褤�Ǥ��礦. ���Τ���
-����ˡ��, tools/USAGE.ghostscript�˽񤤤Ƥ���ޤ�. �����ؤ����ڿ���
-����κ�äƤ��줿������tools/USAGE.ghostscript.eng�ˤ���ޤ�. 
+ Ghostscriptから使用するには, 5の書体倶楽部形式に変換する方法もありま
+すが, 質を落さないためにはPFA形式で用いたほうがよいでしょう. そのため
+の方法は, tools/USAGE.ghostscriptに書いてあります. 東京大学の鈴木慎司
+さんの作ってくれた英訳がtools/USAGE.ghostscript.engにあります. 
 
- �ե���Ȥ����, �ġ���Υѥå���~ftp/Font/patches�ʲ����֤��Ƥ���ޤ�. 
-1�Ԥ�Ĺ����Ĺ�᤮�뤿��patch�����Ƥ��ʤ����Ȥ����뤫�⤷��ޤ���, 
-���λ���patch�Υ�������common.h�������
+ フォントおよび, ツールのパッチは~ftp/Font/patches以下に置いてあります. 
+1行の長さが長過ぎるためpatchが当てられないことがあるかもしれませんが, 
+その時はpatchのソースのcommon.hの定義を
 #define MAXLINELEN 4096 
 #define BUFFERSIZE 4096
-���٤ˤ��Ʋ�����(������ؤβ��Ľſ�����λ�Ŧ�ˤ���ΤǤ�). 
+程度にして下さい(山形大学の会田重信さんの指摘によるものです). 
 
- �ե���Ȥ򤽤Τޤ�, ���뤤�ϥե����ޥå��Ѵ����ƻ���, ���ۤ�����, 
-�Ŀ�, ��Ҥ���鷺, ������ε��Ĥ�ɬ�פ���ޤ���. ����, ���ۤ������
-���Υե���Ȥ�ftp.ipl.t.u-tokyo.ac.jp��ͳ�褹�뤳��, �ɤΤ褦���Ѵ���
-���������յ����Ʋ�����. �ե���ȤϤ��줫���, �С�����󥢥åפ���ͽ��
-�ʤΤ�, ��ü�桼�����ǿ��ΥС�������ʬ�Ǽ���������褦�ˤ�����
-����Ǥ�.
+ フォントをそのまま, あるいはフォーマット変換して使用, 配布する場合, 
+個人, 会社を問わず, こちらの許可は必要ありません. ただ, 配布する場合は
+そのフォントがftp.ipl.t.u-tokyo.ac.jpに由来すること, どのような変換を
+したかを付記して下さい. フォントはこれからも, バージョンアップする予定
+なので, 末端ユーザが最新のバージョンを自分で手に入れられるようにしたい
+ためです.
 
- �����λ����θ����, ���ޤ�˥ǥ�����ΤҤɤ����ʤɸ��Ŧ�����ä���, 
-tanaka@ipl.t.u-tokyo.ac.jp�ޤǸ�Ϣ��������. 
+ 漢字の字形の誤りや, あまりにデザインのひどい字など御指摘があったら, 
+tanaka@ipl.t.u-tokyo.ac.jpまで御連絡下さい. 
 
 --------------------
- ���ĸ�����ʬ�ʲ�ϴ������Ф��դΤ褦�����ʤ򥢥르�ꥺ��ˤ�ä��Ȥ�
-��碌, ʸ����ǥ����󤹤뤳�Ȥ���Ū�Ȥ���, 90ǯ4���92ǯ3��ޤǳ�ư
-���ޤ���(���ߤ����ĸ����Τ�Τ�����ޤ���). 
+ 和田研漢字分科会は漢字を偏や旁のような部品をアルゴリズムによって組み
+合わせ, 文字をデザインすることを目的として, 90年4月から92年3月まで活動
+しました(現在は和田研そのものがありません). 
 
- �ؤ�ä����С�(����)�ȼ�ʺ�����Ƥϰʲ����̤�Ǥ�. 
+ 関わったメンバー(当時)と主な作業内容は以下の通りです. 
 
-���ıѰ춵��: 
-  JIS��2, ��3�����Ȥ߹�碌�ǡ�������
+和田英一教授: 
+  JIS第2, 第3水準の組み合わせデータ入力
 
-���Ѻ�(����):
-  UtiLisp����ѥ���β���
-  UtiLisp��CLX��ܿ�
+岩崎英哉(助手):
+  UtiLispコンパイラの改良
+  UtiLispにCLXを移植
 
-�а�͵��Ϻ:
-  ������ȥ󥨥ǥ���������
-  ������ȥ�ǡ�������
+石井裕一郎:
+  スケルトンエディタの製作
+  スケルトンデータ入力
 
-���ⴴͺ:
-  ������ȥ�ǡ�������
+竹内幹雄:
+  スケルトンデータ入力
 
-Ĺ������:
-  UtiLisp��CLX��ܿ�
-  ��ī�κ�ʧ���θ���
+長橋賢児:
+  UtiLispにCLXを移植
+  明朝体左払いの原型
 
-ð��ɧ:
-  ʿ��̾, �Ҳ�̾�θ���
+丹明彦:
+  平仮名, 片仮名の原型
 
-������:
-  ��ɮ����
+飯尾淳:
+  毛筆書体
 
-����ůϯ:
-  ���դ����르�ꥺ��
-  �Ȥ߹�碌���르�ꥺ��
-  �Ȥ߹�碌�ǡ�������    
-  ������ȥ�ǡ�������
+田中哲朗:
+  肉付けアルゴリズム
+  組み合わせアルゴリズム
+  組み合わせデータ入力    
+  スケルトンデータ入力
 

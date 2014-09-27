@@ -1,42 +1,42 @@
-�����ե���������ʺ������å�2003-08-09�ǤˤĤ���     ���� ���� <kanou@khdd.net>
+東風フォント代用品作成キット2003-08-09版について     狩野 宏樹 <kanou@khdd.net>
 
-�� ����
-���Υ��åȤϡ������ե���Ȥ�������(substitution)��������뤿���
-��ȯ����ޤ�����
-�����Υ����ȥ饤����ʬ���������¾�Υե���Ȥ����䤦����� PfaEdit 
-������ץ� ReplaceKanji.pe �ȡ������ƤӽФ�����Υ����륹����ץȡ�
-�ե���Ȥι��ۤ�ɬ�פʽ����ǡ��������ʤ�ޤ���
+● 概要
+このキットは、東風フォントの代用品(substitution)を作成するために
+開発されました。
+漢字のアウトライン部分を取り除き、他のフォントから補うための PfaEdit 
+スクリプト ReplaceKanji.pe と、それを呼び出すためのシェルスクリプト、
+フォントの構築に必要な修正データかららなります。
 
-�����С��������ν�����
-���١����Ȥʤ� PfaEdit ����030803 �С������ˤʤ�ޤ�����
-��PfaEdit �Υӥåȥޥå��ɤ߹��߻���ʸ���������Х��ؤ�׽˥����
-  ���ᡢBDF �ե�����������Ǥ����Τ���ߤ�ޤ�����
-�������å��� 21 �ɥåȤ�������ޤ�����20 �ɥåȤβ��̤Ф��С������Ǥ���
-���Ľ񤭥���դ��֤������ʤ�������褹�뤿��Υѥå���������ޤ�����
-�����ꥷ��ʸ����������ʸ��������Ƥ������ᡢGreekFixup = 1 �˽������ޤ�����
-�����˲�褵�줿������Ф��Ƥϥѥå��������ޤ�����
-������������κ������줿�ե���Ȥμ����ߤϡ�sasage-mono �ե����
+●前バージョンよりの修正点
+・ベースとなる PfaEdit が、030803 バージョンになりました。
+・PfaEdit のビットマップ読み込み時に文字が欠落するバグへの彌縫策の
+  ため、BDF ファイルを取り込んでいたのを取り止めました。
+・ゴシックの 21 ドットを作成しました。20 ドットの下駄ばきバージョンです。
+・縦書きグリフに置き換わらない問題を解決するためのパッチを作成しました。
+・ギリシャ文字Δ・Ωが文字落ちしていたため、GreekFixup = 1 に修正しました。
+・既に解決された問題に対してはパッチを削除しました。
+・内田明さんの作成されたフォントの取り込みは、sasage-mono フォント
   (http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/sasage-mono/)
-  ��Oradano Mincho �ե����
+  を、Oradano Mincho フォント
   (http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/)
-  �����ؤ��ޤ�����
-�������륹����ץ� makefont.sh ��¹Ԥ��Ƥ⡢�������Ȥʤ�ե���Ȥ�
-  �񤭴����ʤ��褦�ˤ��ޤ�������ַ�̤Υե���Ȥ��̤�̾���ǽ񤭽Ф���
-  �ޤ���
+  に切替えました。
+・シェルスクリプト makefont.sh を実行しても、ソースとなるフォントを
+  書き換えないようにしました。中間結果のフォントは別の名前で書き出され
+  ます。
 
-�� ReplaceKanji.pe �λȤ���
-�ޤ���PfaEdit �򥤥󥹥ȡ��뤹��ɬ�פ�����ޤ���
-�ܥ��å�Ʊ���� 030803.diff �� 030803 �Ǥ����Ƥ�ʪ�������ꥸ�ʥ��
-���۸��ˤ��Υѥå��������ޤ줿��ΥС���������Ѥ��Ƥ���������
+● ReplaceKanji.pe の使い方
+まず、PfaEdit をインストールする必要があります。
+本キット同梱の 030803.diff を 030803 版に当てた物か、オリジナルの
+配布元にこのパッチが取り込まれた後のバージョンを使用してください。
 
-�����������å����������ȴ�������:
+・東風ゴシックから漢字を抜き取る場合:
 pfaedit -script ReplaceKanji.pe kochi-gothic.ttf
-�����������å����������ȴ����ꡢ¾�Υ��������֤���������:
+・東風ゴシックから漢字を抜き取り、他のソースで置き換える場合:
 pfaedit -script ReplaceKanji.pe kochi-gothic.ttf Gothic-Fix.sfd wadalab-gothic-descent-1024.sfd  oradano.ttf
-�ɤ���ξ��⡢���ϥե�����̾�� kochi-gothic-subst.ttf �Ȥʤ�ޤ���
+どちらの場合も、出力ファイル名は kochi-gothic-subst.ttf となります。
 
-���ѥե���Ȥκ�����Ȥϡ�Ʊ���� makefont.sh �ǹԤ��ޤ�����
-�����ȥǥ��쥯�ȥ���֤�ɬ�פΤ��륽�����ե�����ϰʲ��ΤȤ���Ǥ���
+代用フォントの作成作業は、同梱の makefont.sh で行いました。
+カレントディレクトリに置く必要のあるソースファイルは以下のとおりです。
 
 kochi-mincho.ttf
 kochi-gothic.ttf
@@ -48,34 +48,34 @@ wadalab-gothic-descent-1024.sfd
 wadalab-mincho-descent-1024.sfd
 oradano.ttf
 
-k20gm-u.bdf �ϡ�k20gm.bdf �˥ѥå� patches/kg20m.bdf.patch �����Ƥ�
-�������Ƥ�������������� k21gm-u.bdf �˥��ԡ�����patches/kg21m.bdf.patch
-�����ƤƤ������������θ塢PfaEdit ���¹Բ�ǽ�ʤ��Ȥ��ǧ����������
-makefont.sh ��¹Ԥ���� Shrink.pe, ReplaceKanjis.pe ��¹Ԥ��ơ�
-�ե������������ޤ���
+k20gm-u.bdf は、k20gm.bdf にパッチ patches/kg20m.bdf.patch を当てて
+作成してください。それを k21gm-u.bdf にコピーし、patches/kg21m.bdf.patch
+を当ててください。その後、PfaEdit が実行可能なことを確認したうえで
+makefont.sh を実行すれば Shrink.pe, ReplaceKanjis.pe を実行して、
+ファイルを作成します。
 
-makefont.sh ����Ƭ�˥����ȥ����Ȥ���Ƥ����Ϣ�Υ��ޥ�����ˤ�ꡢ
-�ե���������֤��Ǥ���Ϥ��Ǥ���
+makefont.sh の冒頭にコメントアウトされている一連のコマンド操作により、
+ファイルの配置ができるはずです。
 
-�� �֤������˻��Ѥ����ե���ȥե�����
-makefont.sh ��¹Ԥ���Τ�ɬ�פʥե�����ϰʲ��������ꤷ�Ƥ���������
+● 置き換えに使用したフォントファイル
+makefont.sh を実行するのに必要なファイルは以下から入手してください。
 
-���ĸ��ե���Ȥ� em=1000 ���� 1024 �ؤȥꥵ�����Ѵ�����1 �ե�����ˤޤȤ᤿ʪ
-(�ֳ�����ˤ��)
+和田研フォントを em=1000 から 1024 へとリサイズ変換し、1 ファイルにまとめた物
+(赤垣さんによる)
 http://www.fdiary.net/~kazuhiko/tmp/wadalab-gothic-descent-1024.sfd.bz2
 http://www.fdiary.net/~kazuhiko/tmp/wadalab-mincho-descent-1024.sfd.bz2
 
-������ˤϥ����ȥ饤��ѥ������Ƥ����Τ�����Τǡ���������������ľ����
-Gothic-Fix.sfd, Mincho-Fix.sfd (�ܥ������������Ʊ��) ��ʻ�Ѥ��Ƥ���������
+この中にはアウトラインパスが乱れているものがあるので、それを正しく作り直した
+Gothic-Fix.sfd, Mincho-Fix.sfd (本アーカイブ内に同梱) を併用してください。
 
-����������κ��줿��JIS X 0213:2000 ���������ޤ�ե����
+内田明さんの作られた、JIS X 0213:2000 の非漢字を含むフォント
 http://www.asahi-net.or.jp/%7Esd5a-ucd/freefonts/Oradano-Mincho/Oradano20030619.tgz
 
-������Τ���󤬺������줿��Ayu20 Gothic 1.4
+山内千里さんが作成された、Ayu20 Gothic 1.4
 http://x-tt.sourceforge.jp/ayu.html
-(k20gm.bdf ��ɬ�פǤ�)
+(k20gm.bdf が必要です)
 
-�� ���Ѿ������
-name �ơ��֥�˴ޤޤ줿�ե���Ⱦ���ϡ����ꥸ�ʥ�Υե���Ȥ����ѹ�
-����ޤ��󡣥��ꥸ�ʥ�ȶ�¸�Ǥ��ʤ������������ΤǤ���ʤɤ������
-ǧ�����Ƥ����Ѥ���������
+● 利用上の注意
+name テーブルに含まれたフォント情報は、オリジナルのフォントから変更
+されません。オリジナルと共存できない・情報が不正確であるなどの問題を
+認識してご利用ください。

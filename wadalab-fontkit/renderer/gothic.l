@@ -49,15 +49,15 @@
       ((angle .,(diff2 p1 l1))
        (angle .,(diff2 p2 l2))))))
 ;
-; flection : ��������������ޤ�ʤ���Τ��Ĥ���ɽ���ѥ�᡼����METAFONT �� tension �εդȤ�����롣
-; flare : (ʧ������ü��) ��������ˤʤ��ٹ�Υѥ�᡼����1.0 ����礭������ü������åѾ��ˤʤ롣
-; right-curvature: �����֤�������ǡ��ʹ�������¦ (��ʧ���Ǥϥ����֤���¦����ʧ���Ǥϳ�¦) ��
-;                  �ʤ��꤬ȿ��¦��꤭�Ĥ��ʤ��ٹ�Υѥ�᡼����
-;                  �����ͤ� 1.0 ����礭���Ⱥ�ʧ���Ǥ���������٤��ʤꡢ��ʧ���Ǥ������ʤ롣
-; rightside-head-flare: �����֤οʹ�������¦����Ƭ����������ٹ硣
-;                      �ֿ͡פʤɤ� 1 ��꾮�����ͤ����ꤷ�ơ������ι����ߤ��ޤ���ͽ�ꡣ
-; rightside-tail-flare: �����֤οʹ�������¦����ü��������ٹ硣
-;                       ��ʧ���Ϻ���¦�˿��Ӥ��̤��礭�������ۤ��������������뤿�ᡣ
+; flection : カーブ中間部の折れ曲がりのきつさを表すパラメータ。METAFONT の tension の逆とも言える。
+; flare : (払いの先端が) 末広がりになる度合のパラメータ。1.0 より大きいと先端部がラッパ状になる。
+; right-curvature: カーブの中間部で、進行方向右側 (左払いではカーブの内側、右払いでは外側) の
+;                  曲がりが反対側よりきつくなる度合のパラメータ。
+;                  この値が 1.0 より大きいと左払いでは中間部が細くなり、右払いでは太くなる。
+; rightside-head-flare: カーブの進行方向右側の先頭部を太める度合。
+;                      「人」などで 1 より小さい値に設定して、交点の黒ずみを抑える予定。
+; rightside-tail-flare: カーブの進行方向右側の末端を太める度合。
+;                       右払いは左下側に伸びる量を大きくしたほうが整合性があるため。
 ;
 (defun gothic3 (p1 p2 p3 w &optional (flection 0.6666666666) (flare 1.0) (right-curvature 1.0)
 		   (rightside-head-flare 1.0) (rightside-tail-flare 1.0))
@@ -155,8 +155,8 @@
     (angle .,
      (plus2 p1 (normlen2 (+ (* len 0.8)(* len sintheta)) (diff2 p3 p1)))))))
 ;
-; 2004050: �Ĳ���Ǥ����ߤ��ʿ�˶᤯���Ƥߤ���(��ľ������75%, ��ʿ��90%)
-; ���ꥸ�ʥ�Ͼ������򻲾ȤΤ��ȡ�
+; 2004050: 縦画の打ち込みを水平に近くしてみた。(垂直方向≒75%, 水平≒90%)
+; オリジナルは上の定義を参照のこと。
 ;
 (defkazari gothic ((hidari tate tatehidari tatehane kokoro) 0 
 	    (hidari tate tatehidari tatehane kokoro) 1)
@@ -277,10 +277,10 @@
 	 )
     `((angle .,newp0))))
 ;;
-;; ������Ȥ����
+;; エレメントの定義
 ;;
 ;
-; �������
+; 点の定義
 ;
 (defelement gothic ten
   (let* ((x (car points))
@@ -294,7 +294,7 @@
 ;	(niku3 x m y 0.3 0.3 w w w (* 1.1 w))))
 
 ;
-; ���������
+; 縦棒の定義
 ;
 (defelement gothic tate
   (let ((x (car points))
@@ -303,7 +303,7 @@
     (gothic2 x y w)))
 
 ;
-; ���������
+; 横棒の定義
 ;
 (defelement gothic yoko
   (let ((x (car points))
@@ -311,7 +311,7 @@
 	(w local_gothicwidth))
     (gothic2 (inter2 x y 0.000001) (inter2 y x 0.00001) w)))
 ;
-; ����Ϥ餤�����
+; 右上はらいの定義
 ;
 (defelement gothic migiue
   (let ((x (car points))
@@ -324,18 +324,18 @@
  ))
 
 ;
-; ���Ϥ餤�����
+; 左はらいの定義
 ;
 (defelement gothic hidari
   (let* ((p0 (car points))
 	 (p1 (cadr points))
 	 (p2 (caddr points))
-	 (w (* 1.05 local_gothicwidth)) ; flare < 1 �ʤΤ������Τ�����������
+	 (w (* 1.05 local_gothicwidth)) ; flare < 1 なので補正のため太くする
 	)
     (gothic3 p0 p1 p2 w 0.75 0.9 0.95 1.0 1.0)
 ))
 ;
-; �ĺ��Ϥ餤�����
+; 縦左はらいの定義
 ;
 (defelement gothic tatehidari
   (let* ((p0 (car points))
@@ -348,7 +348,7 @@
     `(,(nconc (car l0) (cdar l1))
       ,(nconc (cadr l0) (cdadr l1)))))
 ;
-; ���Ϥ餤�����
+; 右はらいの定義
 ;
 (defelement gothic migi
   (let ((x (car points))
@@ -359,7 +359,7 @@
     (gothic3 x y z w 0.7 1.15 1.05 1.0 1.2)
     ))
 ;
-; �������Фΰ���
+; こざと偏の一部
 ;
 (defelement gothic kozato
   (let* ((p0 (car points))
@@ -373,7 +373,7 @@
 	    (hane p12 p2 p3
 		    w w w))))
 ;
-; ��ķ��
+; 縦跳ね
 ;
 (defelement gothic tatehane
   (let* ((p0 (car points))
@@ -400,7 +400,7 @@
 ;    `(,(nconc (car out1)(cdar out2))
 ;      ,(nconc (cadr out1)(cdadr out2)))))
 ;
-; �դ�ķ��
+; 旁の跳ね
 ;	    
 (defelement gothic tsukurihane
   (let* ((p0 (car points))
@@ -427,7 +427,7 @@
 ;    `(,(nconc (car out1)(cdar out2))
 ;      ,(nconc (cadr out1)(cdadr out2)))))
 ;
-; ���󤺤�
+; さんずい
 ;
 (defelement gothic sanzui 
   (let* ((p0 (car points))
@@ -442,7 +442,7 @@
     (gothic3 p0 p2 p1 w)))
 
 ;
-; ������
+; こころ
 ;
 (defelement gothic kokoro
   (let* ((p0 (car points))
@@ -477,7 +477,7 @@
       `(,(nconc (car out1)(cdar out2)(cdar out4)(cdar out5))
 	,(nconc (cadr out1)(cdadr out2)(cdadr out4)(cdadr out5)))))))
 ;
-; ������
+; たすき
 ;
 (defelement gothic tasuki
   (let* ((p0 (car points))
@@ -499,7 +499,7 @@
 ;    `(,(nconc (car out1)(cdar out2)(cdar out3))
 ;      ,(nconc (cadr out1)(cdadr out2)(cdadr out3)))))
 ;
-; �ޤ��ꤿ��
+; まがりたて
 ;
 (defelement gothic magaritate
   (let ((p0 (car points))
@@ -511,7 +511,7 @@
 	  (t
 	   (gothic3 p0 p1 p2 w)))))
 ;
-; ����
+; かぎ
 ;
 (defelement gothic kagi
   (let* ((p0 (car points))
@@ -534,7 +534,7 @@
     `(,(nconc (car out1)(cdar out2)(cdar out3))
       ,(nconc (cadr out1)(cdadr out2)(cdadr out3)))))
 ;
-; ����ˤ夦
+; しんにゅう
 ;
 (defelement gothic shin-nyuu
   (let* ((p0 (car points))
@@ -593,8 +593,8 @@
 			   (setq minlink (car ll) minlen len))))))
 	    (t (push (car l) newelements))))))
 
-; ������Ȥ�Ĺ���Ȥ��� X/Y ���ؤμͱ�
-; (���ߤ�ñ��˥��ȥ��������������ޤ�����Ĺ������)
+; エレメントの長さとその X/Y 軸への射影
+; (現在は単純にストロークを構成する折れ線の長さの和)
 (defun elemlen (elem points)
   (do* ((prev (caadr elem) (car rest))
 	(rest (cdadr elem) (cdr rest))
@@ -611,7 +611,7 @@
       (setq len_x (+ len_x x))
       (setq len_y (+ len_y y)))))
 
-; ʸ���˴ޤޤ�륨����Ȥ�Ĺ��������
+; 文字に含まれるエレメントの長さの総和
 (defun total-elemlen (prim)
   (let* ((len 0) (len_x 0) (len_y 0)
 	(points (car prim))

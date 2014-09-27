@@ -29,7 +29,7 @@
 ;
 ; $Id$
 
-; Ã±°Ì¤Ï400*400¤ÎºÂÉ¸·Ï
+; å˜ä½ã¯400*400ã®åº§æ¨™ç³»
 (defvar minchowidth)
 (defvar tateyokoratio)
 (defvar minchoheight)
@@ -39,29 +39,29 @@
 (defvar tomeheight)
 (defvar meshsize)
 (defvar mw)
-; mw¤Ïmincho-prim¤ÎÃæ¤ÇÀßÄê¤µ¤ì¤ë
+; mwã¯mincho-primã®ä¸­ã§è¨­å®šã•ã‚Œã‚‹
 ; (setq mw minchowidth)
 ;
-; ¥é¥¤¥Ö¥é¥ê¤ò load ¤¹¤ë
+; ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ load ã™ã‚‹
 ;(or (boundp 'kanjilib) (load "lib.l"))
 
-; defkazari ¤Î°ú¿ô¤Î°ÕÌ£ (x, y ¤ÏÉôÉÊ¤ÎÌ¾Á°)
-; Ã±ÆÈ:
-;	 (x 0 x 1) : x ¤Î»ÏÅÀ   0 -> 1 ¤Î½ç¤ËÀş¤ò°ú¤¯¡£
-;	 (x 2 x 3) : x ¤Î½ªÅÀ   2 -> 3 ¤Î½ç¡£
-; ³Ñ:
-; ¨£ (½Ä = x, ²£ = y ¤È¤¹¤ë¡£½Ä²£µÕ¤Î¾ì¹ç¤ÏÉ½Î¢¤Î´Ø·¸¤¬µÕ¤Ë¤Ê¤ë)
+; defkazari ã®å¼•æ•°ã®æ„å‘³ (x, y ã¯éƒ¨å“ã®åå‰)
+; å˜ç‹¬:
+;	 (x 0 x 1) : x ã®å§‹ç‚¹   0 -> 1 ã®é †ã«ç·šã‚’å¼•ãã€‚
+;	 (x 2 x 3) : x ã®çµ‚ç‚¹   2 -> 3 ã®é †ã€‚
+; è§’:
+; â”Œ (ç¸¦ = x, æ¨ª = y ã¨ã™ã‚‹ã€‚ç¸¦æ¨ªé€†ã®å ´åˆã¯è¡¨è£ã®é–¢ä¿‚ãŒé€†ã«ãªã‚‹)
 ;        (x 1 y 0)
-;        (x 0 y 1) (Î¢¸ş¤­)
-; ¨¦
+;        (x 0 y 1) (è£å‘ã)
+; â””
 ;        (x 2 y 0)
-;        (x 3 y 1) (Î¢¸ş¤­)
-; ¨¤
+;        (x 3 y 1) (è£å‘ã)
+; â”
 ;        (x 1 y 3)
-;        (x 0 y 2) (Î¢¸ş¤­)
-; ¨¥
+;        (x 0 y 2) (è£å‘ã)
+; â”˜
 ;        (x 2 y 3)
-;        (x 3 y 2) (Î¢¸ş¤­)
+;        (x 3 y 2) (è£å‘ã)
 ;
 (defkazari mincho (yoko 0 yoko 1)
   (let* ((p0 (svref cross 0))
@@ -380,7 +380,7 @@
 
 ;
 ;
-; ÅÀ¤ÎÄêµÁ
+; ç‚¹ã®å®šç¾©
 ;
 (defelement mincho ten
   (let* ((dotsize (meshwidth mw))
@@ -399,7 +399,7 @@
 	   (t (/ len 60.0))))))
 
 ;
-; ½ÄËÀ¤ÎÄêµÁ
+; ç¸¦æ£’ã®å®šç¾©
 ;
 (defelement mincho tate
     (let* ((dotsize (meshwidth mw))
@@ -413,7 +413,7 @@
 	    (t
 	     (niku2 p0 p1 0.4 0.4 w (* w 0.92)(* w 0.92) w)))))
 ;
-; ²£ËÀ¤ÎÄêµÁ
+; æ¨ªæ£’ã®å®šç¾©
 ;
 (defelement mincho yoko
   (let* ((dotsize (meshwidth (* mw tateyokoratio)))
@@ -422,7 +422,7 @@
 	 (p1 (gridy (cadr points) dotsize)))
     (line2 p0 p1 w)))
 ;
-; ±¦¾å¤Ï¤é¤¤¤ÎÄêµÁ
+; å³ä¸Šã¯ã‚‰ã„ã®å®šç¾©
 ;
 (defelement mincho migiue
   (let* ((dotsize (meshwidth mw))
@@ -434,7 +434,7 @@
 	 (p2 (gridy (caddr points) 1)))
     (niku3 p0 p1 p2 0.3 0.3 w0 (inter w0 w1 0.3)(inter w0 w1 0.7) w1)))
 ;
-; ±¦¤Ï¤é¤¤¤ÎÄêµÁ
+; å³ã¯ã‚‰ã„ã®å®šç¾©
 ;
 (defelement mincho migi
   (let* ((dotsize0 (meshwidth (* mw 0.5)))
@@ -447,7 +447,7 @@
     (niku3 p0 p1 p2 0.3 0.3 
 	   w0 (inter w0 w1 0.25)(inter w0 w1 0.75) w1)))
 ;
-; ¤·¤ó¤Ë¤ç¤¦
+; ã—ã‚“ã«ã‚‡ã†
 ;
 (defelement mincho shin-nyuu
     (let* 
@@ -464,7 +464,7 @@
      (curve2 p0 (inter2 p0 p1 0.5)(inter2 p2 p1 0.9) p2
 	     w0 (inter w0 w1 0.2) (inter w0 w1 0.9) w1)))
 ;
-; ¤Ş¤¬¤ê½Ä
+; ã¾ãŒã‚Šç¸¦
 ;
 (defelement mincho magaritate
   (let* ((dotsize (meshwidth mw))
@@ -475,7 +475,7 @@
 	 (p2 (grid (caddr points) dotsize)))
     (curve2 p0 (inter2 p0 p1 0.7)(inter2 p2 p1 0.7) p2 w0 w1 w1 w0)))
 ;
-; ¤«¤®
+; ã‹ã
 ;
 (defelement mincho kagi
   (let* ((dotsize0 (meshwidth mw))
@@ -497,7 +497,7 @@
 		   (cond ((> (metric2 p12 p2) w0)
 			   (line2 p12 p2 w1))
 			 (t `(nil nil)))))))
-; ½Äº¸¤Ï¤é¤¤¤ÎÄêµÁ
+; ç¸¦å·¦ã¯ã‚‰ã„ã®å®šç¾©
 (defelement mincho tatehidari
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))
@@ -519,7 +519,7 @@
        (bezier .,(diff2 (inter2 p1 p2 0.5) l0))
        (bezier .,(diff2 p2 l1))
        (angle .,p3)))))
-; ¤³¤³¤í
+; ã“ã“ã‚
 (defelement mincho kokoro
   (let* ((dotsize0 (meshwidth mw))
 	 (dotsize1 (meshwidth (* 1.0 mw)))
@@ -617,7 +617,7 @@
        (bezier .,(inter2 b3 b2 0.9))
        (bezier .,(inter2 p3 b2 0.9))
        (angle .,p3)))))
-; ¤¿¤¹¤­
+; ãŸã™ã
 (defelement mincho tasuki
   (let* ((dotsize0 (meshwidth mw))
 	 (w0 (normwidth dotsize0))
@@ -640,7 +640,7 @@
     (kokorohane p0 p1 p2 p3 w0 w2 w3)))
 ;    (curve2 p0 (inter2 p0 p01 0.99) (inter2 p4 p01 0.7) p4 w0 w0 w0 w0
 ;	    (kokorohane p4 p12 p2 p3 w0 w2 w3))))
-; ½ÄÄ·¤Í
+; ç¸¦è·³ã­
 (defelement mincho tatehane
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))
@@ -702,7 +702,7 @@
        (bezier .,(inter2 b2 b3 0.66666))
        (bezier .,(inter2 a3 b3 0.66666))
        (angle .,a3)))))
-; ÚÕ¤ÎÄ·¤Í
+; æ—ã®è·³ã­
 (defelement mincho tsukurihane
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))
@@ -745,7 +745,7 @@
 	  (t
 	   (setq p12 (cross2 p0 p3 (diff2 p1 p0)(diff2 p2 p3)))
 	   (hane p0 p12 p3 w w1 w2)))))
-; ¤³¤¶¤ÈÊĞ¤Î°ìÉô
+; ã“ã–ã¨åã®ä¸€éƒ¨
 (defelement mincho kozato
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))
@@ -766,7 +766,7 @@
 	    (* 0.7 w)
 	    w w
 	    (hane p12 p2 p3 w w1 w2))))
-; ¤µ¤ó¤º¤¤
+; ã•ã‚“ãšã„
 (defelement mincho sanzui
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))
@@ -833,7 +833,7 @@
        (angle .,b5)
        (angle .,p1)))))
 
-; º¸¤Ï¤é¤¤¤ÎÄêµÁ
+; å·¦ã¯ã‚‰ã„ã®å®šç¾©
 (defelement mincho hidari
   (let* ((dotsize (meshwidth mw))
 	 (w (normwidth dotsize))

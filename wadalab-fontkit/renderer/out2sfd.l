@@ -180,7 +180,7 @@ EndChar
 )
 
 ;
-; Ê¸»ú¥¢¥¦¥È¥é¥¤¥ó¤ÎÀ¸À®
+; æ–‡å­—ã‚¢ã‚¦ãƒˆãƒ©ã‚¤ãƒ³ã®ç”Ÿæˆ
 ; 
 (defun out2sfd (o outline em ascent &key (round-points t))
   (labels ((_round (x) 
@@ -226,7 +226,7 @@ EndChar
 )))
 
 ;
-; ¥Õ¥¡¥¤¥ë¤ÎÀ¸À®
+; ãƒ•ã‚¡ã‚¤ãƒ«ã®ç”Ÿæˆ
 ;
 (defun out-to-sfd-all (outlines tag sfdfile &optional (fontname "Untitled1")
 				            &key (remove-overlap t)
@@ -248,7 +248,7 @@ EndChar
        (print kanji *terminal-io*)
        (force-output *terminal-io*)
        (setq l
-	     (cond ((eq kanji '¡¡) nil) ; ¥¹¥Ú¡¼¥¹
+	     (cond ((eq kanji 'ã€€) nil) ; ã‚¹ãƒšãƒ¼ã‚¹
 		   ((not (boundp kanji)) nil)
 		   (t
 		    (skeleton2list (setq skeleton (normkanji (rm-limit (applykanji kanji tag)))) tag))))
@@ -941,7 +941,7 @@ EndChar
 -1 -1 -1 -1 -1 -1 -1 -1 -1 
 ))
 
-; 1-16-01 ¡Á 1-77-74
+; 1-16-01 ã€œ 1-77-74
 (defconstant hojo2uni #(
 19970 19972 19973 19980 19986 19999 20003 20004 20008 20011 20014 20015 20016
 20021 20032 20033 20036 20039 20049 20058 20060 20067 20072 20073 20084 20085
@@ -1392,7 +1392,7 @@ EndChar
 40866 40867 40869))
 
 ;
-; ÅÀ¤ÎºÂÉ¸ÃÍ¤ò¥á¥Ã¥·¥å¤Ë±è¤ï¤»¤ë
+; ç‚¹ã®åº§æ¨™å€¤ã‚’ãƒ¡ãƒƒã‚·ãƒ¥ã«æ²¿ã‚ã›ã‚‹
 ;
 (defun align-points (glyph)
   (mapcar 
@@ -1484,7 +1484,7 @@ gsave
 ;not yet
 )    
 
-;;; FontForge ¤Ç¤Î¼è¤ê¹ş¤ßÍÑ¤Ë¥ì¥ó¥À¥ê¥ó¥°·ë²Ì¤ò½ĞÎÏ
+;;; FontForge ã§ã®å–ã‚Šè¾¼ã¿ç”¨ã«ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°çµæœã‚’å‡ºåŠ›
 ;
 (defun print-point (pt)
   (format t "~A ~A " (* 2.5 (car pt)) (+ 800 (* -2.5 (cadr pt)))))

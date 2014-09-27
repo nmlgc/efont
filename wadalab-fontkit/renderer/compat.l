@@ -27,10 +27,10 @@
 ; $Id$
 
 ;-----------------------------------------------------------------------------
-; ½èÍı·Ï¸ÇÍ­¤ÎÄêµÁ
+; å‡¦ç†ç³»å›ºæœ‰ã®å®šç¾©
 ;-----------------------------------------------------------------------------
 
-; charset:EUC-JP ¤È¤¤¤¦¥·¥ó¥Ü¥ë¤ò¸«¤Æ¤â¥¨¥é¡¼¤Ë¤Ê¤é¤Ê¤¤¤è¤¦¤Ë¤¹¤ë
+; charset:EUC-JP ã¨ã„ã†ã‚·ãƒ³ãƒœãƒ«ã‚’è¦‹ã¦ã‚‚ã‚¨ãƒ©ãƒ¼ã«ãªã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹
 (or (find-package 'charset)
     (progn
       (make-package 'charset 
@@ -40,7 +40,7 @@
       (in-package common-lisp-user)))
 (defvar EUC-JP)
 
-; CMUCL ¤ËÆüËÜ¸ì¥·¥ó¥Ü¥ë¤òÆÉ¤Ş¤»¤ë
+; CMUCL ã«æ—¥æœ¬èªã‚·ãƒ³ãƒœãƒ«ã‚’èª­ã¾ã›ã‚‹
 ; (http://www.geocities.co.jp/SiliconValley-SanJose/7474/cmuclMemo.html#0012)
 (if (equal (lisp-implementation-type) "CMU Common Lisp")
     (loop for i from 128 to 255 do (set-syntax-from-char (code-char i) #\a)))
@@ -110,17 +110,17 @@
     kstr))
 
 ;-----------------------------------------------------------------------------
-; utilisp ¸ß´¹´Ø¿ô
+; utilisp äº’æ›é–¢æ•°
 ;-----------------------------------------------------------------------------
 (defun neq (a b) (not (eq a b)))
 (defun minus (a) (- a))
 
-; Common Lisp ¤Î assq, memq ¤Ï¿¿¥ê¥¹¥È¤·¤«°ú¿ô¤Ë¼è¤ì¤Ê¤¤¤Î¤Ç¡¢Ì¾Á°¤òÊÑ¤¨¤ë
+; Common Lisp ã® assq, memq ã¯çœŸãƒªã‚¹ãƒˆã—ã‹å¼•æ•°ã«å–ã‚Œãªã„ã®ã§ã€åå‰ã‚’å¤‰ãˆã‚‹
 
 (or (fboundp 'assq)
     (defmacro assq (key obj) `(assoc ,key ,obj :test #'eq)))
 
-; obj ¤¬¥É¥Ã¥È¥ê¥¹¥È¤Ç¤âÆ°¤¯¤è¤¦¤ËÊÑ¹¹¤¹¤ë¤È¤³¤¦¤Ê¤ë¡£
+; obj ãŒãƒ‰ãƒƒãƒˆãƒªã‚¹ãƒˆã§ã‚‚å‹•ãã‚ˆã†ã«å¤‰æ›´ã™ã‚‹ã¨ã“ã†ãªã‚‹ã€‚
 (defun assq* (key obj)
   (do ((l obj (cdr l)))
       ((atom l) nil)
@@ -148,36 +148,36 @@
 (defun vset (vec nth value)
   (setf (svref vec nth) value))
 
-; ¥Ï¥Ã¥·¥åÉ½¤ò»È¤¦¤è¤¦¤Ë¤¹¤ë¤Ù¤­¤«?
+; ãƒãƒƒã‚·ãƒ¥è¡¨ã‚’ä½¿ã†ã‚ˆã†ã«ã™ã‚‹ã¹ãã‹?
 (defmacro defprop (sym value key)
   `(putprop (quote ,sym) (quote ,value) (quote , key)))
 (defun putprop (sym value key)
   (setf (get sym key) value))
 
-; UtiLisp ¤Ç¤Ï float ¤ÎÆâÉô±é»»¤ÎÀºÅÙ¤¬ double ¤À¤Ã¤¿¤Î¤Ç¡¢É¬Í×¤Ë±ş¤¸¤ÆÊÑ´¹¤¹¤ë
+; UtiLisp ã§ã¯ float ã®å†…éƒ¨æ¼”ç®—ã®ç²¾åº¦ãŒ double ã ã£ãŸã®ã§ã€å¿…è¦ã«å¿œã˜ã¦å¤‰æ›ã™ã‚‹
 (defmacro dfloat (n) `(coerce ,n 'double-float))
 (defmacro sfloat (n) `(coerce ,n 'single-float))
 
-; 2ch ¥×¥í¥°¥é¥àµ»½ÑÈÄ¡ÖCommonLisp Scheme Part10¡×¤Ç
+; 2ch ãƒ—ãƒ­ã‚°ãƒ©ãƒ æŠ€è¡“æ¿ã€ŒCommonLisp Scheme Part10ã€ã§
 ; http://pc2.2ch.net/test/read.cgi/tech/1075630259/197-198
-; ¤µ¤ó¤¬¸æ¼¨ÈÏ¤µ¤ì¤¿ dbind* ¤È match ¤ò¡¢²şÂ¤¤Î¤¦¤¨´Ø¿ôÌ¾¤òÊÑ¤¨¤Æ»ÈÍÑ
+; ã•ã‚“ãŒå¾¡ç¤ºç¯„ã•ã‚ŒãŸ dbind* ã¨ match ã‚’ã€æ”¹é€ ã®ã†ãˆé–¢æ•°åã‚’å¤‰ãˆã¦ä½¿ç”¨
 ;
-; ¥É¥Ã¥È¥ê¥¹¥È¤Ø¤ÎÂĞ±ş¤òÄÉ²Ã¤·¤¿¡£
+; ãƒ‰ãƒƒãƒˆãƒªã‚¹ãƒˆã¸ã®å¯¾å¿œã‚’è¿½åŠ ã—ãŸã€‚
 
-; nil °Ê³°¤Î (true ¤Ë¤Ê¤ë) ¥¢¥È¥à¤«¤É¤¦¤«
+; nil ä»¥å¤–ã® (true ã«ãªã‚‹) ã‚¢ãƒˆãƒ ã‹ã©ã†ã‹
 (defun true-atom (obj)
   (and (atom obj) (not (null obj))))
-; t, nil °Ê³°¤Î¥·¥ó¥Ü¥ë¤«¤É¤¦¤«
+; t, nil ä»¥å¤–ã®ã‚·ãƒ³ãƒœãƒ«ã‹ã©ã†ã‹
 (defun nsymbolp (obj)
   (and (symbolp obj)
        (not (or (eq obj 't) (eq obj 'nil)))))
-; ¥É¥Ã¥ÈÂĞ¤«¤É¤¦¤«
+; ãƒ‰ãƒƒãƒˆå¯¾ã‹ã©ã†ã‹
 (defun dotpairp (l) (and (listp l) (true-atom (cdr l))))
 ;
-; dmaplist, dmapcon : ¥É¥Ã¥È¥ê¥¹¥È¤ò°·¤¨¤ë maplist / mapcon .
-; (Common Lisp ¤Î»ÅÍÍ¤Ç¤Ï, map ·Ï´Ø¿ô¤Î°ú¿ô¤Ï¿¿¥ê¥¹¥È¤Ç¤Ê¤±¤ì¤Ğ¤Ê¤é¤Ê¤¤)
-; (a b c . d) ¤ËÂĞ¤·¡¢(a b c .d), (b c . d), (c . d) ¤Î½ç¤ÇÅ¬ÍÑ¡£
-; º£¤Î¤È¤³¤í¡¢1 °ú¿ô¤Î¤ß¤ËÂĞ±ş¡£
+; dmaplist, dmapcon : ãƒ‰ãƒƒãƒˆãƒªã‚¹ãƒˆã‚’æ‰±ãˆã‚‹ maplist / mapcon .
+; (Common Lisp ã®ä»•æ§˜ã§ã¯, map ç³»é–¢æ•°ã®å¼•æ•°ã¯çœŸãƒªã‚¹ãƒˆã§ãªã‘ã‚Œã°ãªã‚‰ãªã„)
+; (a b c . d) ã«å¯¾ã—ã€(a b c .d), (b c . d), (c . d) ã®é †ã§é©ç”¨ã€‚
+; ä»Šã®ã¨ã“ã‚ã€1 å¼•æ•°ã®ã¿ã«å¯¾å¿œã€‚
 (defun dmaplist (pred lst)
   (do ((l lst (cdr l))
        (ret))
@@ -255,12 +255,12 @@
 			       forms))))))
 
 ;-----------------------------------------------------------------------------
-; ¤è¤¯¤¢¤ë¥æ¡¼¥Æ¥£¥ê¥Æ¥£´Ø¿ô
+; ã‚ˆãã‚ã‚‹ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£é–¢æ•°
 ;-----------------------------------------------------------------------------
 (defun mappend (fn &rest lists)
   (apply #'append (apply fn lists)))
 
-; 1 Í×ÁÇ¤ÎÄÉ²Ã (nconc1 ¤ÏÇË²õÅª)
+; 1 è¦ç´ ã®è¿½åŠ  (nconc1 ã¯ç ´å£Šçš„)
 (defun append1 (lst elem)
   (append lst (list elem)))
 (defun nconc1 (lst elem)

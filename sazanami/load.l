@@ -33,7 +33,7 @@
      (setq *top-level-auto-declare* t))
 
 (defvar base-directory)
-; ╔Ё╔С╔я╔╓╔И╓╛дл╓И╓й╓╓╩Ч╓о╪║╓н╧т╓Р╔Ё╔А╔С╔х╔╒╔╕╔х
+; Ц┌ЁЦ┐ЁЦ┐▒Ц┌╓Ц┐╘Ц│▄И─ Ц┌┴Ц│╙Ц│└Ф≥┌Ц│╞Ф╛║Ц│╝Х║▄Ц┌▓Ц┌ЁЦ┐║Ц┐ЁЦ┐┬Ц┌╒Ц┌╕Ц┐┬
 (defparameter source-load nil)
 (defun load-directory (dir)
   (let* ((base-directory dir))

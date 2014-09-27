@@ -49,13 +49,13 @@
 	 )
 ;   (break)
     (setq spaces nil)
-    ; ³Æ¥¨¥ì¥á¥ó¥È¤ò yokolines ¤« otherlines ¤«¤Î¤É¤Á¤é¤«¤ËÊ¬Îà¤¹¤ë
+    ; å„ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã‚’ yokolines ã‹ otherlines ã‹ã®ã©ã¡ã‚‰ã‹ã«åˆ†é¡ã™ã‚‹
     (do ((l lines (cdr l)))
       ((atom l))
       (cond ((eq (caar l) 'yoko)
 	     (push (car l) yokolines))
 	    (t (push (car l) otherlines))))
-    ; yokolines ¤ò y ºÂÉ¸¤Î¾®¤µ¤¤½ç¤ËÊÂ¤ÙÂØ¤¨¤ë
+    ; yokolines ã‚’ y åº§æ¨™ã®å°ã•ã„é †ã«ä¸¦ã¹æ›¿ãˆã‚‹
     (setq yokolines (sort yokolines
 			  #'(lambda (x y)
 ;			       (prinderr `(x ,x)) 
@@ -66,8 +66,8 @@
 ;   (do ((l yokolines (cdr l)))
 ;     ((atom l))
 ;     (prinderr (list (nth (caadar l) points)(nth (cadadr (car l)) points))))
-    ;; ¥ê¥¹¥È yokotree ¤ò¹½À®¤¹¤ë¡£
-    ;; ³ÆÍ×ÁÇ¤Ï¡¢(yoko¥¹¥È¥í¡¼¥¯ÄêµÁ ¿Æ°ìÍ÷ Ä¾¿Æ°ìÍ÷¤ÎÈÖ¹æ nil) ¤È¤Ê¤ë¡£
+    ;; ãƒªã‚¹ãƒˆ yokotree ã‚’æ§‹æˆã™ã‚‹ã€‚
+    ;; å„è¦ç´ ã¯ã€(yokoã‚¹ãƒˆãƒ­ãƒ¼ã‚¯å®šç¾© è¦ªä¸€è¦§ ç›´è¦ªä¸€è¦§ã®ç•ªå· nil) ã¨ãªã‚‹ã€‚
     (do ((l yokolines (cdr l))
 	 (i 0 (1+ i))
 	 (directparents nil nil)
@@ -77,16 +77,16 @@
        (setq yokotree (nreverse yokotree))
        )
       (do ((ll yokotree (cdr ll))
-	   (j (1- i) (1- j)))	; (i, j) ¤Ï yokolines ¤Ë´Ş¤Ş¤ì¤ë 2 ËÜ¤Î¥¨¥ì¥á¥ó¥È¤ÎÁ´ÁÈ¹ç¤»¤òÌÖÍå¤¹¤ë
+	   (j (1- i) (1- j)))	; (i, j) ã¯ yokolines ã«å«ã¾ã‚Œã‚‹ 2 æœ¬ã®ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®å…¨çµ„åˆã›ã‚’ç¶²ç¾…ã™ã‚‹
 	((atom ll)
-;	 (push `(,(car l) ,parents ,directparents nil) yokotree)) ; ¤³¤ì¤À¤È (CMUCL ¤Ç) nil ¤¬ static ¤Ë³ä¤êÅö¤Æ¤é¤ì¡¢Äê¿ôÅª¥Ç¡¼¥¿¹½Â¤¤Î½ñ¤­´¹¤¨¤¬È¯À¸¤¹¤ë¤é¤·¤¤¤Î¤Ç¼¡¹Ô¤Ë½ñ¤­´¹¤¨¤¿
+;	 (push `(,(car l) ,parents ,directparents nil) yokotree)) ; ã“ã‚Œã ã¨ (CMUCL ã§) nil ãŒ static ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã€å®šæ•°çš„ãƒ‡ãƒ¼ã‚¿æ§‹é€ ã®æ›¸ãæ›ãˆãŒç™ºç”Ÿã™ã‚‹ã‚‰ã—ã„ã®ã§æ¬¡è¡Œã«æ›¸ãæ›ãˆãŸ
 	 (push (list (car l) parents directparents nil) yokotree))
 	(cond ((memq j parents))
 	      ((child-of (car l) (caar ll) points)
 	       (push j directparents)
 	       (setq parents (union parents (cons j (cadar ll))))))))
 
-    ; yokotree ¤Î³ÆÍ×ÁÇ¤ÎºÇ½ªÍ×ÁÇ (brother) ¤ò¥»¥Ã¥È¤¹¤ë
+    ; yokotree ã®å„è¦ç´ ã®æœ€çµ‚è¦ç´  (brother) ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
     (do ((l yokotree (cdr l))
 	 (directparents)
 	 (i 0 (1+ i)))
@@ -196,17 +196,17 @@
 	   (setq  sum1 (+ sum1 (caar l)))))
       ))
 ;
-; prim ¤Ë°Ê²¼¤Îµ¿»÷¥¨¥ì¥á¥ó¥È¤òÄÉ²Ã¤·¤¿·ë²Ì¤ò ret ¤Ë³ÊÇ¼¤·¤ÆÊÖ¤¹¡£
+; prim ã«ä»¥ä¸‹ã®ç–‘ä¼¼ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã‚’è¿½åŠ ã—ãŸçµæœã‚’ ret ã«æ ¼ç´ã—ã¦è¿”ã™ã€‚
 ;
-; ¥¨¥ì¥á¥ó¥È¤Î³«»ÏÅÀ (¾åÃ¼) ¤«¤é¡¢¤½¤Î¥¨¥ì¥á¥ó¥È¤Î´Ş¤à³Æ¥ê¥ó¥¯ÅÀ¤Ë
-; ¸ş¤±¤Æ°ú¤¤¤¿Àş (µ¿»÷¥¨¥ì¥á¥ó¥È) ¤ò (tate ³«»ÏÅÀ ¥ê¥ó¥¯ÅÀ) ¤È¤¤¤¦·Á¤Ç
-; ret ¤ËÁŞÆş¤¹¤ë¡£¤¿¤À¤·¡¢½ªÎ»ÅÀ(²¼Ã¼)¤Ë¶á¤¹¤®¤ë°ÌÃÖ (¥¨¥ì¥á¥ó¥ÈÄ¹¤Î 1/4
-; °ÊÆâ) ¤Ë¥ê¥ó¥¯ÅÀ¤¬¤¢¤ë¤È¤½¤Î¥¨¥ì¥á¥ó¥È¤«¤éºî¤é¤ì¤ëµ¿»÷¥¨¥ì¥á¥ó¥È¤ÎÁŞÆş
-; ¤ÏÅÓÃæ¤ÇÃæÃÇ¤¹¤ë¡£
+; ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®é–‹å§‹ç‚¹ (ä¸Šç«¯) ã‹ã‚‰ã€ãã®ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®å«ã‚€å„ãƒªãƒ³ã‚¯ç‚¹ã«
+; å‘ã‘ã¦å¼•ã„ãŸç·š (ç–‘ä¼¼ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆ) ã‚’ (tate é–‹å§‹ç‚¹ ãƒªãƒ³ã‚¯ç‚¹) ã¨ã„ã†å½¢ã§
+; ret ã«æŒ¿å…¥ã™ã‚‹ã€‚ãŸã ã—ã€çµ‚äº†ç‚¹(ä¸‹ç«¯)ã«è¿‘ã™ãã‚‹ä½ç½® (ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆé•·ã® 1/4
+; ä»¥å†…) ã«ãƒªãƒ³ã‚¯ç‚¹ãŒã‚ã‚‹ã¨ãã®ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã‹ã‚‰ä½œã‚‰ã‚Œã‚‹ç–‘ä¼¼ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®æŒ¿å…¥
+; ã¯é€”ä¸­ã§ä¸­æ–­ã™ã‚‹ã€‚
 ;
-; ÌäÂêÅÀ1: link ÅÀ¤ÎÎóµó½ç ¤¬ (link 1 2 3) ¤Î»ş¤È (link 3 2 1) ¤Î»ş¤Ç
-;          ÊÖ¤êÃÍ¤¬ÊÑ¤ï¤ë²ÄÇ½À­¤¬¤¢¤ë¡£
-; ÌäÂêÅÀ2: tate ¤À¤±¤Ç¤Ê¤¯ tatehane ¤ä tatehidari ¤âÎóµó¤¹¤Ù¤­¤Ç¤Ï?
+; å•é¡Œç‚¹1: link ç‚¹ã®åˆ—æŒ™é † ãŒ (link 1 2 3) ã®æ™‚ã¨ (link 3 2 1) ã®æ™‚ã§
+;          è¿”ã‚Šå€¤ãŒå¤‰ã‚ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã€‚
+; å•é¡Œç‚¹2: tate ã ã‘ã§ãªã tatehane ã‚„ tatehidari ã‚‚åˆ—æŒ™ã™ã¹ãã§ã¯?
 ;
 (defparameter  simple-thresh 0.25)
 ;
@@ -220,7 +220,7 @@
       ((atom l)`(,points ,(nreverse ret) .,alist))
       (cond ((eq (caar l) 'tate)
 	     (setq link (assq 'link (cddar l)))
-	     ; p0 = ºÇ½é¤Î¥¨¥ì¥á¥ó¥È¤ÎºÇ½é¤ÎÅÀ¤ÎÈÖ¹æ, p1 = 2 ÈÖÌÜ¤ÎÅÀ¤ÎÈÖ¹æ
+	     ; p0 = æœ€åˆã®ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®æœ€åˆã®ç‚¹ã®ç•ªå·, p1 = 2 ç•ªç›®ã®ç‚¹ã®ç•ªå·
 	     (setq p0 (car (cadar l))
 		   p1 (cadr (cadar l)))
 	     (setq y0 (cadr (nth p0 points))
@@ -290,10 +290,10 @@
       '(otherend yokoend yokostart leftdown rightdown cross up))
 ;
 ; child-of
-; 	line1 ¤¬ line0 ¤Î¡Ö»Ò¶¡¡×¤«¤É¤¦¤« (x ¼´¤Ø¤Î¼Í±Æ¤¬½Å¤Ê¤ê¹ç¤¦¤«)
-;       ²£Àş¤òÈæ³ÓÂĞ¾İ¤È¤·¤Æ¤¤¤ë¤Î¤Ç x00<x01, x10<x11 ¤ò²¾Äê¤·¤Æ¤¤¤ë¡£
+; 	line1 ãŒ line0 ã®ã€Œå­ä¾›ã€ã‹ã©ã†ã‹ (x è»¸ã¸ã®å°„å½±ãŒé‡ãªã‚Šåˆã†ã‹)
+;       æ¨ªç·šã‚’æ¯”è¼ƒå¯¾è±¡ã¨ã—ã¦ã„ã‚‹ã®ã§ x00<x01, x10<x11 ã‚’ä»®å®šã—ã¦ã„ã‚‹ã€‚
 ;
-(defparameter eps 1.0e-4) ; utilisp¤Ç10^-5¤òÉ¾²Á¤¹¤ë¤È0.0001¤ÈÅù¤·¤¯¤Ê¤Ã¤¿¡£
+(defparameter eps 1.0e-4) ; utilispã§10^-5ã‚’è©•ä¾¡ã™ã‚‹ã¨0.0001ã¨ç­‰ã—ããªã£ãŸã€‚
 ;
 (defun child-of (line0 line1 points)
   (let* ((x00 (car (nth (caadr line0) points)))
@@ -497,48 +497,48 @@
 
 (defparameter partheight
       (partsort
-      '((nil . 0.7) ; Æó
+      '((nil . 0.7) ; äºŒ
 	(((tate leftupper leftdown)
 	  (tate rightupper rightdown))
-	 . 1.0) ; ¸ı
+	 . 1.0) ; å£
 	(((tate (yokostart leftdown) up)
 	  (tate (yokoend rightdown) up))
-	 . 0.78) ; Ã¶
+	 . 0.78) ; æ—¦
 	(((tate otherstart otherend))
-	 . 0.86) ; ¹©
+	 . 0.86) ; å·¥
 	(((tate otherstart cross))
-	 . 0.70) ; ´³
+	 . 0.70) ; å¹²
 	(((tate cross otherend))
-	 . 0.73) ; ÅÚ
+	 . 0.73) ; åœŸ
 	(((tate leftupper yokostart)
 	  (tate rightupper yokoend))
-	 . 0.70) ; Æü
+	 . 0.70) ; æ—¥
 	(((tate yokostart yokostart)
 	  (tate yokoend yokoend))
-	 . 0.58) ; ÌÜ
+	 . 0.58) ; ç›®
 	(((tate yokostart leftdown)
 	  (tate yokoend rightdown))
-	 . 0.72) ; Æü
+	 . 0.72) ; æ—¥
 	(((tate leftupper yokostart)
 	  (tate otherstart cross)
 	  (tate rightupper yokoend))
-	 . 0.95) ; ÅÄ
+	 . 0.95) ; ç”°
 	(((tate yokostart leftdown)
 	  (tate cross (cross otherend))
 	  (tate yokoend rightdown))
-	 . 0.95) ; ÅÄ
+	 . 0.95) ; ç”°
 	(((tate leftupper yokostart)
 	  (kokoro otherstart cross)
 	  (tate rightupper yokoend))
-	 . 0.95) ; ÅÅ
+	 . 0.95) ; é›»
 	(((tate yokostart leftdown)
 	  (kokoro cross (cross otherend))
 	  (tate yokoend rightdown))
-	 . 0.95) ; ÅÅ
+	 . 0.95) ; é›»
 	(((tate * nil))
-	 . 1.4) ; ½½
+	 . 1.4) ; å
 	(((tatehane * nil))
-	 . 1.4) ; ½½
+	 . 1.4) ; å
 	(((tate * *))
 	 . 0.70)
 	(((tate * *)(tate * *))
@@ -548,48 +548,48 @@
 	(((tate * *)(tate * *)(tate * *)(tate * *))
 	 . 0.85)
 	(((hidari * *)(migiue * *)(ten * *))
-	 . 1.11) ; ¥à
+	 . 1.11) ; ãƒ 
 	(((hidari * *)(ten * *)(hidari * *)(migiue * *)(ten * *))
-	 . 1.63) ; »å
+	 . 1.63) ; ç³¸
 	(((hidari rightupper nil)(migi (cross down otherstart) nil))
-	 . 1.90) ; Ëô
+	 . 1.90) ; åˆ
 	(((hidari rightupper *)(hidari yokostart *)(migi (down otherstart) *))
-	 . 2.28) ; ³Æ
+	 . 2.28) ; å„
 	(((kokoro * *)(ten * *)(ten * *)(ten * *))
-	 . 2.14) ; ¿´
+	 . 2.14) ; å¿ƒ
 	(((tate * (nil otherend)))
-	 . 0.73) ; µş
+	 . 0.73) ; äº¬
 	(((tate * (nil otherend))
 	  (ten * *)(hidari * *)(ten * yokostart))
-	 . 0.75) ; Æ²
+	 . 0.75) ; å ‚
 	(((tate (cross otherstart) *)
 	  (hidari (cross otherstart) *)
 	  (migi (cross otherstart) *))
-	 . 1.85) ; ÌÚ
+	 . 1.85) ; æœ¨
 	(((tate (cross otherstart) *)
 	  (hidari (cross otherstart down) *)
 	  (ten (cross otherstart down) *))
-	 . 1.85) ; ÌÚ¤Ø¤ó
+	 . 1.85) ; æœ¨ã¸ã‚“
 	(((tatehane otherstart *)(ten * *)(ten * *))
-	 . 1.86) ; ¾®
+	 . 1.86) ; å°
 	(((tatehane otherstart *)(ten * *))
-	 . 1.80) ; À£
+	 . 1.80) ; å¯¸
 	(((hidari otherstart *)(kokoro otherstart *))
-	 . 1.51) ; ¸«
+	 . 1.51) ; è¦‹
 	(((hidari (cross otherstart) nil)(migi (down otherstart) nil))
-	 . 1.85) ; Âç
+	 . 1.85) ; å¤§
 	(((magaritate (cross otherstart) nil)(hidari otherstart nil)(ten * *))
-	 . 1.73) ; ½÷
+	 . 1.73) ; å¥³
 	(((hidari (otherstart down) *)
 	  (tate * *)(migiue * *)(hidari * *)(migi * *))
-	 . 2.40) ; °á
+	 . 2.40) ; è¡£
 	(((tate * *)(migiue * *)(hidari * *)(migi * *))
-	 . 2.40) ; °Ú
+	 . 2.40) ; ç•
 	(((hidari yokostart *)
 	  (hidari otherstart *)
 	  (hidari otherstart *)
 	  (tsukurihane rightupper *))
-	 . 2.20) ; °×
+	 . 2.20) ; æ˜“
 	(((hidari * nil)(kokoro * nil))
 	 . 1.70)
 	(((hidari down (otherend up))(ten down (otherend up)))

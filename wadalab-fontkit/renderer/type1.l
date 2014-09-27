@@ -73,8 +73,8 @@
 	 (print `(error ,val) *terminal-io*)
 	 (break))))
 ;
-; Adobe Type1 Font Format ¤Î½ĞÎÏ
-; (Â¾¤«¤é¸Æ¤Ğ¤ì¤Æ¤¤¤Ê¤¤)
+; Adobe Type1 Font Format ã®å‡ºåŠ›
+; (ä»–ã‹ã‚‰å‘¼ã°ã‚Œã¦ã„ãªã„)
 ;
 (defun klist2type1 (klist tag &optional (fontfile))
   (let ((*standard-output* 
@@ -102,7 +102,7 @@
 	 (hints (type1hints skeleton type)))
     (out2type1 outline hints)))
 ;
-; fix ¤Ï¡¢Æ°ºî¾å¸ß´¹¤Î truncate ¤Ç¤Ï¤Ê¤¯ round ¤ËÃÖ¤­´¹¤¨¤¿¡£
+; fix ã¯ã€å‹•ä½œä¸Šäº’æ›ã® truncate ã§ã¯ãªã round ã«ç½®ãæ›ãˆãŸã€‚
 ;
 (defun out2type1 (outline &optional (hints))
   (cond

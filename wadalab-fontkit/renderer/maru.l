@@ -192,7 +192,7 @@
 ;
 (deftypehook maru #'maru-prim)
 ;
-; ½ÄÄ·¤Í
+; ç¸¦è·³ã­
 ;
 (defelement gothic tatehane
   (let* ((p0 (car points))
@@ -208,7 +208,7 @@
 				 (diff2 p2 p1)))))
     (line2 p0 p01 w (maruhane p01 p1 p2 w w w))))
 ;
-; ¤³¤¶¤ÈÊĞ¤Î°ìÉô
+; ã“ã–ã¨åã®ä¸€éƒ¨
 ;
 (defelement gothic kozato
   (let* ((p0 (car points))
@@ -222,7 +222,7 @@
 	    (maruhane p12 p2 p3
 		    w w w))))
 ;
-; ÚÕ¤ÎÄ·¤Í
+; æ—ã®è·³ã­
 ;	    
 (defelement gothic tsukurihane
   (let* ((p0 (car points))

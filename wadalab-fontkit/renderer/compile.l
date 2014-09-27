@@ -50,7 +50,7 @@
 	(> (file-write-date file) (file-write-date binary-file)))))
 
 (defun compile-file-if-updated (file)
-;; ¥Ç¥Ğ¥Ã¥°ÍÑ¤ÎÀßÄê
+;; ãƒ‡ãƒãƒƒã‚°ç”¨ã®è¨­å®š
 ;  (declare (optimize (debug 3)
 ;		      (compilation-speed 0)
 ;		      (spped 1)

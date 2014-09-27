@@ -55,17 +55,17 @@ Close()
 
 Open(JISX0208)
 
-# ∞˙Õ—…‰§œ¡¥≥—§ÚÕ•¿Ë°£
+# ÂºïÁî®Á¨¶„ÅØÂÖ®Ëßí„ÇíÂÑ™ÂÖà„ÄÇ
 Select(kuten(1, 38)); SetCharName("uni2018")
 Select(kuten(1, 39)); SetCharName("uni2019")
 Select(kuten(1, 40)); SetCharName("uni201C")
 Select(kuten(1, 41)); SetCharName("uni201D")
 
-# §¶°´
+# „ÅÜ„Çõ
 c = kuten(4, 84); if (InFont(c)); Select(c); SetCharName("uni3094"); endif
 
-## 13 ∂Ë§Œ NEC ≥∞ª˙
-# ¥›øÙª˙
+## 13 Âå∫„ÅÆ NEC Â§ñÂ≠ó
+# ‰∏∏Êï∞Â≠ó
 c = kuten(13, 1); if (InFont(c)); Select(c); SetCharName("uni2460"); endif
 c = kuten(13, 2); if (InFont(c)); Select(c); SetCharName("uni2461"); endif
 c = kuten(13, 3); if (InFont(c)); Select(c); SetCharName("uni2462"); endif
@@ -86,7 +86,7 @@ c = kuten(13,17); if (InFont(c)); Select(c); SetCharName("uni2470"); endif
 c = kuten(13,18); if (InFont(c)); Select(c); SetCharName("uni2471"); endif
 c = kuten(13,19); if (InFont(c)); Select(c); SetCharName("uni2472"); endif
 c = kuten(13,20); if (InFont(c)); Select(c); SetCharName("uni2473"); endif
-# •Ì°º•ﬁøÙª˙
+# „É≠„Éº„ÉûÊï∞Â≠ó
 c = kuten(13,21); if (InFont(c)); Select(c); SetCharName("uni2160"); endif
 c = kuten(13,22); if (InFont(c)); Select(c); SetCharName("uni2161"); endif
 c = kuten(13,23); if (InFont(c)); Select(c); SetCharName("uni2162"); endif
@@ -97,23 +97,23 @@ c = kuten(13,27); if (InFont(c)); Select(c); SetCharName("uni2166"); endif
 c = kuten(13,28); if (InFont(c)); Select(c); SetCharName("uni2167"); endif
 c = kuten(13,29); if (InFont(c)); Select(c); SetCharName("uni2168"); endif
 c = kuten(13,30); if (InFont(c)); Select(c); SetCharName("uni2169"); endif
-# πÁª˙
-c = kuten(13,32); if (InFont(c)); Select(c); SetCharName("uni3349"); endif # •ﬂ•Í
-c = kuten(13,33); if (InFont(c)); Select(c); SetCharName("uni3314"); endif # •≠•Ì
-c = kuten(13,34); if (InFont(c)); Select(c); SetCharName("uni3322"); endif # •ª•Û•¡
-c = kuten(13,35); if (InFont(c)); Select(c); SetCharName("uni334D"); endif # •·°º•»•Î
-c = kuten(13,36); if (InFont(c)); Select(c); SetCharName("uni3318"); endif # •∞•È•‡
-c = kuten(13,37); if (InFont(c)); Select(c); SetCharName("uni3327"); endif # •»•Û
-c = kuten(13,38); if (InFont(c)); Select(c); SetCharName("uni3303"); endif # •¢°º•Î
-c = kuten(13,39); if (InFont(c)); Select(c); SetCharName("uni3336"); endif # •ÿ•Ø•ø°º•Î
-c = kuten(13,40); if (InFont(c)); Select(c); SetCharName("uni3351"); endif # •Í•√•»•Î
-c = kuten(13,41); if (InFont(c)); Select(c); SetCharName("uni3357"); endif # •Ô•√•»
-c = kuten(13,42); if (InFont(c)); Select(c); SetCharName("uni330D"); endif # •´•Ì•Í°º
-c = kuten(13,43); if (InFont(c)); Select(c); SetCharName("uni3326"); endif # •…•Î
-c = kuten(13,44); if (InFont(c)); Select(c); SetCharName("uni3323"); endif # •ª•Û•»
-c = kuten(13,45); if (InFont(c)); Select(c); SetCharName("uni332B"); endif # •—°º•ª•Û•»
-c = kuten(13,46); if (InFont(c)); Select(c); SetCharName("uni334A"); endif # •ﬂ•Í•–°º•Î
-c = kuten(13,47); if (InFont(c)); Select(c); SetCharName("uni333B"); endif # •⁄°º•∏
+# ÂêàÂ≠ó
+c = kuten(13,32); if (InFont(c)); Select(c); SetCharName("uni3349"); endif # „Éü„É™
+c = kuten(13,33); if (InFont(c)); Select(c); SetCharName("uni3314"); endif # „Ç≠„É≠
+c = kuten(13,34); if (InFont(c)); Select(c); SetCharName("uni3322"); endif # „Çª„É≥„ÉÅ
+c = kuten(13,35); if (InFont(c)); Select(c); SetCharName("uni334D"); endif # „É°„Éº„Éà„É´
+c = kuten(13,36); if (InFont(c)); Select(c); SetCharName("uni3318"); endif # „Ç∞„É©„É†
+c = kuten(13,37); if (InFont(c)); Select(c); SetCharName("uni3327"); endif # „Éà„É≥
+c = kuten(13,38); if (InFont(c)); Select(c); SetCharName("uni3303"); endif # „Ç¢„Éº„É´
+c = kuten(13,39); if (InFont(c)); Select(c); SetCharName("uni3336"); endif # „Éò„ÇØ„Çø„Éº„É´
+c = kuten(13,40); if (InFont(c)); Select(c); SetCharName("uni3351"); endif # „É™„ÉÉ„Éà„É´
+c = kuten(13,41); if (InFont(c)); Select(c); SetCharName("uni3357"); endif # „ÉØ„ÉÉ„Éà
+c = kuten(13,42); if (InFont(c)); Select(c); SetCharName("uni330D"); endif # „Ç´„É≠„É™„Éº
+c = kuten(13,43); if (InFont(c)); Select(c); SetCharName("uni3326"); endif # „Éâ„É´
+c = kuten(13,44); if (InFont(c)); Select(c); SetCharName("uni3323"); endif # „Çª„É≥„Éà
+c = kuten(13,45); if (InFont(c)); Select(c); SetCharName("uni332B"); endif # „Éë„Éº„Çª„É≥„Éà
+c = kuten(13,46); if (InFont(c)); Select(c); SetCharName("uni334A"); endif # „Éü„É™„Éê„Éº„É´
+c = kuten(13,47); if (InFont(c)); Select(c); SetCharName("uni333B"); endif # „Éö„Éº„Ç∏
 c = kuten(13,48); if (InFont(c)); Select(c); SetCharName("uni339C"); endif # mm
 c = kuten(13,49); if (InFont(c)); Select(c); SetCharName("uni339D"); endif # cm
 c = kuten(13,50); if (InFont(c)); Select(c); SetCharName("uni339E"); endif # km
@@ -122,7 +122,7 @@ c = kuten(13,52); if (InFont(c)); Select(c); SetCharName("uni338F"); endif # kg
 c = kuten(13,53); if (InFont(c)); Select(c); SetCharName("uni33C4"); endif # cc
 c = kuten(13,54); if (InFont(c)); Select(c); SetCharName("uni33A1"); endif # m^2
 
-c = kuten(13,63); if (InFont(c)); Select(c); SetCharName("uni337B"); endif #  ø¿Æ
+c = kuten(13,63); if (InFont(c)); Select(c); SetCharName("uni337B"); endif # Âπ≥Êàê
 
 c = kuten(13,64); if (InFont(c)); Select(c); SetCharName("uni301D.vert"); endif
 c = kuten(13,65); if (InFont(c)); Select(c); SetCharName("uni301E.vert"); endif
@@ -137,12 +137,12 @@ c = kuten(13,71); if (InFont(c)); Select(c); SetCharName("uni32A6"); endif
 c = kuten(13,72); if (InFont(c)); Select(c); SetCharName("uni32A7"); endif
 c = kuten(13,73); if (InFont(c)); Select(c); SetCharName("uni32A8"); endif
 
-c = kuten(13,74); if (InFont(c)); Select(c); SetCharName("uni3231"); endif # (≥Ù)
-c = kuten(13,75); if (InFont(c)); Select(c); SetCharName("uni3232"); endif # (Õ≠)
-c = kuten(13,76); if (InFont(c)); Select(c); SetCharName("uni3239"); endif # (¬Â)
-c = kuten(13,77); if (InFont(c)); Select(c); SetCharName("uni337E"); endif # Ã¿º£
-c = kuten(13,78); if (InFont(c)); Select(c); SetCharName("uni337D"); endif # ¬Á¿µ
-c = kuten(13,79); if (InFont(c)); Select(c); SetCharName("uni337C"); endif # æºœ¬
+c = kuten(13,74); if (InFont(c)); Select(c); SetCharName("uni3231"); endif # (Ê†™)
+c = kuten(13,75); if (InFont(c)); Select(c); SetCharName("uni3232"); endif # (Êúâ)
+c = kuten(13,76); if (InFont(c)); Select(c); SetCharName("uni3239"); endif # (‰ª£)
+c = kuten(13,77); if (InFont(c)); Select(c); SetCharName("uni337E"); endif # ÊòéÊ≤ª
+c = kuten(13,78); if (InFont(c)); Select(c); SetCharName("uni337D"); endif # Â§ßÊ≠£
+c = kuten(13,79); if (InFont(c)); Select(c); SetCharName("uni337C"); endif # Êò≠Âíå
 
 c = kuten(13,80); if (InFont(c)); Clear(); endif
 c = kuten(13,81); if (InFont(c)); Clear(); endif

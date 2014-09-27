@@ -29,7 +29,7 @@
 
 (defprimitive
    gothic
-   §¢
+   „ÅÇ
    '(((74 103)
       (178 100)
       (266 82)
@@ -50,7 +50,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §§
+   „ÅÑ
    '(((92 76)
       (70 210)
       (108 344)
@@ -64,7 +64,7 @@
      (ylimit 0 400)))
 (defprimitive
    gothic
-   §¶
+   „ÅÜ
    '(((128 39)
       (189 64)
       (273 65)
@@ -78,7 +78,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §®
+   „Åà
    '(((113 26)
       (176 51)
       (270 59)
@@ -97,7 +97,7 @@
      (ylimit 0 400)))
 (defprimitive
    gothic
-   §™
+   „Åä
    '(((40 125)
       (141 133)
       (244 118)
@@ -123,7 +123,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §´
+   „Åã
    '(((37 141)
       (110 143)
       (192 136)
@@ -146,7 +146,7 @@
      (ylimit 0 400)))
 (defprimitive
    gothic
-   §≠
+   „Åç
    '(((73 108)
       (208 108)
       (300 85)
@@ -167,13 +167,13 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ø
+   „Åè
    '(((237 22) (157 143) (106 205) (107 234) (158 283) (260 381))
      ((hira-long (0 1 2 3 4 5)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §±
+   „Åë
    '(((64 58)
       (49 205)
       (71 352)
@@ -188,13 +188,13 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §≥
+   „Åì
    '(((107 68) (190 79) (295 76) (79 246) (69 308) (178 348) (336 342))
      ((hira-long (0 1 2)) (hira-long (3 4 5 6)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §µ
+   „Åï
    '(((59 111)
       (188 121)
       (321 92)
@@ -209,13 +209,13 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §∑
+   „Åó
    '(((124 42) (120 190) (122 331) (183 381) (350 286) (270 372))
      ((hira-long (0 1 2 3 5 4)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §π
+   „Åô
    '(((41 121)
       (203 132)
       (363 113)
@@ -232,7 +232,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ª
+   „Åõ
    '(((27 165)
       (187 148)
       (356 147)
@@ -249,7 +249,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ω
+   „Åù
    '(((104 60)
       (202 69)
       (303 56)
@@ -266,7 +266,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ø
+   „Åü
    '(((31 129)
       (135 130)
       (200 115)
@@ -286,7 +286,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §¡
+   „Å°
    '(((41 85)
       (156 98)
       (297 76)
@@ -301,19 +301,19 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ƒ
+   „Å§
    '(((43 146) (165 141) (285 129) (359 232) (284 322) (143 346))
      ((hira-long (0 1 2 3 4 5)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §∆
+   „Å¶
    '(((39 109) (173 107) (353 99) (152 197) (153 310) (276 366))
      ((hira-long (0 1 2)) (hira-long (2 3 4 5)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §»
+   „Å®
    '(((312 149)
       (94 242)
       (88 327)
@@ -325,7 +325,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   § 
+   „Å™
    '(((41 107)
       (140 109)
       (221 86)
@@ -348,7 +348,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §À
+   „Å´
    '(((76 48)
       (57 204)
       (69 370)
@@ -362,7 +362,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ã
+   „Å¨
    '(((90 69)
       (126 193)
       (198 291)
@@ -381,7 +381,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Õ
+   „Å≠
    '(((121 29)
       (118 201)
       (119 378)
@@ -405,7 +405,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Œ
+   „ÅÆ
    '(((198 89)
       (102 349)
       (53 313)
@@ -419,7 +419,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §œ
+   „ÅØ
    '(((71 44)
       (52 199)
       (58 366)
@@ -440,7 +440,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §“
+   „Å≤
    '(((54 84)
       (109 82)
       (193 72)
@@ -456,7 +456,7 @@
      (ylimit 0 400)))
 (defprimitive
    gothic
-   §’
+   „Åµ
    '(((157 44)
       (200 88)
       (253 126)
@@ -477,13 +477,13 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ÿ
+   „Å∏
    '(((27 221) (115 129) (161 120) (377 328) (264 221) (70 174))
      ((hira-long (0 5 1 2 4 3)))
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §€
+   „Åª
    '(((71 44)
       (52 199)
       (58 366)
@@ -508,7 +508,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ﬁ
+   „Åæ
    '(((191 12)
       (189 229)
       (191 346)
@@ -530,7 +530,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §ﬂ
+   „Åø
    '(((95 82)
       (152 82)
       (225 65)
@@ -550,7 +550,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §‡
+   „ÇÄ
    '(((30 117)
       (120 117)
       (215 93)
@@ -575,7 +575,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §·
+   „ÇÅ
    '(((90 69)
       (126 193)
       (198 291)
@@ -592,7 +592,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §‚
+   „ÇÇ
    '(((159 25)
       (146 162)
       (135 290)
@@ -610,7 +610,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §‰
+   „ÇÑ
    '(((9 212)
       (177 120)
       (284 102)
@@ -627,7 +627,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ê
+   „ÇÜ
    '(((64 72)
       (41 194)
       (47 343)
@@ -647,7 +647,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ë
+   „Çà
    '(((191 12)
       (189 229)
       (191 334)
@@ -664,7 +664,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §È
+   „Çâ
    '(((105 39)
       (183 47)
       (254 75)
@@ -680,7 +680,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Í
+   „Çä
    '(((143 21)
       (115 137)
       (117 265)
@@ -693,7 +693,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Î
+   „Çã
    '(((119 64)
       (192 67)
       (278 53)
@@ -712,7 +712,7 @@
      (ylimit 0 400)))
 (defprimitive
    gothic
-   §Ï
+   „Çå
    '(((121 29)
       (118 201)
       (119 378)
@@ -735,7 +735,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ì
+   „Çç
    '(((119 64)
       (192 67)
       (278 53)
@@ -750,7 +750,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ô
+   „Çè
    '(((121 29)
       (118 201)
       (119 378)
@@ -770,7 +770,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §
+   „Çê
    '(((78 79)
       (155 70)
       (238 51)
@@ -789,7 +789,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ò
+   „Çë
    '(((112 37)
       (191 42)
       (268 37)
@@ -817,7 +817,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Ú
+   „Çí
    '(((58 114)
       (182 125)
       (310 111)
@@ -838,7 +838,7 @@
      (xlimit 0 400)(ylimit 0 400)))
 (defprimitive
    gothic
-   §Û
+   „Çì
    '(((219 24)
       (148 161)
       (28 349)

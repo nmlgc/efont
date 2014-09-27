@@ -66,29 +66,29 @@ if (result == "mplus.bdf")
 	Select("0x2D3D"); SetCharName("uni2168")
 	Select("0x2D3E"); SetCharName("uni2169")
 
-	Select("0x2D40"); SetCharName("uni3349")	# ¥ß¥ê
-	Select("0x2D41"); SetCharName("uni3314")	# ¥­¥í
-	Select("0x2D42"); SetCharName("uni3322")	# ¥»¥ó¥Á
-	Select("0x2D43"); SetCharName("uni334D")	# ¥á¡¼¥È¥ë
-	Select("0x2D44"); SetCharName("uni3318")	# ¥°¥é¥à
-	Select("0x2D45"); SetCharName("uni3327")	# ¥È¥ó
-	Select("0x2D46"); SetCharName("uni3303")	# ¥¢¡¼¥ë
-	Select("0x2D47"); SetCharName("uni3336")	# ¥Ø¥¯¥¿¡¼¥ë
-	Select("0x2D48"); SetCharName("uni3351")	# ¥ê¥Ã¥È¥ë
-	Select("0x2D49"); SetCharName("uni3357")	# ¥ï¥Ã¥È
-	Select("0x2D4A"); SetCharName("uni330D")	# ¥«¥í¥ê¡¼
-	Select("0x2D4B"); SetCharName("uni3326")	# ¥É¥ë
-	Select("0x2D4C"); SetCharName("uni3323")	# ¥»¥ó¥È
-	Select("0x2D4D"); SetCharName("uni332B")	# ¥Ñ¡¼¥»¥ó¥È
-	Select("0x2D4E"); SetCharName("uni334A")	# ¥ß¥ê¥Ğ¡¼¥ë
-	Select("0x2D4F"); SetCharName("uni333B")	# ¥Ú¡¼¥¸
+	Select("0x2D40"); SetCharName("uni3349")	# ãƒŸãƒª
+	Select("0x2D41"); SetCharName("uni3314")	# ã‚­ãƒ­
+	Select("0x2D42"); SetCharName("uni3322")	# ã‚»ãƒ³ãƒ
+	Select("0x2D43"); SetCharName("uni334D")	# ãƒ¡ãƒ¼ãƒˆãƒ«
+	Select("0x2D44"); SetCharName("uni3318")	# ã‚°ãƒ©ãƒ 
+	Select("0x2D45"); SetCharName("uni3327")	# ãƒˆãƒ³
+	Select("0x2D46"); SetCharName("uni3303")	# ã‚¢ãƒ¼ãƒ«
+	Select("0x2D47"); SetCharName("uni3336")	# ãƒ˜ã‚¯ã‚¿ãƒ¼ãƒ«
+	Select("0x2D48"); SetCharName("uni3351")	# ãƒªãƒƒãƒˆãƒ«
+	Select("0x2D49"); SetCharName("uni3357")	# ãƒ¯ãƒƒãƒˆ
+	Select("0x2D4A"); SetCharName("uni330D")	# ã‚«ãƒ­ãƒªãƒ¼
+	Select("0x2D4B"); SetCharName("uni3326")	# ãƒ‰ãƒ«
+	Select("0x2D4C"); SetCharName("uni3323")	# ã‚»ãƒ³ãƒˆ
+	Select("0x2D4D"); SetCharName("uni332B")	# ãƒ‘ãƒ¼ã‚»ãƒ³ãƒˆ
+	Select("0x2D4E"); SetCharName("uni334A")	# ãƒŸãƒªãƒãƒ¼ãƒ«
+	Select("0x2D4F"); SetCharName("uni333B")	# ãƒšãƒ¼ã‚¸
 	Select("0x2D50"); SetCharName("uni339C")	# mm
 	Select("0x2D51"); SetCharName("uni339D")	# cm
 	Select("0x2D52"); SetCharName("uni339E") 	# km
 	Select("0x2D53"); SetCharName("uni338E")	# mg
 	Select("0x2D54"); SetCharName("uni33C4")	# cc
 	Select("0x2D56"); SetCharName("uni33A1")	# m^2
-	Select("0x2D5F"); SetCharName("uni337B")	# Ê¿À®
+	Select("0x2D5F"); SetCharName("uni337B")	# å¹³æˆ
 	Select("0x2D60"); SetCharName("uni301D.vert")	#
 	Select("0x2D61"); SetCharName("uni301E.vert")	#
 	Select("0x2D62"); SetCharName("uni2116")	# No
@@ -99,12 +99,12 @@ if (result == "mplus.bdf")
 	Select("0x2D67"); SetCharName("uni32A6")
 	Select("0x2D68"); SetCharName("uni32A7")
 	Select("0x2D69"); SetCharName("uni32A8")
-	Select("0x2D6A"); SetCharName("uni3231")	# (³ô)
-	Select("0x2D6B"); SetCharName("uni3232")	# (Í­)
-	Select("0x2D6C"); SetCharName("uni3239")	# (Âå)
-	Select("0x2D6D"); SetCharName("uni337E")	# ÌÀ¼£
-	Select("0x2D6E"); SetCharName("uni337D")	# ÂçÀµ
-	Select("0x2D6F"); SetCharName("uni337C")	# ¾¼ÏÂ
+	Select("0x2D6A"); SetCharName("uni3231")	# (æ ª)
+	Select("0x2D6B"); SetCharName("uni3232")	# (æœ‰)
+	Select("0x2D6C"); SetCharName("uni3239")	# (ä»£)
+	Select("0x2D6D"); SetCharName("uni337E")	# æ˜æ²»
+	Select("0x2D6E"); SetCharName("uni337D")	# å¤§æ­£
+	Select("0x2D6F"); SetCharName("uni337C")	# æ˜­å’Œ
 	Select("0x2D70");  Clear()
 	Select("0x2D71");  Clear()
 	Select("0x2D72");  Clear()

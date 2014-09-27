@@ -39,7 +39,7 @@
 					      (inc-cdr (caddr lst))))))
      (mapcar #'inc-line lines)))
 
-; 2 ¸Ä¤Î¥×¥ê¥ß¥Æ¥£¥ÖÄêµÁ¤ò·ë¹ç¤¹¤ë (2 ÈÖÌÜ¤Î prim ¤ÎÅÀÈÖ¹æ¤ÏÉÕ¤±´¹¤¨¤ë)
+; 2 å€‹ã®ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å®šç¾©ã‚’çµåˆã™ã‚‹ (2 ç•ªç›®ã® prim ã®ç‚¹ç•ªå·ã¯ä»˜ã‘æ›ãˆã‚‹)
 ;
 (defun appendpart (prim0 prim1 &optional (newalist))
   (let* ((points0 (car prim0))
@@ -55,8 +55,8 @@
 ;	 .,(append newalist primalist0 primalist1)
       .,newalist)))
 
-; ÉôÉÊ¤ÎÁÈ¹ç¤»·ë²Ì¤òÊÖ¤¹¡£
-;  fonttype: mincho gothic ¤Ê¤É¡£
+; éƒ¨å“ã®çµ„åˆã›çµæœã‚’è¿”ã™ã€‚
+;  fonttype: mincho gothic ãªã©ã€‚
 ;  affines: 
 (defun joint (fonttype affines prims &optional (alist))
   (do ((outlines (affinepart (applykanji (car prims)fonttype)(car affines)))
@@ -67,10 +67,10 @@
 	  (appendpart outlines
 		      (affinepart (applykanji (car p) fonttype)(car a))))))
 ;
-; ¥×¥ê¥ß¥Æ¥£¥ÖÄêµÁ¤ÎÃæ¤Ë primhook ¤òÄêµÁ¤·¤Æ¤ª¤¯¤³¤È¤Ë¤è¤ê¡¢Ê¸Ì®°ÍÂ¸¤Î
-; ÉôÉÊº¹¤·ÂØ¤¨¤¬¤Ç¤­¤ë¡£
+; ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å®šç¾©ã®ä¸­ã« primhook ã‚’å®šç¾©ã—ã¦ãŠãã“ã¨ã«ã‚ˆã‚Šã€æ–‡è„ˆä¾å­˜ã®
+; éƒ¨å“å·®ã—æ›¿ãˆãŒã§ãã‚‹ã€‚
 ;
-; CLISP ¤Î ext:applyhook ¤È¤Î¾×ÆÍ¤òÈò¤±¤ë¤¿¤áÌ¾Á°¤òÊÑ¹¹¤·¤¿
+; CLISP ã® ext:applyhook ã¨ã®è¡çªã‚’é¿ã‘ã‚‹ãŸã‚åå‰ã‚’å¤‰æ›´ã—ãŸ
 ;
 (defun apply-hook (prim jointtype i n)
   (let* ((alist (cddr prim))
@@ -159,55 +159,55 @@
     (push (times-affine vec (car l)) ret))))
 
 ;
-; ²£Êı¸ş
+; æ¨ªæ–¹å‘
 ;
 (putprop 
  'yoko
  #'(lambda (fonttype prims)
      (let* ((nprims (mapcar #'(lambda (x) (applykanji x fonttype)) prims))
 	    (affines (affine-yoko-n nprims fonttype)))
-       `(joint ',affines ',prims nil))) ; ²¼¤Î´Ø¿ô¤È°ã¤Ã¤Æ joint ¤Ë fonttype
- 'expand)                               ; °ú¿ô¤¬ÅÏ¤Ã¤Æ¤Ê¤¤¤±¤É¤¤¤¤¤Î¤«?
+       `(joint ',affines ',prims nil))) ; ä¸‹ã®é–¢æ•°ã¨é•ã£ã¦ joint ã« fonttype
+ 'expand)                               ; å¼•æ•°ãŒæ¸¡ã£ã¦ãªã„ã‘ã©ã„ã„ã®ã‹?
 (defun yoko (fonttype prims)
   (let* ((nprims (mapcar #'(lambda (x) (applykanji x fonttype)) prims))
 	 (affines (affine-yoko-n nprims fonttype)))
     (joint fonttype affines nprims nil)))
 ;
-; yoko-n ¤Î³ÆÉôÉÊ¤Ë»Ü¤¹¥¢¥Õ¥£¥óÊÑ´¹¤ò»»½Ğ¤¹¤ë
-; (°ú¿ô alist ¤Ï¸½ºß»È¤ï¤ì¤Æ¤¤¤Ê¤¤)
+; yoko-n ã®å„éƒ¨å“ã«æ–½ã™ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›ã‚’ç®—å‡ºã™ã‚‹
+; (å¼•æ•° alist ã¯ç¾åœ¨ä½¿ã‚ã‚Œã¦ã„ãªã„)
 ;
-; ³ÆÉôÉÊ¤ÎÉıÃ±°Ì (xunit) ¤Ï primlist ¤ÎÃæ¤Ë´Ş¤Ş¤ì¤Æ¤¤¤ë¡£
-; °Ê²¼¤Î¾ò·ï¤òËş¤¿¤¹ÊÑ´¹¹ÔÎó¤òµá¤á¤ë:
-; ¡¦³ÆÉôÉÊ¤ÎÁêÂĞÉı¤Ï xunit ¤ËµÕÈæÎã¤¹¤ë
-; ¡¦³ÆÉôÉÊ¤Ï¡¢À©Ìó¤ÎÈÏ°ÏÆâ¤Ç¤Ç¤­¤ë¤À¤±¶á¤Å¤±¤ë
-; ¡¦°ìÈÖ±¦Â¦¤ÎÉôÉÊ¤¬Á´³ÑÉı¤Ë°ìÃ×¤¹¤ë¡£
+; å„éƒ¨å“ã®å¹…å˜ä½ (xunit) ã¯ primlist ã®ä¸­ã«å«ã¾ã‚Œã¦ã„ã‚‹ã€‚
+; ä»¥ä¸‹ã®æ¡ä»¶ã‚’æº€ãŸã™å¤‰æ›è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹:
+; ãƒ»å„éƒ¨å“ã®ç›¸å¯¾å¹…ã¯ xunit ã«é€†æ¯”ä¾‹ã™ã‚‹
+; ãƒ»å„éƒ¨å“ã¯ã€åˆ¶ç´„ã®ç¯„å›²å†…ã§ã§ãã‚‹ã ã‘è¿‘ã¥ã‘ã‚‹
+; ãƒ»ä¸€ç•ªå³å´ã®éƒ¨å“ãŒå…¨è§’å¹…ã«ä¸€è‡´ã™ã‚‹ã€‚
 ;
 (defun affine-yoko-n (primlist fonttype &optional (alist))
-  (let ((newprimlist) (hw-affines) ; 'hw' = halfwidth (È¾³Ñ)
+  (let ((newprimlist) (hw-affines) ; 'hw' = halfwidth (åŠè§’)
 	(xunits) (common-yunit)
 ;        (centerp)
 ;        (newalist `((ylimitratio . 0.5) (xlimitratio . 0.1) .,alist))
 	)
-  ; [1] ³ÆÉôÉÊ¤òº¸±¦ÁÈ¤ß¹ç¤ï¤»ÍÑ¤ËºÇÅ¬²½¤·¡¢newprimlist ¤Ë³ÊÇ¼¤¹¤ë
-  ;     Ê¸Ì® (°ÌÃÖ) ¤Ë¸ÇÍ­¤ÊÊÑ·Á¤¬ÄêµÁ¤µ¤ì¤Æ¤¤¤ì¤ĞÊÑ·Á¤ò»Ü¤·¡¢
-  ;     xunit, yunit, ylimit ¤ò·×»»¤·¤Æ¤ª¤¯¡£
+  ; [1] å„éƒ¨å“ã‚’å·¦å³çµ„ã¿åˆã‚ã›ç”¨ã«æœ€é©åŒ–ã—ã€newprimlist ã«æ ¼ç´ã™ã‚‹
+  ;     æ–‡è„ˆ (ä½ç½®) ã«å›ºæœ‰ãªå¤‰å½¢ãŒå®šç¾©ã•ã‚Œã¦ã„ã‚Œã°å¤‰å½¢ã‚’æ–½ã—ã€
+  ;     xunit, yunit, ylimit ã‚’è¨ˆç®—ã—ã¦ãŠãã€‚
   (do ((l primlist (cdr l))
        (n (length primlist))
        (i 0 (1+ i)))
       ((atom l)
        (setq newprimlist (nreverse newprimlist)))
-    (let* ((p (applykanji (car l) fonttype)) ; ¥¹¥±¥ë¥È¥ó¤ò¼èÆÀ¤·¤Æ
-	   (p (apply-hook p 'yoko i n))      ; °ÌÃÖ¤Ë¸ÇÍ­¤ÊÊÑ·Á¤ò»Ü¤·
-	   (p (add-ylimit (add-unit p))))    ; ¥Ñ¥é¥á¡¼¥¿¤ò»»½Ğ¤·¤Æµ­Æş
+    (let* ((p (applykanji (car l) fonttype)) ; ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã‚’å–å¾—ã—ã¦
+	   (p (apply-hook p 'yoko i n))      ; ä½ç½®ã«å›ºæœ‰ãªå¤‰å½¢ã‚’æ–½ã—
+	   (p (add-ylimit (add-unit p))))    ; ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ç®—å‡ºã—ã¦è¨˜å…¥
       (push p newprimlist)
-;      (and (prim-center p) (setq centerp 200)) ; yoko¤Ç¤ÏÃæ¿´Àş¤Ï»È¤ï¤Ê¤¤¤Ï¤º¤Ê¤Î¤Ç¥³¥á¥ó¥È¥¢¥¦¥È
+;      (and (prim-center p) (setq centerp 200)) ; yokoã§ã¯ä¸­å¿ƒç·šã¯ä½¿ã‚ãªã„ã¯ãšãªã®ã§ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆ
       ))
-  ; [2] ³ÆÉôÉÊ¤Îº¸±¦Éı¤òÈ¾³ÑÄ¹Êı·Á¤ËÀµµ¬²½¤¹¤ëÊÑ´¹¹ÔÎó¤ò hw-affines ¤Ë³ÊÇ¼¤¹¤ë
-  ;     (Í½¤áÆ±¤¸Âç¤­¤µ¤ÎÈ¢¤Ë¼ı¤á¤ë¤³¤È¤Ë¤è¤ê¡¢Á´³Ñ¤¤¤Ã¤Ñ¤¤¤Ë¥Ç¥¶¥¤¥ó¤µ¤ì¤Æ
-  ;     ¤¤¤Ê¤¤ÉôÉÊ¤¬¡¢³°Éô¤Î¶õÇò¤Ë±Æ¶Á¤µ¤ì¤Ê¤¤¤è¤¦¤Ë¤·¤Æ¤¤¤ë)¡£
-  ;     ¤½¤ì¤È¶¦¤Ë¡¢³ÆÉôÉÊ¤Î xunits ¤È common-yunit(=Á´ÉôÉÊÃæ¤ÎºÇ¾®ÃÍ) ¤òµá¤á¤ë
+  ; [2] å„éƒ¨å“ã®å·¦å³å¹…ã‚’åŠè§’é•·æ–¹å½¢ã«æ­£è¦åŒ–ã™ã‚‹å¤‰æ›è¡Œåˆ—ã‚’ hw-affines ã«æ ¼ç´ã™ã‚‹
+  ;     (äºˆã‚åŒã˜å¤§ãã•ã®ç®±ã«åã‚ã‚‹ã“ã¨ã«ã‚ˆã‚Šã€å…¨è§’ã„ã£ã±ã„ã«ãƒ‡ã‚¶ã‚¤ãƒ³ã•ã‚Œã¦
+  ;     ã„ãªã„éƒ¨å“ãŒã€å¤–éƒ¨ã®ç©ºç™½ã«å½±éŸ¿ã•ã‚Œãªã„ã‚ˆã†ã«ã—ã¦ã„ã‚‹)ã€‚
+  ;     ãã‚Œã¨å…±ã«ã€å„éƒ¨å“ã® xunits ã¨ common-yunit(=å…¨éƒ¨å“ä¸­ã®æœ€å°å€¤) ã‚’æ±‚ã‚ã‚‹
   (do ((l newprimlist (cdr l))
-;       (yunitsum 0.0) ; (yunit ¤òºÇ¾®ÃÍ¤Ç¤Ê¤¯Ê¿¶ÑÃÍ¤È¤¹¤ë»ş¤Ï¤³¤ì¤ò»È¤¦)
+;       (yunitsum 0.0) ; (yunit ã‚’æœ€å°å€¤ã§ãªãå¹³å‡å€¤ã¨ã™ã‚‹æ™‚ã¯ã“ã‚Œã‚’ä½¿ã†)
        (yunitmin))
       ((atom l)
        (setq xunits (nreverse xunits))
@@ -216,8 +216,8 @@
        (setq common-yunit yunitmin))
     (let ((ylimit))
 ;      (cond (
-      ; ¿åÊ¿Êı¸ş¤Ï¥¹¥±¥ë¥È¥ó¤Î¹­¤¬¤ê¤òÈ¾³ÑÉı°ìÇÕ¤Ë¡¢
-      ; ¿âÄ¾Êı¸ş¤Ï ylimit ¤Ë¹ç¤ï¤»¤Æ¥µ¥¤¥ºÄ´À°
+      ; æ°´å¹³æ–¹å‘ã¯ã‚¹ã‚±ãƒ«ãƒˆãƒ³ã®åºƒãŒã‚Šã‚’åŠè§’å¹…ä¸€æ¯ã«ã€
+      ; å‚ç›´æ–¹å‘ã¯ ylimit ã«åˆã‚ã›ã¦ã‚µã‚¤ã‚ºèª¿æ•´
       (setq ylimit (cdr (assq 'ylimit (cddar l))))
       (let ((skel-bbox (realregion (car l))))
         (push (region2region `(,(first skel-bbox) ,(first ylimit)
@@ -225,7 +225,7 @@
 			     '(0 0 200 400))
 	      hw-affines))
 ;	     )
-; ylimit ¤¬Ì¤ÄêµÁ¤À¤Ã¤¿¾ì¹ç (¸½ºß¤Ï»öÁ°¤Ë add-ylimit ¤ÇÀßÄê¤·¤Æ¤¤¤ë¤Î¤Ç¡¢¤¢¤ê¤¨¤Ê¤¤)
+; ylimit ãŒæœªå®šç¾©ã ã£ãŸå ´åˆ (ç¾åœ¨ã¯äº‹å‰ã« add-ylimit ã§è¨­å®šã—ã¦ã„ã‚‹ã®ã§ã€ã‚ã‚Šãˆãªã„)
 ;	    (t
 ;	     (push (region-affine
 ;		    (virtual-region '(nil nil) '(0 0 200 400))
@@ -233,42 +233,42 @@
 ;		   hw-affines)))
       )
     (let ((prim (affinepart (car l) (car hw-affines))))
-      (push (xunit prim 200.0) xunits)                 ; Éı¤¬È¾Ê¬¤Ë°µ½Ì¤µ¤ì¤Æ¤¤¤ë¤Î¤Ç
-;      (setq yunitsum (+ yunitsum (yunit prim 100.0))) ; xunit ¤Î¥Ç¥Õ¥©¥ë¥ÈÃÍ¤Ï
-      (let ((y (yunit prim 100.0)))		       ; yunit ¤Î 2 ÇÜ¤Ë¤Ê¤ë¡£
+      (push (xunit prim 200.0) xunits)                 ; å¹…ãŒåŠåˆ†ã«åœ§ç¸®ã•ã‚Œã¦ã„ã‚‹ã®ã§
+;      (setq yunitsum (+ yunitsum (yunit prim 100.0))) ; xunit ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã¯
+      (let ((y (yunit prim 100.0)))		       ; yunit ã® 2 å€ã«ãªã‚‹ã€‚
 	(if (or (null yunitmin) (> yunitmin y))	 
 	  (setq yunitmin y))))
     )
-  ; [3] ºÇ½é¤ÎÉôÉÊ¤òÈ¾³ÑÉı¤Ë½Ì¤á¡¢¼¡¤ÎÉôÉÊ¤ò xunit ¤ÎµÕ¿ôÈæ¤Ë±ş¤¸¤¿Ä¹Êı·Á¤Ë¤¹¤ë
+  ; [3] æœ€åˆã®éƒ¨å“ã‚’åŠè§’å¹…ã«ç¸®ã‚ã€æ¬¡ã®éƒ¨å“ã‚’ xunit ã®é€†æ•°æ¯”ã«å¿œã˜ãŸé•·æ–¹å½¢ã«ã™ã‚‹
   (let* ((xunit1 (car xunits))
 	 (param `((yunit 0 .,common-yunit) (xunit 0 .,xunit1)))
 	 (ratio) (xshift) (newaffines))
-    ; [3-1] 2 ÈÖÌÜ°Ê¹ß¤Î³ÆÉôÉÊ¤ÎÊÑ´¹¹ÔÎó¤ÎÉı¤È¿åÊ¿°ÜÆ°ÎÌ¤òµá¤á¡¢newaffines ¤ËµÕ½ç¤Ç
-    ; ³ÊÇ¼¤¹¤ë
+    ; [3-1] 2 ç•ªç›®ä»¥é™ã®å„éƒ¨å“ã®å¤‰æ›è¡Œåˆ—ã®å¹…ã¨æ°´å¹³ç§»å‹•é‡ã‚’æ±‚ã‚ã€newaffines ã«é€†é †ã§
+    ; æ ¼ç´ã™ã‚‹
     (do ((l (cdr newprimlist) (cdr l))
 	 (xunit_l (cdr xunits) (cdr xunit_l))
 	 (affine_l (cdr hw-affines) (cdr affine_l))
-	 (prev-prim (affinepart (car newprimlist) (car hw-affines)))) ; ºÇ½é¤ÏÈ¾³ÑÉı
+	 (prev-prim (affinepart (car newprimlist) (car hw-affines)))) ; æœ€åˆã¯åŠè§’å¹…
 	((atom l))
-      ; ÊÑ´¹¹ÔÎó¤ÎÉıÀ®Ê¬¤Ç¤¢¤ë ratio ¤Ï xunit ¤ÎµÕ¿ô¤ËÈæÎã¤¹¤ë
+      ; å¤‰æ›è¡Œåˆ—ã®å¹…æˆåˆ†ã§ã‚ã‚‹ ratio ã¯ xunit ã®é€†æ•°ã«æ¯”ä¾‹ã™ã‚‹
       (setq ratio (/ (float xunit1) (float (car xunit_l))))
-      ; ºÇ½é¤Ï 1000 (È¾³Ñ¤Î 5 ÇÜ) ¤À¤±±¦¤Ë¤º¤é¤·¤Æ¤ª¤¯
-      ; (yoko ¤Î°ú¿ô¤ÏºÇÂç 4 ¸Ä (|1-60-15|, |1-75-48| Åù) ¤Ê¤Î¤Ç¤³¤ì¤ÇÂ­¤ê¤ë)¡£
+      ; æœ€åˆã¯ 1000 (åŠè§’ã® 5 å€) ã ã‘å³ã«ãšã‚‰ã—ã¦ãŠã
+      ; (yoko ã®å¼•æ•°ã¯æœ€å¤§ 4 å€‹ (|1-60-15|, |1-75-48| ç­‰) ãªã®ã§ã“ã‚Œã§è¶³ã‚Šã‚‹)ã€‚
       (let ((prim (affinepart 
 		   (car l) 
 		   (times-affine (vector ratio 0 0 1 1000 0) (car affine_l)))))
-        ; ¤É¤ì¤À¤±¶á¤Å¤±¤ë¤ÈÁ°¤ÎÉôÉÊ¤Ë¤Ö¤Ä¤«¤ë¤«¤Î¸Â³¦ÃÍ¤ò·×»»¤·¡¢¤½¤Î¤Ö¤óº¸¤ËÌá¤¹
+        ; ã©ã‚Œã ã‘è¿‘ã¥ã‘ã‚‹ã¨å‰ã®éƒ¨å“ã«ã¶ã¤ã‹ã‚‹ã‹ã®é™ç•Œå€¤ã‚’è¨ˆç®—ã—ã€ãã®ã¶ã‚“å·¦ã«æˆ»ã™
 	(setq xshift (- 1001
 			(general-limit prev-prim prim #(0 0 0 0 -1 0) param))))
       (push (times-affine (vector ratio 0 0 1 xshift 0) (car affine_l))
 	    newaffines)
       (setq prev-prim (affinepart (car l) (car newaffines))))
-    ; ¥ë¡¼¥×¤òÈ´¤±¤¿»şÅÀ¤Ç¡¢ratio ¤Ë¤ÏºÇ¸å¤ÎÉôÉÊ¤Î(ºÇ½é¤ÎÉôÉÊ¤È¤Î)ÁêÂĞÉı¤¬
-    ; Æş¤Ã¤Æ¤¤¤ë¤³¤È¤ËÃí°Õ¡£
+    ; ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ãŸæ™‚ç‚¹ã§ã€ratio ã«ã¯æœ€å¾Œã®éƒ¨å“ã®(æœ€åˆã®éƒ¨å“ã¨ã®)ç›¸å¯¾å¹…ãŒ
+    ; å…¥ã£ã¦ã„ã‚‹ã“ã¨ã«æ³¨æ„ã€‚
     ;
-    ; [3-2] ºÇ¸å¤ÎÉôÉÊ¤Î±¦Ã¼¤¬Á´³Ñ¤Ë¼ı¤Ş¤ë¤è¤¦¤ËÊäÀµÃÍ xscale ¤òÀßÄê¤·¤¿¸å¡¢
-    ; ³ÆÊÑ´¹¹ÔÎó¤òÊäÀµ¤·¤Ê¤¬¤éµÕ½ç¤Ë¤Ê¤Ã¤¿¤â¤Î¤ò¤â¤¦°ìÅÙµÕ½ç¤Ë¤·¤Æ ret ¤Ë 
-    ; push ¤·¤Æ¤¤¤¯¡£»Å¾å¤²¤ËºÇ½é¤ÎÉôÉÊÉı¤òÊäÀµ¡¢push ¤·¤Æ return¡£
+    ; [3-2] æœ€å¾Œã®éƒ¨å“ã®å³ç«¯ãŒå…¨è§’ã«åã¾ã‚‹ã‚ˆã†ã«è£œæ­£å€¤ xscale ã‚’è¨­å®šã—ãŸå¾Œã€
+    ; å„å¤‰æ›è¡Œåˆ—ã‚’è£œæ­£ã—ãªãŒã‚‰é€†é †ã«ãªã£ãŸã‚‚ã®ã‚’ã‚‚ã†ä¸€åº¦é€†é †ã«ã—ã¦ ret ã« 
+    ; push ã—ã¦ã„ãã€‚ä»•ä¸Šã’ã«æœ€åˆã®éƒ¨å“å¹…ã‚’è£œæ­£ã€push ã—ã¦ returnã€‚
     (do* ((l newaffines (cdr l))
 	  (xscale (/ 400.0 (+ xshift (* ratio 200.0))))
 	  (ret `((xunit .,(* xscale xunit1))
@@ -276,7 +276,7 @@
 		 (ylimit 0 400)
 		 (center))))
 	 ((atom l)
-	  (push (nscalex xscale (car hw-affines)) ; ºÇ½é¤ÎÉôÉÊ
+	  (push (nscalex xscale (car hw-affines)) ; æœ€åˆã®éƒ¨å“
 		ret))
       (push (nscalex xscale (car l)) ret)))))
 ;
@@ -290,7 +290,7 @@
 				'(15 15 385 385))))
     (affinepart prim affine)))
 ;
-; ¤¿¤ì, ¤«¤Ş¤¨
+; ãŸã‚Œ, ã‹ã¾ãˆ
 ;
 (defun affine-tare (prim1 prim2 fonttype)
   (affine-inner2 (apply-hook prim1 'tare 0 2)
@@ -634,8 +634,8 @@
 		  minx))
 	    (setq minx x)))))))))
 ;
-; region1 ¤ò region2 ¤Ë°Ü¤¹¤è¤¦¤ÊÊÑ´¹¹ÔÎó¤òÊÖ¤¹¡£
-; region1, region2 ¤Ï (minx miny maxx maxy) ¤«¤é¤Ê¤ë 4 Í×ÁÇ¤ÎÇÛÎó¡£
+; region1 ã‚’ region2 ã«ç§»ã™ã‚ˆã†ãªå¤‰æ›è¡Œåˆ—ã‚’è¿”ã™ã€‚
+; region1, region2 ã¯ (minx miny maxx maxy) ã‹ã‚‰ãªã‚‹ 4 è¦ç´ ã®é…åˆ—ã€‚
 ;
 (defun region2region (region1 region2)
   (let* ((x11 (first region1))(y11 (second region1))
@@ -667,10 +667,10 @@
 		  (cy (- y21 (* y11 scaley))))
 	     (vector scalex 0 0 scaley cx cy))))))
 ;
-; center ¤ò¸¶ÅÀ¤ËÊ¿¹Ô°ÜÆ°¤¹¤ë¤è¤¦¤ÊÊÑ´¹¤òÊÖ¤¹
+; center ã‚’åŸç‚¹ã«å¹³è¡Œç§»å‹•ã™ã‚‹ã‚ˆã†ãªå¤‰æ›ã‚’è¿”ã™
 ;
-; (¤â¤È scaleconv ¤È¤¤¤¦Ì¾Á°¤À¤Ã¤¿¤¬¡¢¹Ô¤Ã¤Æ¤¤¤ë¤Î¤Ï scale ¤Ç¤Ï¤Ê¤¯
-; translation ¤Ê¤Î¤Ç´Ø¿ôÌ¾¤òÊÑ¤¨¤¿)
+; (ã‚‚ã¨ scaleconv ã¨ã„ã†åå‰ã ã£ãŸãŒã€è¡Œã£ã¦ã„ã‚‹ã®ã¯ scale ã§ã¯ãªã
+; translation ãªã®ã§é–¢æ•°åã‚’å¤‰ãˆãŸ)
 (defun center-to-conv (center)
   (let* ((cx (car center))
 	 (cy (cadr center)))
@@ -747,7 +747,7 @@
 	 (numberp (rm-eq (caadr l)))(not (minusp (1+ (rm-eq (caadr l)))))
 	 (return (car l)))))
 |#
-; section¤ÎÃæ¤Ë¤¢¤ì¤Ğval¤òÊÖ¤¹
+; sectionã®ä¸­ã«ã‚ã‚Œã°valã‚’è¿”ã™
 (defun in-section (val section)
   (do ((l section (cdr l)))
     ((atom l) nil)
@@ -771,7 +771,7 @@
     ,(* 0.5 (+ (second region)(fourth region)))))
 
 ; scale-affine
-; x+(Ax+c)t ¤Ît¤òÂåÆş¤¹¤ë
+; x+(Ax+c)t ã®tã‚’ä»£å…¥ã™ã‚‹
 (defun scale-affine (limit affine)
   (vector (+ 1 (* limit (svref affine 0)))
 	  (* limit (svref affine 1))

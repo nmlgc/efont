@@ -71,15 +71,15 @@ UNIBDF= misaki-gothic-8.bdf misaki-mincho-8.bdf \
 
 all: ${UNIBDF}
 
-# BBOX ¤Ç»ØÄê¤µ¤ì¤¿¤è¤êÂ¿¤¤¥Ó¥Ã¥È¤¬±¦¤Ë¤¢¤ë
+# BBOX ã§æŒ‡å®šã•ã‚ŒãŸã‚ˆã‚Šå¤šã„ãƒ“ãƒƒãƒˆãŒå³ã«ã‚ã‚‹
 misaki-goth.bdf: ${MISAKIDIR}/misaki.bdf
 	sed 's/^\(..\)00$$/\1/' $(.ALLSRC) > $(.TARGET)
 
 misaki-min.bdf: misaki.bdf
 	sed 's/^\(..\)00$$/\1/' $(.ALLSRC) > $(.TARGET)
 
-# FontForge-20040618 ¤Ë¤Ï BDF Ê¸»úÌ¾¤¬ PostScript Ì¾¤Ç¤Ê¤±¤ì¤Ð¤¤¤±¤Ê¤¤¤È¤·¤Æ
-# ¤¤¤ë¤Î¤Ç¡¢xc/misc/8x16.bdf ¤Ê¤É¤¬Àµ¤·¤¯ÆÉ¤ß¹þ¤á¤Ê¤¤
+# FontForge-20040618 ã«ã¯ BDF æ–‡å­—åãŒ PostScript åã§ãªã‘ã‚Œã°ã„ã‘ãªã„ã¨ã—ã¦
+# ã„ã‚‹ã®ã§ã€xc/misc/8x16.bdf ãªã©ãŒæ­£ã—ãèª­ã¿è¾¼ã‚ãªã„
 9x18gm.bdf: ${AYUDIR}/9x18gm.bdf
 	sed 's/STARTCHAR.*/STARTCHAR noname/' $(.ALLSRC) > $(.TARGET)
 

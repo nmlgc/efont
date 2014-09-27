@@ -80,30 +80,30 @@
 			(t "l")))))
 		 source-files))))
 ;
-; �Ҥ餬�ʤ���
+; ひらがなの幅
 ;
 (setq *default-hirawidth* 8)
 ;
-; ��ī��(mincho.l)
+; 明朝体(mincho.l)
 ;
 
-; ��ī�Τν�������
+; 明朝体の縦棒の幅
 (setq minchowidth 8)
-; ��ī�Τν������Ф��벣������Ψ
+; 明朝体の縦棒に対する横棒の比率
 (setq tateyokoratio 0.4)
-; �ǥ����󥵥������Ф������γ���Ψ
+; デザインサイズに対する幅の拡大率
 (setq hirawidth 0.6)
-; �����λ����ξ���
+; 縦棒の始点の飾り
 (setq tatekazari 1.5) 
-; �����λߤ�ν������Ф�����
+; 横線の止めの縦線に対する比
 (setq tomeheight 1.8)
-; �����Ȳ����θ����ξ���
+; 縦棒と横棒の交点の飾り
 (setq kazariheight 1.4)
-; �ǥե���Ȥ�meshsize��ʬ����������ȳ����ʤ�. 
+; デフォルトのmeshsizeを十分小さくすると害がない. 
 ;(setq meshsize 6.618290) 
 (setq meshsize 0.01)
 
 ;
-; �����å���(gothic.l, maru.l)
+; ゴシック体(gothic.l, maru.l)
 ;
 (setq gothicwidth 13.0)

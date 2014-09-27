@@ -30,7 +30,7 @@
 ; $Id$
 
 ;
-; ¥Õ¥¡¥¤¥ë¤Î¥Ø¥Ã¥À¤Î½ĞÎÏ
+; ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ˜ãƒƒãƒ€ã®å‡ºåŠ›
 ;
 (defun outputFileHeader (scale row col)
     (format t "%!~%%%BoundingBox: 45 45 ~A ~A~%" 
@@ -238,7 +238,7 @@ end
 )
 )
 ;
-; ¥Ú¡¼¥¸¤´¤È¤Î¥Ø¥Ã¥À¤Î½ĞÎÏ
+; ãƒšãƒ¼ã‚¸ã”ã¨ã®ãƒ˜ãƒƒãƒ€ã®å‡ºåŠ›
 ;
 (defun outputPageHeader (page psfile printfile scale)
   (format t "50 50 translate~%0.001 ~A mul dup scale~%" scale)
@@ -254,7 +254,7 @@ end
   (format t "/Wadalab-mincho-10 CompNF~%")
   (format t "/Wadalab-mincho-10 findfont 400 scalefont setfont~%"))
 ;
-; ¥Õ¥¡¥¤¥ë¤ÎÀ¸À®
+; ãƒ•ã‚¡ã‚¤ãƒ«ã®ç”Ÿæˆ
 ;
 (defun out-to-ps-all (outlines tag psfile 
 		      &key (col 9) (row (round (* 0.67 col)))
@@ -280,13 +280,13 @@ end
 ;     (princ (gccount) *terminal-io*)
       (print kanji *terminal-io*)
       (setq l
-	    (cond ((eq kanji '¡¡) nil) ; ¥¹¥Ú¡¼¥¹
+	    (cond ((eq kanji 'ã€€) nil) ; ã‚¹ãƒšãƒ¼ã‚¹
 		  ((not (boundp kanji)) nil)
 		  (t
 		   (let (
-; Common Lisp Hyperspec Sec.9.1.1: É¸½à¤Î¥³¥ó¥Ç¥£¥·¥ç¥ó·¿¤Ë¤¢¤ë¤Î¤Ï
+; Common Lisp Hyperspec Sec.9.1.1: æ¨™æº–ã®ã‚³ãƒ³ãƒ‡ã‚£ã‚·ãƒ§ãƒ³å‹ã«ã‚ã‚‹ã®ã¯
 ; type-error, unbound-variable, undefined-function, division-by-zero.
-; °ú¿ô¤Î¸Ä¿ô¤Ï cell-error °ìÈÌ¤«? ¸å¤ÇÍ¾Íµ¤¬¤¢¤ì¤Ğ
+; å¼•æ•°ã®å€‹æ•°ã¯ cell-error ä¸€èˆ¬ã‹? å¾Œã§ä½™è£•ãŒã‚ã‚Œã°
 ;		  (err:argument-type #'(lambda (x (y))(throw 'err)))
 ;		  (err:number-of-arguments #'(lambda (x (y))(throw 'err)))
 ;		  (err:unbound-variable #'(lambda (x (y))(throw 'err)))

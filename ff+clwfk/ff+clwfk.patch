@@ -4436,9 +4436,9 @@
 +
 +/* 
 +
-+TODO: C �ǽ񤯴ؿ�
-+�� A_Outline �� SplineSet ���Ѵ������Хå����饦��ɤ˽񤭹��ࡣ
-+��������ȥ󤫤�
++TODO: C で書く関数
++・ A_Outline を SplineSet に変換し、バックグラウンドに書き込む。
++・スケルトンから
 +
 + */
 +#endif

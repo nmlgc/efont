@@ -155,7 +155,7 @@
 	   (+ xlen (abs (- (car (nth (car ll) points))
 			   (car (nth (cadr ll) points))))))))))))
 ;
-; ¥¹¥È¥í¡¼¥¯¤Î y Êı¸ş¤Î°ÜÆ°ÎÌ¤ÎÁíÏÂ¤Î,¥×¥ê¥ß¥Æ¥£¥Ö¤Î¹â¤µ¤ËÂĞ¤¹¤ëÈæÎ¨ (ºÇÄã 2.0)
+; ã‚¹ãƒˆãƒ­ãƒ¼ã‚¯ã® y æ–¹å‘ã®ç§»å‹•é‡ã®ç·å’Œã®,ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®é«˜ã•ã«å¯¾ã™ã‚‹æ¯”ç‡ (æœ€ä½ 2.0)
 ;
 (defun prim-ylen (prim region)
   (let* ((points (car prim))
@@ -179,7 +179,7 @@
 		  (abs (- (cadr (nth (car ll) points))
 			  (cadr (nth (cadr ll) points)))))))))))
 ;
-; ¥×¥ê¥ß¥Æ¥£¥Ö¤ò¹½À®¤¹¤ëÅÀ¤ò¼è¤ê´¬¤¯ºÇ¾®¤ÎÄ¹Êı·Á¤òµá¤á¤ë
+; ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æ§‹æˆã™ã‚‹ç‚¹ã‚’å–ã‚Šå·»ãæœ€å°ã®é•·æ–¹å½¢ã‚’æ±‚ã‚ã‚‹
 ;
 (defun realregion (prim)
   (cond ((assq*cdr 'realregion (cddr prim)))
@@ -311,7 +311,7 @@
 	     (cond ((zerop height) defunit)
 		   (t (/ (float height)(float tateheight)))))))))
 ;
-; ¥×¥ê¥ß¥Æ¥£¥Ö¸ÇÍ­¤Î¹â¤µ¤ò·èÄê¤¹¤ë
+; ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å›ºæœ‰ã®é«˜ã•ã‚’æ±ºå®šã™ã‚‹
 ;
 (defun tateheight (prim &optional (rregion (realregion prim)))
   (let* ((xlen (prim-xlen prim rregion))
@@ -338,7 +338,7 @@
 	     (cond ((zerop width) defunit)
 		   (t (/ (float width)(float yokowidth)))))))))
 ;
-; ¥×¥ê¥ß¥Æ¥£¥Ö¸ÇÍ­¤ÎÉı (ºÇ¾®ÃÍ¤Ï 1.0) ¤ò·èÄê¤¹¤ë
+; ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–å›ºæœ‰ã®å¹… (æœ€å°å€¤ã¯ 1.0) ã‚’æ±ºå®šã™ã‚‹
 ;
 (defun yokowidth (prim &optional (rregion (realregion prim)))
   (let ((yokowidth (assq* 'yokowidth (cddr prim))))
@@ -351,23 +351,23 @@
 			 (> (/ width tatekankaku 1.4) 
 			    (- ylen 1.0)))
 		    (/ width tatekankaku 1.4))
-		   ((< ylen 2.0) 1.0) ; prim ¤¬¡Ö°ì¡×¤Î¾ì¹ç¤À¤±
+		   ((< ylen 2.0) 1.0) ; prim ãŒã€Œä¸€ã€ã®å ´åˆã ã‘
 		   (t (- ylen 1.0))))))))
 ;
-; ½Ä²èÆ±»Î¤¬¤¤¤Á¤Ğ¤óÀÜ¶á¤·¤Æ¤¤¤ë²Õ½ê¤Îµ÷Î¥¤òÊÖ¤¹
+; ç¸¦ç”»åŒå£«ãŒã„ã¡ã°ã‚“æ¥è¿‘ã—ã¦ã„ã‚‹ç®‡æ‰€ã®è·é›¢ã‚’è¿”ã™
 ;
 (defun tatekankaku (prim)
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (tates nil))
-    ; lines ¤«¤é½Ä²è¤ÎÎà¤À¤±È´¤­½Ğ¤·¤Æ tates ¤Ë³ÊÇ¼
+    ; lines ã‹ã‚‰ç¸¦ç”»ã®é¡ã ã‘æŠœãå‡ºã—ã¦ tates ã«æ ¼ç´
     (do ((l lines (cdr l)))
       ((atom l))
       (cond ((memq (caar l)
 		   '(tate tatehane tatehidari kokoro tsukurihane tasuki))
 	     (push (car l) tates))))
-    ; Á´¤Æ¤Î¡Ö½Ä¡×²è¤Î¥Ú¥¢¤ËÂĞ¤·¾åÃ¼Æ±»Î¤Îµ÷Î¥¤òµá¤á¡¢¤½¤ÎºÇ¾®ÃÍ¤òÊÖ¤¹
-    (cond ((cdr tates) ;; (>= (length tates) 2) ¤ËÆ±¤¸
+    ; å…¨ã¦ã®ã€Œç¸¦ã€ç”»ã®ãƒšã‚¢ã«å¯¾ã—ä¸Šç«¯åŒå£«ã®è·é›¢ã‚’æ±‚ã‚ã€ãã®æœ€å°å€¤ã‚’è¿”ã™
+    (cond ((cdr tates) ;; (>= (length tates) 2) ã«åŒã˜
 	   (do ((l tates (cdr l))
 		(minkankaku nil)
 		(p0 nil)(p1 nil))
@@ -379,7 +379,7 @@
 	       ((atom ll))
 	       (setq p2 (nth (car (cadar ll)) points)
 		     p3 (nth (cadr (cadar ll)) points))
-	       ; y ¼´Êı¸ş¤Ë½Å¤Ê¤ê¹ç¤¦ÉôÊ¬¤ò»ı¤¿¤Ê¤¤¥Ú¥¢¤Ï½ü³°¤¹¤ë
+	       ; y è»¸æ–¹å‘ã«é‡ãªã‚Šåˆã†éƒ¨åˆ†ã‚’æŒãŸãªã„ãƒšã‚¢ã¯é™¤å¤–ã™ã‚‹
 	       (cond ((and (<= (cadr p2)(cadr p1))
 			   (<= (cadr p0)(cadr p3)))
 ;		      (pprint (list p0 p1 p2 p3))
@@ -388,19 +388,19 @@
 				 (> minkankaku kankaku))
 			     (setq minkankaku kankaku)))))))))))
 ;
-; ²£²èÆ±»Î¤¬¤¤¤Á¤Ğ¤óÀÜ¶á¤·¤Æ¤¤¤ë²Õ½ê¤Îµ÷Î¥¤òÊÖ¤¹
+; æ¨ªç”»åŒå£«ãŒã„ã¡ã°ã‚“æ¥è¿‘ã—ã¦ã„ã‚‹ç®‡æ‰€ã®è·é›¢ã‚’è¿”ã™
 ;
 (defun yokokankaku (prim)
   (let* ((points (car prim))
 	 (lines (cadr prim))
 	 (yokos nil))
-    ; lines ¤«¤é yoko ¤À¤±È´¤­½Ğ¤·¤Æ yokos ¤Ë³ÊÇ¼
+    ; lines ã‹ã‚‰ yoko ã ã‘æŠœãå‡ºã—ã¦ yokos ã«æ ¼ç´
     (do ((l lines (cdr l)))
       ((atom l))
-      (cond ((eq 'yoko (caar l)) ; migiue ¤òÆş¤ì¤¿Êı¤¬¤¤¤¤¤«¤â
+      (cond ((eq 'yoko (caar l)) ; migiue ã‚’å…¥ã‚ŒãŸæ–¹ãŒã„ã„ã‹ã‚‚
 	     (push (car l) yokos))))
-    ; Á´¤Æ¤Î yoko ¤Î¥Ú¥¢¤ËÂĞ¤·º¸Ã¼Æ±»Î¤Îµ÷Î¥¤òµá¤á¡¢¤½¤ÎºÇ¾®ÃÍ¤òÊÖ¤¹
-    (cond ((cdr yokos) ;; (>= (length yokos) 2) ¤ËÆ±¤¸
+    ; å…¨ã¦ã® yoko ã®ãƒšã‚¢ã«å¯¾ã—å·¦ç«¯åŒå£«ã®è·é›¢ã‚’æ±‚ã‚ã€ãã®æœ€å°å€¤ã‚’è¿”ã™
+    (cond ((cdr yokos) ;; (>= (length yokos) 2) ã«åŒã˜
 	   (do ((l yokos (cdr l))
 		(minkankaku nil)
 		(p0 nil)(p1 nil))
@@ -412,7 +412,7 @@
 	       ((atom ll))
 	       (setq p2 (nth (car (cadar ll)) points)
 		     p3 (nth (cadr (cadar ll)) points))
-	       ; x Êı¸ş¤Ë½Å¤Ê¤ê¹ç¤¦ÉôÊ¬¤ò»ı¤¿¤Ê¤¤¥Ú¥¢¤Ï½üµî¤¹¤ë
+	       ; x æ–¹å‘ã«é‡ãªã‚Šåˆã†éƒ¨åˆ†ã‚’æŒãŸãªã„ãƒšã‚¢ã¯é™¤å»ã™ã‚‹
 	       (cond ((and (<= (car p2)(car p1))
 			   (<= (car p0)(car p3)))
 ;		      (pprint (list p0 p1 p2 p3))
@@ -421,7 +421,7 @@
 				 (> minkankaku kankaku))
 			     (setq minkankaku kankaku)))))))))))
 ;
-; e1 ¤Î(Ã¼)ÅÀ¤¬ e2 ¤Î¥ê¥ó¥¯ÅÀ¤Ë°ìÃ×¤¹¤ë¤«¤É¤¦¤«
+; e1 ã®(ç«¯)ç‚¹ãŒ e2 ã®ãƒªãƒ³ã‚¯ç‚¹ã«ä¸€è‡´ã™ã‚‹ã‹ã©ã†ã‹
 (defun inlink (e1 e2 points)
   (declare (ignore points))
   (let* ((points1 (cadr e1))
@@ -833,8 +833,8 @@
 				      (car (nth (car p2) points2)))))
 			  ,e1 ,e2))))))))
 ;
-; ¤³¤ì¤Ş¤Ç¤Îcrossunit, nocrossunit, elementunit¤¹¤Ù¤Æ¤ò´Ş¤à³µÇ°
-; ¥Õ¥©¡¼¥Ş¥Ã¥È : (´ğËÜ¥¨¥ì¥á¥ó¥È¤Î¥ê¥¹¥È ¥ª¥×¥·¥ç¥ó¥¨¥ì¥á¥ó¥È¤Î¥ê¥¹¥È ´Ø¿ô)
+; ã“ã‚Œã¾ã§ã®crossunit, nocrossunit, elementunitã™ã¹ã¦ã‚’å«ã‚€æ¦‚å¿µ
+; ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ : (åŸºæœ¬ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®ãƒªã‚¹ãƒˆ ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚¨ãƒ¬ãƒ¡ãƒ³ãƒˆã®ãƒªã‚¹ãƒˆ é–¢æ•°)
 ; 
 ;
 (defconstant complexunit

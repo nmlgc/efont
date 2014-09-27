@@ -30,7 +30,7 @@
 ; $Id$
 
 ;
-; ´Á»ú¤Î¥·¥ó¥Ü¥ë¤«¤é¡¤jointÅù¤ò¤ª¤³¤Ê¤¤skeleton¤òÆÀ¤ë¡¥
+; æ¼¢å­—ã®ã‚·ãƒ³ãƒœãƒ«ã‹ã‚‰ï¼Œjointç­‰ã‚’ãŠã“ãªã„skeletonã‚’å¾—ã‚‹ï¼
 ;
 (defun applykanji (l &optional (tag))
 ;  (pprint l)
@@ -47,11 +47,11 @@
 		    (mapcar #'(lambda (x) (applykanji x tag))
 			    (second (third l)))
 		    (fourth l)))
-	    ((symbolp (car l))	; tate, yoko ¤Ê¤É¤ÎÁÈ¹ç¤»ÄêµÁ
+	    ((symbolp (car l))	; tate, yoko ãªã©ã®çµ„åˆã›å®šç¾©
 	     (funcall (car l) tag (cdr l)))
 	    (t (unpackprim l))))))
 ;
-; ÁÈ¤ß¹ç¤ï¤»¤¿¤â¤Î¤ò»È¤¦
+; çµ„ã¿åˆã‚ã›ãŸã‚‚ã®ã‚’ä½¿ã†
 ;
 (defun expandkanji (l &optional (fonttype 'mincho))
   (cond ((symbolp l) 
@@ -108,7 +108,7 @@
     ((atom l))
     (remprop (car l) 'prim)))
 ;
-; ´Á»úÄêµÁ¤¬°ÍÂ¸¤¹¤ëÉôÉÊÌ¾¤È¤½¤ÎÄêµÁ¼«¿È¤ÎÉôÉÊÌ¾¤ò¥ê¥¹¥È¥¢¥Ã¥×¤¹¤ë¡£
+; æ¼¢å­—å®šç¾©ãŒä¾å­˜ã™ã‚‹éƒ¨å“åã¨ãã®å®šç¾©è‡ªèº«ã®éƒ¨å“åã‚’ãƒªã‚¹ãƒˆã‚¢ãƒƒãƒ—ã™ã‚‹ã€‚
 ;
 (defun kanjiusage (def)
   (remove-duplicates
@@ -123,7 +123,7 @@
 	 (t
 	  (mapcan #'kanjiusage (cdr def))))))
 ;
-; Í¿¤¨¤é¤ì¤¿¥·¥ó¥Ü¥ë¤¬¥×¥ê¥ß¥Æ¥£¥Ö¤È¤·¤ÆÄêµÁ¤µ¤ì¤Æ¤¤¤ë¤«¤É¤¦¤«
+; ä¸ãˆã‚‰ã‚ŒãŸã‚·ãƒ³ãƒœãƒ«ãŒãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã¨ã—ã¦å®šç¾©ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
 (defun primitivep (def)
   (and (symbolp def)
        (let ((expanded (eval def)))
@@ -133,10 +133,10 @@
 	      (numberp (caaar expanded))))))
 
 ;
-; EUC ¤Î´Á»ú 1 Ê¸»ú¤«¤é¡¢16 ¿ÊÊ¸»úÎó¤Î JIS ¥³¡¼¥É¤òÆÀ¤ë
+; EUC ã®æ¼¢å­— 1 æ–‡å­—ã‹ã‚‰ã€16 é€²æ–‡å­—åˆ—ã® JIS ã‚³ãƒ¼ãƒ‰ã‚’å¾—ã‚‹
 ;
-; lisp/disp.l ¤Ç¤·¤«»È¤ï¤ì¤Æ¤¤¤Ê¤¤¡£(Ì¤°Ü¿¢ÉôÊ¬)
-; Unicode ²½¤µ¤ì¤Æ¤¤¤ë½èÍı·Ï (clisp Åù) ¤Ç¤ÏÀµ¤·¤¯Æ°¤«¤Ê¤¤¡£
+; lisp/disp.l ã§ã—ã‹ä½¿ã‚ã‚Œã¦ã„ãªã„ã€‚(æœªç§»æ¤éƒ¨åˆ†)
+; Unicode åŒ–ã•ã‚Œã¦ã„ã‚‹å‡¦ç†ç³» (clisp ç­‰) ã§ã¯æ­£ã—ãå‹•ã‹ãªã„ã€‚
 ;
 (defun euc2jis(str)
   (let* ((len (length str))

@@ -30,9 +30,9 @@
 ; $Id$
 
 ;
-; winding rule¤Ë½¾¤Ã¤¿ outline¤«¤é¡¤¸òº¹Åù¤ò²ò¾Ã¤·¤¿
-; outline¤òÆÀ¤ë
-; Îã)
+; winding ruleã«å¾“ã£ãŸ outlineã‹ã‚‰ï¼Œäº¤å·®ç­‰ã‚’è§£æ¶ˆã—ãŸ
+; outlineã‚’å¾—ã‚‹
+; ä¾‹)
 ; +1+2----------------+-+
 ; | |                 | 3
 ; + +------------>----+ +
@@ -41,7 +41,7 @@
 ; + +-------<---------+ +
 ; | |                 | |
 ; +-+---------------4-+-+
-; ¤È¤¤¤¦4¤Ä¤Îoutline¤«¤é
+; ã¨ã„ã†4ã¤ã®outlineã‹ã‚‰
 ; ->
 ; +-+--------<--------+-+
 ; |                     |
@@ -51,7 +51,7 @@
 ; + +-----------------+ +
 ; |                     |
 ; +-+-----------------+-+
-; ¤È¤¤¤¦2¤Ä¤Îoutline¤òÆÀ¤ë¡¥
+; ã¨ã„ã†2ã¤ã®outlineã‚’å¾—ã‚‹ï¼Ž
 ;
 (defun makeoutline (orig)
   (let* ((all)(ass)(ret))
@@ -78,8 +78,8 @@
 	  (flatten-outlines all)))
 	ass))))))
 
-; ÎØ³ÔÀþ¤Î³ÆÅÀ¤òÇÜÀºÅÙ/Ã±ÀºÅÙ¤ËÊÑ´¹¤¹¤ë
-; ÇÜÀºÅÙ¤Ç¤Î±é»»¤Ë¤è¤êÀºÅÙÉÔÂ­¤Ë¤è¤ë¥¨¥é¡¼¤Î²ÄÇ½À­¤¬¸º¤ë
+; è¼ªéƒ­ç·šã®å„ç‚¹ã‚’å€ç²¾åº¦/å˜ç²¾åº¦ã«å¤‰æ›ã™ã‚‹
+; å€ç²¾åº¦ã§ã®æ¼”ç®—ã«ã‚ˆã‚Šç²¾åº¦ä¸è¶³ã«ã‚ˆã‚‹ã‚¨ãƒ©ãƒ¼ã®å¯èƒ½æ€§ãŒæ¸›ã‚‹
 (defun glyph2dfloat (glyph)
   (mapcar #'(lambda (contour)
 	      (mapcar #'(lambda (p) 
@@ -108,7 +108,7 @@
 	 (push `((bezier (,x1 ,y1) (,x2 ,y2) (,x3 ,y3) (,x4 ,y4))) ret1)
 	 (setq ll (cddr ll))))))
 |#
-; match ¤Ê¤·¥Ð¡¼¥¸¥ç¥ó
+; match ãªã—ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 (defun flatten-outline (outline)
   (do ((ll (append1 outline (car outline)) (cdr ll))
        (ret1))
@@ -151,7 +151,7 @@
 	 (push `(angle .,p1) ret1)
 	 (setq lastp p1)))))
 |#
-; match ¤Ê¤·¥Ð¡¼¥¸¥ç¥ó
+; match ãªã—ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 (defun unflatten-outline (outline)
     (do ((ll outline(cdr ll))(ret1)(lastp))
       ((atom ll)
@@ -408,7 +408,7 @@
 	(rplacd e2 
 		`((,tval ,(- flag) ,point ,i1 ,j1).,(cdr e2)))))))
 
-; ³Æ¶ÊÀþ¥»¥°¥á¥ó¥È¾å¤Î¸òº¹ÅÀ¤ò t ¤Î½ç¤ËÊÂ¤Ù¤ë¡£
+; å„æ›²ç·šã‚»ã‚°ãƒ¡ãƒ³ãƒˆä¸Šã®äº¤å·®ç‚¹ã‚’ t ã®é †ã«ä¸¦ã¹ã‚‹ã€‚
 (defun sort-flatten (outs)
   (do ((l outs (cdr l))(ret))
     ((atom l)(nreverse ret))
@@ -675,7 +675,7 @@
 			(tracestart outs point i1 j1))))))))))
 
 ;
-; 2¤Ä¤ÎÄ¾Àþ¤ÇÀÜ¤¹¤ëoutline¤ò¤¯¤Ã¤Ä¤±¤Æ¤¤¤¯¡¥
+; 2ã¤ã®ç›´ç·šã§æŽ¥ã™ã‚‹outlineã‚’ãã£ã¤ã‘ã¦ã„ãï¼Ž
 ;
 (defun append-outs (outline)
   (do (
@@ -729,7 +729,7 @@
 	(setq l rest))
        (nil (return nil))))))
 |#
-; match ¤Ê¤·¥Ð¡¼¥¸¥ç¥ó
+; match ãªã—ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 (defun append-out (out1 out2)
   (let* ((top1 (car out1))(tmp)(l out1)(done))
     (loop
@@ -757,9 +757,9 @@
 	    (push (caddr l) done)
 	    (setq l (cdddr l)))))))))))
 ;
-; p0, p1¤ò(p1 p0¤Î½ç¤Ç)Ã¼ÅÀ¤È¤¹¤ë line¤¬ out2Ãæ¤Ë¤¢¤ë¤«¤ò¥Á¥§¥Ã¥¯
-; ¤Ê¤¤¤Ê¤é nil¤òÊÖ¤¹
-; ¤¢¤ë¾ì¹ç¤Ï p1°Ê²¼¡¤p0¤Þ¤Ç¤Îoutline¤òÊÖ¤¹
+; p0, p1ã‚’(p1 p0ã®é †ã§)ç«¯ç‚¹ã¨ã™ã‚‹ lineãŒ out2ä¸­ã«ã‚ã‚‹ã‹ã‚’ãƒã‚§ãƒƒã‚¯
+; ãªã„ãªã‚‰ nilã‚’è¿”ã™
+; ã‚ã‚‹å ´åˆã¯ p1ä»¥ä¸‹ï¼Œp0ã¾ã§ã®outlineã‚’è¿”ã™
 ;
 ; (append-out1 '(10.0 10.0) '(15.0 15.0) 
 ;    '((angle 20.0 10.0)(angle 15.0 15.0)(angle 10.0 10.0)(angle 15.0 5.0)))
@@ -801,7 +801,7 @@
        (setq l rest))
       (nil (return nil)))))
 |#
-; match ¤Ê¤·¥Ð¡¼¥¸¥ç¥ó
+; match ãªã—ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 (defun append-out1 (p0 p1 out2)
 ;  (pprint `(,p0 ,p1 ,out2))
   (do ((l out2)(top (car out2))(lastl)(done))
@@ -991,7 +991,7 @@
 		   (dp1 (times2 twidth (bezierdp p0 p1 p2 p3 tos))))
 	      `((bezier ,fromp ,(plus2 fromp dp0),(diff2 top dp1),top))))))))
 |#
-; match ¤Ê¤·¥Ð¡¼¥¸¥ç¥ó
+; match ãªã—ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 (defun linepart (part from to)
   (case (car part)
     (line
@@ -1111,7 +1111,7 @@
 		  (push (reverse (car l)) ret))))
 	  (t (push (car l) ret)))))
 
-; »þ·×²ó¤ê¤Î¤È¤­¤ª¤è¤½ +2¦Ð, È¿»þ·×²ó¤ê¤Î¤È¤­¤ª¤è¤½ -2¦Ð
+; æ™‚è¨ˆå›žã‚Šã®ã¨ããŠã‚ˆã +2Ï€, åæ™‚è¨ˆå›žã‚Šã®ã¨ããŠã‚ˆã -2Ï€
 (defun checkwinding (out)
   (let ((poly (bezier2polygon out)))
     (do ((l (cdr (append1 poly (car poly))) (cdr l))
@@ -1128,7 +1128,7 @@
 ;	   (print thetasum)
 	   (setq lastdir thisdir)))))
 
-; 3 ¼¡¤Î Bernstein Â¿¹à¼° (Bezier ¶ÊÀþ¤ÎÄêµÁ¼°)
+; 3 æ¬¡ã® Bernstein å¤šé …å¼ (Bezier æ›²ç·šã®å®šç¾©å¼)
 (defun bernstein (time angle0 bezier0 bezier1 angle1) 
   (let ((emit (- 1.0 time)))
     (+ (*     angle0  emit emit emit)
@@ -1136,7 +1136,7 @@
        (* 3.0 bezier1 emit time time)
        (*     angle1  time time time))))
 
-; Bezier ¶ÊÀþ¤ò´Þ¤àÎØ³Ô¤òÂ¿³Ñ·Á¶á»÷¤¹¤ë
+; Bezier æ›²ç·šã‚’å«ã‚€è¼ªéƒ­ã‚’å¤šè§’å½¢è¿‘ä¼¼ã™ã‚‹
 (defun bezier2polygon (out &optional (segment 2))
   (do ((l out (if (eq (caadr l) 'angle) (cdr l) (cdddr l)))
        (start (car out))

@@ -40,7 +40,7 @@ if (!DrawsSomething("sterling") && DrawsSomething("uniFFE1"))
 	copy("uniFFE1", "sterling");
 	xscaletogwidth(_HW-_20th); centerinhankaku()
 endif
-# currency ∑Á
+# currency Ê¨†
 if (!DrawsSomething("yen"))
 	copy("Y", "yen"); append("equal", "yen"); RemoveOverlap()
 endif
@@ -48,7 +48,7 @@ if (!DrawsSomething("brokenbar"))
 	copy("bar", "brokenbar"); up(_FW+_QW); Paste()
 	yscaletogheight(getgheight("bar")); alignycenter("brokenbar", "bar")
 endif
-# section, dieresis ¢∫ JIS X 0208
+# section, dieresis ‚àà JIS X 0208
 if (!DrawsSomething("copyright") && \
      DrawsSomething(_CIRCLE) && DrawsSomething("uniFF23"))
 	circle("copyright", "uniFF23"); Scale(64, 0,_TOP); centerinhankaku()
@@ -76,20 +76,20 @@ endif
 if (!DrawsSomething("macron"))
 	copy("underscore", "macron"); settop("macron", _FW)
 endif
-# degree plusminus ¢∫ JIS X 0208
+# degree plusminus ‚àà JIS X 0208
 if (!DrawsSomething("uni00B2"))
 	copy("two", "uni00B2"); super("uni00B2")
 endif
 if (!DrawsSomething("uni00B3"))
 	copy("three", "uni00B3"); super("uni00B3")
 endif
-# acute ¢∫ JIS X 0208
-# mu ∑Á
-# paragraph ¢∫ JIS X 0208
+# acute ‚àà JIS X 0208
+# mu Ê¨†
+# paragraph ‚àà JIS X 0208
 if (!DrawsSomething("periodcentered") && DrawsSomething("uniFF65"))
 	copy("uniFF65", "periodcentered")
 endif
-# cedilla ∑Á
+# cedilla Ê¨†
 if (!DrawsSomething("uni00B9"))
 	copy("one", "uni00B9"); super("uni00B9")
 endif
@@ -117,9 +117,9 @@ if (!DrawsSomething("questiondown"))
 endif
 
 #------------------------------------------------------------------------------
-# •¢•Ø•ª•Û•»µ≠πÊ§ŒƒÍµ¡
+# „Ç¢„ÇØ„Çª„É≥„ÉàË®òÂè∑„ÅÆÂÆöÁæ©
 #------------------------------------------------------------------------------
-# Spacing Modifier Letters §Œ•≥°º•…•›•§•Û•»§Úª»Õ—§π§Î
+# Spacing Modifier Letters „ÅÆ„Ç≥„Éº„Éâ„Éù„Ç§„É≥„Éà„Çí‰ΩøÁî®„Åô„Çã
 uml   = 0u00A8
 acute = 0u02CA
 circ  = 0u02C6
@@ -130,7 +130,7 @@ ring  = 0u02DA
 tilde = 0u02DC	# SMALL TILDE
 
 copy("acute", acute); centerinhankaku()
-# ≈Ï…˜§Œ grave §œµ’•¢•›•π•»•Ì•’•£∑¡§ §Œ§«°¢acute §Ú∫∏±¶»ø≈æ§π§Î
+# Êù±È¢®„ÅÆ grave „ÅØÈÄÜ„Ç¢„Éù„Çπ„Éà„É≠„Éï„Ç£ÂΩ¢„Å™„ÅÆ„Åß„ÄÅacute „ÇíÂ∑¶Âè≥ÂèçËª¢„Åô„Çã
 copy(acute, grave); HFlip(); CorrectDirection()	; centerinhankaku()
 copy("asciicircum", circ)
 copy(circ, caron); VFlip(); CorrectDirection()
@@ -138,16 +138,16 @@ copy("degree", ring); centerinhankaku()
 copy("asciitilde", tilde); centerinhankaku()
 
 #------------------------------------------------------------------------------
-# Latin-1 §Œ≤§ ∏ (∑Á§±§∆§§§Î ™§Œ§ﬂ)
+# Latin-1 „ÅÆÊ¨ßÊñá (Ê¨†„Åë„Å¶„ÅÑ„ÇãÁâ©„ÅÆ„Åø)
 #------------------------------------------------------------------------------
-# ¬Á ∏ª˙
+# Â§ßÊñáÂ≠ó
 _accented("Agrave",      "A", grave)
 _accented("Aacute",      "A", acute)
 _accented("Acircumflex", "A", circ)
 _accented("Atilde",      "A", tilde)
 _accented("Adieresis",   "A", uml)
 _accented("Aring",       "A", ring)
-# AE, Ccedil ∑Á
+# AE, Ccedil Ê¨†
 _accented("Egrave",      "E", grave)
 _accented("Eacute",      "E", acute)
 _accented("Ecircumflex", "E", circ)
@@ -179,16 +179,16 @@ _accented("Uacute",      "U", acute)
 _accented("Ucircumflex", "U", circ)
 _accented("Udieresis",   "U", uml)
 _accented("Yacute",      "Y", acute)
-# Thorn, szlig ∑Á
+# Thorn, szlig Ê¨†
 
-# æÆ ∏ª˙
+# Â∞èÊñáÂ≠ó
 _accented("agrave",      "a", grave)
 _accented("aacute",      "a", acute)
 _accented("acircumflex", "a", circ)
 _accented("atilde",      "a", tilde)
 _accented("adieresis",   "a", uml)
 _accented("aring",       "a", ring)
-# ae, ccedil ∑Á
+# ae, ccedil Ê¨†
 _accented("egrave",      "e",        grave)
 _accented("eacute",      "e",        acute)
 _accented("ecircumflex", "e",        circ)
@@ -197,7 +197,7 @@ _accented("igrave",      "dotlessi", grave)
 _accented("iacute",      "dotlessi", acute)
 _accented("icircumflex", "dotlessi", circ)
 _accented("idieresis",   "dotlessi", uml)
-# eth ∑Á
+# eth Ê¨†
 _accented("ntilde",      "n", tilde)
 _accented("ograve",      "o", grave)
 _accented("oacute",      "o", acute)
@@ -217,5 +217,5 @@ _accented("uacute",      "u", acute)
 _accented("ucircumflex", "u", circ)
 _accented("udieresis",   "u", uml)
 _accented("yacute",      "y", acute)
-# thorn ∑Á
+# thorn Ê¨†
 _accented("ydieresis",   "y", uml)

@@ -34,7 +34,7 @@
        `(putprop 'alllimit (cons ',(cdr l) (get 'alllimit 'limit)) 'limit))
 
 (putprop 'alllimit nil 'limit)
-; ²£ËÀ¤È·¹¤¤¤¿²£ËÀ
+; æ¨ªæ£’ã¨å‚¾ã„ãŸæ¨ªæ£’
 (deflimit mincho (yoko yoko)
   ((or (<= x00 x10 x01)(<= x00 x11 x01)(<= x10 x00 x11)(<= x10 x01 x11))
    (>= (diffabs (+ y00 y01) (+ y10 y11)) (* '(1.2 . 1.2) yunit))))

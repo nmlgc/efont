@@ -29,41 +29,41 @@
 ;
 ; $Id$
 
-;; �Ԥ���Ƭ�� ;# �ǻϤޤ�Τϥ��ꥸ�ʥ륳����, ;; �Ϥ�����Ф�������
-;; �����˴ؤ��륳���Ȥ� ;: �ǻϤޤ�
+;; 行の先頭が ;# で始まるのはオリジナルコメント, ;; はそれに対する注釈
+;; 実装に関するコメントは ;: で始まる
 
-; limit.l: ����������Ԥ��롼���� (�����ȹ礻����������η׻��˻Ȥ�)
+; limit.l: 数式処理を行うルーチン群 (部品組合せ時の制約条件の計算に使う)
 ;
-; [1] section (���) �α黻
+; [1] section (区間) の演算
 ;	rm-eq, eqsym, gt, lt, orsection, andsection, revsym, notsection
-; [2] limitrule ��ɾ��
+; [2] limitrule の評価
 ;       xpair, ypair, eval-exp, inequal1, inequal2, gtsection, 
-;	limit-section{,1,2}, extendline, crosst, equation2(̤����)
-; [3] ̵�򺵾���Ƚ��
+;	limit-section{,1,2}, extendline, crosst, equation2(未使用)
+; [3] 無交叉条件の判定
 ;	epsp, equation_ts, crosst1, line-cross, check-res, rmbigres,
 ;	res2section, extend-element, element-limit{,1,2}, add0vector, addvector
-; [4] �����ȹ礻�������� ([2] �� [3] ��ξ��) �����
+; [4] 部品組合せの制約条件 ([2] と [3] の両方) を求める
 ;	general-section{,1}, section2s, general-limit
 ;                                       ^^^^^^^^^^^^^
 
 (defvar revtable)
 (declaim (inline rm-eq eqsym lt xpair ypair extendline epsp))
 
-;# section (���) �η�
-;# nil ���¤ʤ�
-;# ((nil . 1.0)(2.0 . nil))�Τ�����(sorted)
+;# section (区間) の形
+;# nil 制限なし
+;# ((nil . 1.0)(2.0 . nil))のたぐい(sorted)
 ;
-; ü��ɽ��:
-;   -�� = nil, +�� = t, ��ü = �¿�, ����ü = (> . �¿�), ����ü = (< . �¿�)
-; ñ���֤� (��ü . ��ü) �Υɥå��Ф�ɽ����
+; 端の表現:
+;   -∞ = nil, +∞ = t, 閉端 = 実数, 左開端 = (> . 実数), 右開端 = (< . 実数)
+; 単純区間は (下端 . 上端) のドット対で表す。
 ;
-; ���̤ζ�֤ϡ�1 �İʾ��ñ���֤򾮤�������¤٤��ꥹ�Ȥ�ɽ����
-; �㤨�С�((nil . 1.0) (2.0 . nil)) �� (-��, 1.0] �� [2.0, ��) ��ɽ���졢����
-; ((3.0 . 3.0)) �Τ褦��Ĺ�� 0 ���Ķ�֤�ɽ����� (Ĺ�� 0 �γ���֤������Ǥ���)
-; ������� nil ��ɽ����
+; 一般の区間は、1 個以上の単純区間を小さい順に並べたリストで表す。
+; 例えば、((nil . 1.0) (2.0 . nil)) は (-∞, 1.0] ∪ [2.0, ∞) を表され、点は
+; ((3.0 . 3.0)) のような長さ 0 の閉区間で表される (長さ 0 の開区間は不正である)
+; 空集合は nil で表す。
 
 ;
-; ��֤�ü��ɽ���ɥå��Ф�����ͤ����� (rm-eq), �ޤ�������������� (eqsym)
+; 区間の端を表すドット対から数値を得る (rm-eq), または不等号を得る (eqsym)
 ;
 (defun rm-eq (a)
   (cond ((consp a) (cdr a))
@@ -73,16 +73,16 @@
   (and (consp a) (car a)))
 
 ;
-; ��֤�ü a, b ���羮���
+; 区間の端 a, b の大小比較
 ;
-; ɬ�� �� �� �� ������Ω�ĤΤǡ�Ʊ�ʹط��ǤϤʤ��� 
-; a = b �ΤȤ����羮�ط��ϰʲ��Τ褦���������롣
-; �����Ǥϡ�����ü�� (a, ��}, �峫ü�� {��, a), ��ü�� [a] ��ɽ���Ƥ��롣
+; 必ず ＞ か ＜ が成り立つので、同値関係ではない。 
+; a = b のときの大小関係は以下のように定義される。
+; ここでは、下開端を (a, …}, 上開端を {…, a), 閉端を [a] で表している。
 ;
-;  (-��, ��} �� (-��, ��},  {��, +��) �� {��, +��), 
-;   (x, ��}  �� (x, ��} ,    (x, ��}  �� {��, x),     (x, ��} ��  [x],
-;   {��, x)  �� (x, ��} ,    {��, x)  �� {��, x),     {��, x) ��  [x],
-;     [x]    �� (x, ��} ,      [x]    �� {��, x),       [x]   ��  [x],
+;  (-∞, …} ＜ (-∞, …},  {…, +∞) ＞ {…, +∞), 
+;   (x, …}  ＞ (x, …} ,    (x, …}  ＞ {…, x),     (x, …} ＞  [x],
+;   {…, x)  ＜ (x, …} ,    {…, x)  ＜ {…, x),     {…, x) ＜  [x],
+;     [x]    ＜ (x, …} ,      [x]    ＞ {…, x),       [x]   ＞  [x],
 ;
 (defun gt (a b)
   (cond ((null a) nil)
@@ -103,7 +103,7 @@
 (defun lt (a b) (not (gt a b)))
 
 ;
-; orsection: s1 �� s2 �ι�ʻ��������
+; orsection: s1 と s2 の合併集合を求める
 ;
 (defun orsection (s1 s2)
 ;  (pprint (list "orsection" s1 s2))
@@ -139,7 +139,7 @@
 		     (setq s2 (cdr s2)))
 		    (t (return (nreverse ret)))))))))))
 ;
-; andsection: ���̽�������
+; andsection: 共通集合を求める
 ;
 (defun andsection (s1 s2)
 ;  (pprint (list "andsection" s1 s2))
@@ -168,7 +168,7 @@
 				 (setq s2 (cdr s2)))))))))
 	   (t (return (nreverse ret)))))))
 
-; ü�γ��Ĥ�ȿž
+; 端の開閉を反転
 ;
 (defun revsym (val sym)
   (cond ((consp val) (cdr val))
@@ -176,7 +176,7 @@
 	((eq val 't) t)
 	(t (cons sym val))))
 ;
-; notsection: �佸������
+; notsection: 補集合を求める
 ;
 (defun notsection (section)
 ;  (pprint (list "notsection" section))
@@ -192,7 +192,7 @@
 	   (push (cons (revsym lastmax '>) (revsym (caar l) '<)) ret)))
     (setq lastmax (cdar l))))
 ;
-;#  exp ��ɾ������ (at + b) �η��ˤ���
+;#  exp を評価して (at + b) の形にする
 ;
 ; original 
 ;(defun eval-exp (exp e1 p1 e2 p2 param)
@@ -254,7 +254,7 @@
 (defun ypair (p)
   (cons (cadr (cadr p)) (cadr (car p))))
 ;
-;: match ��Ȥ�ʤ��褦�ˤ��ƹ�®����ޤä�
+;: match を使わないようにして高速化を図った
 ;
 (defun eval-exp (exp e1 p1 e2 p2 param)
   (let* ((exp1))
@@ -283,7 +283,7 @@
 	  ((quote) (cadr exp))
 	  (otherwise exp)))
    ((symbolp exp)
-    (case exp						; �и����ٽ�˥�����
+    (case exp						; 出現頻度順にソート
 	  ((x11) (xpair (nth (cadr (cadr e2)) p2)))		; 66
 	  ((x00) (xpair (nth (car (cadr e1)) p1)))		; 64
 	  ((y01) (ypair (nth (cadr (cadr e1)) p1)))		; 64
@@ -303,7 +303,7 @@
 	  (otherwise (cdr (assq exp param)))))
     (t exp)))
 ;
-;#  aX + b >= 0 �β�ζ�֤��֤�
+;#  aX + b >= 0 の解の区間を返す
 ;
 (defun inequal1 (a b)
 ;  (pprint (cons a b))
@@ -320,9 +320,9 @@
 	(t
 	 (list (cons nil (/ (float b) (float (minus a))))))))
 ;
-;#  aX^2 + bX + c >= 0 �β�ζ�֤��֤�
+;#  aX^2 + bX + c >= 0 の解の区間を返す
 ;
-;; (���� deflimit �Ǥϻ��Ѥ���ʤ�)
+;; (現在 deflimit では使用されない)
 ;
 (defun inequal2 (a b c)
   (cond ((zerop a)
@@ -341,7 +341,7 @@
 				     (/ (+ sqrtd b) -2.0 (float a)))))
 			(t nil))))))))
 ;
-;#  ex1 >= ex2 �β�ζ�֤��֤�
+;#  ex1 >= ex2 の解の区間を返す
 ;
 ; original
 ;(defun gtsection (ex1 ex2 e1 p1 e2 p2 param)
@@ -372,7 +372,7 @@
 ;       (print "Not supported Such expression" *terminal-io*)
 ;       (print (cons ex1 ex2) *terminal-io*)))))
 ;
-;: match ��Ȥ�ʤ��С������
+;: match を使わないバージョン
 ;
 (defun gtsection (ex1 ex2 e1 p1 e2 p2 param)
   (let* ((ex1 (eval-exp ex1 e1 p1 e2 p2 param))
@@ -403,7 +403,7 @@
      (t
        (inequal1 (- (car ex1) (car ex2)) (- (cdr ex1) (cdr ex2)))))))
 ;
-; limit-section: limitrule ���顢�����񿨤����ϰ� (section) �����
+; limit-section: limitrule から、条件に抵触する範囲 (section) を求める
 ;
 (defun limit-section2 (e1 p1 e2 p2 param def)
   (case (car def)
@@ -459,7 +459,7 @@
 (defun extendline (a b s)
   (plus2 a (times2 (/ s 2.0) (diff2 a b))))
 ;
-; (���߻��Ѥ���Ƥ��ʤ�)
+; (現在使用されていない)
 ;
 (defun crosst (a b c)
   (let* (
@@ -487,7 +487,7 @@
 		    (list (car ts)))
 		   (t nil)))))))
 ;
-;#  aX^2 + bX + c = 0 �μ¿���Υꥹ�� (�Ų���ʣ���Ƶ󤲤�)
+;#  aX^2 + bX + c = 0 の実数解のリスト (重解も重複して挙げる)
 ;
 (defun equation2 (a b c)
   (cond ((zerop a)
@@ -502,25 +502,25 @@
 ;
 ;#  equation_ts
 ;
-; ���������������ʸ�����ʹ����ˤ�����������ȥ�ե���Ȥκ����� p.46 ���:
-; (�����ֹ�ϰ��ѼԤˤ���ɲ�)
+; 田中先生の博士論文「部品合成による漢字スケルトンフォントの作成」 p.46 より:
+; (数式番号は引用者により追加)
 ;
-;| ��ʬ AB �� CD �˸���������Ȥ������ϡ�
+;| 線分 AB と CD に交点があるという条件は、
 ;|
 ;|       (Ax - Cx) * (By - Ay) - (Ay - Cy) * (Bx - Ax)
-;| 0 �� ������������������������������������������������ �� 1  �ġġġġ� [1]
+;| 0 ≦ ―――――――――――――――――――――――― ≦ 1  …………… [1]
 ;|       (Cx - Dx) * (By - Ay) - (Cy - Dy) * (Bx - Ax)
 ;|
 ;|       (Cx - Ax) * (Dy - Cy) - (Cy - Ay) * (Dx - Cx)
-;| 0 �� ������������������������������������������������ �� 1  �ġġġġ� [2]
+;| 0 ≦ ―――――――――――――――――――――――― ≦ 1  …………… [2]
 ;|       (Dx - Cx) * (Ay - By) - (Dy - Cy) * (Ax - Bx)
 ;|
-;| �Ƚ񤱤�. Ax ���� t �Σ������Ǥ��뤿��, �����ϣ�����ͭ�����η���
-;| ɽ����, ���ʬ���򤹤뤳�Ȥˤ�ä�, �������������Ȥ��Ʋ򤯤��Ȥ��Ǥ���.
+;| と書ける. Ax 等が t の１次式であるため, これらは２次の有理式の形で
+;| 表され, 場合分けをすることによって, ２次の不等式として解くことができる.
 ;
-; �����ѿ�̾���Ѥ���� [1] �� 0 �� (ab + ac - bc) / (bc + bd - ac - ad) �� 1,
-;                      [2] �� 0 �� (cd - ac - ad) / (bc + bd - ac - ad) �� 1 
-; �Ƚ񤭴������롣
+; 下の変数名を用いると [1] は 0 ≦ (ab + ac - bc) / (bc + bd - ac - ad) ≦ 1,
+;                      [2] は 0 ≦ (cd - ac - ad) / (bc + bd - ac - ad) ≦ 1 
+; と書き換えられる。
 ;
 (defun epsp (x) (< (abs x) 1.0d-7))
 ;
@@ -563,9 +563,9 @@
 ;(break)
 	     )))))
 ;
-;: �����٤ؤ��Ѵ��ϸƽФ����ǹԤ��褦���ѹ���
+;: 倍精度への変換は呼出し元で行うように変更。
 ;
-; a2, b2, c2 �� add0vector �ޤ��� addvector ���դ��ä���줿��
+; a2, b2, c2 は add0vector または addvector で付け加えられた点
 ;
 (defun crosst1 (a b c)
   (let* (
@@ -587,7 +587,7 @@
 	 (ret))
       ((null l) ret)
       (and (<= (minus delta) (cdar l) (+ 1.0 delta))
-;      (and (<= -0.0d0 (cdar l)) (<= (cdar l) 1.0d0)) ; ���ΤȤ��� delta = 0 �ʤΤǥ����ȥ�����
+;      (and (<= -0.0d0 (cdar l)) (<= (cdar l) 1.0d0)) ; 今のところ delta = 0 なのでコメントアウト
 	    (push (sfloat (caar l)) ret)))))
 ;
 (defun line-cross (a0 a1 b0 b1)
@@ -668,7 +668,7 @@
 ;	   )
 ;	  ))))))
 ;
-;: match ��Ȥ�ʤ��С������
+;: match を使わないバージョン
 ;
 (defun res2section (res a0 a1 b0 b1)
   (cond 
@@ -708,8 +708,8 @@
 		     )
 	       )))))))
 ;
-; element �γ��� (�����ʳ�) �򼡤�����ȿ�������˰�ư������̤κ�ɸ���֤�
-;: ���ΤȤ���, local_margin �Ͼ�� 0 �ʤΤ� element �˼��ä������֤��Ƥ���
+; element の各点 (終点以外) を次の点の反対方向に移動した結果の座標を返す
+;: 今のところ, local_margin は常に 0 なので element に手を加えずに返している
 ;
 (defparameter limit_margin 0.0)
 (defun extend-element (element points limit_flag)
@@ -740,13 +740,13 @@
 	  (setq p0 p1)
 	  (setq p1 (nth (car l) points)))))))
 ;
-;#  ñ�˾��ͤ���ޤǤθ���
+;#  単に衝突するまでの検出
 ;
 (defun element-limit2 (points1 points2)
   (labels ((dfloat-2x2list (l) `((,(dfloat (caar l)) ,(dfloat (cadar l)))
 				 (,(dfloat (caadr l)) ,(dfloat (cadadr l))))))
     (let ((section) 
-	  (p22d) (p12d)) ; do* �ϥ롼���ѿ������μ�����ͤ�����Ѥ��ʤ�
+	  (p22d) (p12d)) ; do* はループ変数の前の周回の値を引き継げない
       (do* ((p2 points2 (cdr p2))
 	    (p21 (car p2) p22)
 	    (p21d (dfloat-2x2list p21) p22d)
@@ -768,10 +768,10 @@
 			     (res2section res p11 p12 p21 p22))))))
       section)))
 ;
-; �֥������Ʊ�Τ�����(��)���ʤ��פȤ�����������񿨤��� section �����
+; 「エレメント同士が衝突(交差)しない」という前提条件に抵触する section を求める
 ;
-; ����Ʊ�Τξ�硢extend-element �Ǽ㴳��;͵���������
-;: (���ߤ� limit_margin �� 0.0 �����ꤷ�Ƥ���Τǡ����� extend ���Ƥ��ʤ�)
+; 実線同士の場合、extend-element で若干の余裕を持たせる
+;: (現在は limit_margin を 0.0 に設定しているので、全く extend していない)
 ;
 (defun element-limit1 (e1 p1 e2 p2)
   (let* ((points1)
@@ -784,11 +784,11 @@
     (setq points2 (extend-element e2 p2 limitflag))
     (element-limit2 points1 points2)))
 ;
-;#  2 �ĤΥ�����ȤˤĤ��� suitable t ����� (�����ͤˤ��餺). 
+;#  2 つのエレメントについて suitable t を求める (最大値にあらず). 
 ;
-; element-limit1 �ˤ����ۤξ�� (�������Ʊ�Τ����ͤ��ʤ�) �ȡ�
-; limit-section �ˤ��桼������ξ�� (limitrule.l �� deflimit ����Ƥ���)
-; �Τɤ��餫���񿨤��� t ���ϰϤ���롣
+; element-limit1 による暗黙の条件 (エレメント同士が衝突しない) と、
+; limit-section によるユーザ定義の条件 (limitrule.l で deflimit されている)
+; のどちらかに抵触する t の範囲を求める。
 ;
 (defun element-limit (element1 points1 element2 points2 param)
   (let* ((type1 (car element1))
@@ -823,13 +823,13 @@
 (defun addvector (points conv)
   (mapcar #'(lambda (x) (list x (affine x conv))) points))
 ;
-; prim1 �� prim2 ���� 1 �Ĥ��ĥ�����Ȥ��ä��ȹ礻�����Ƥ��Ф��ơ�
-; ������񿨤����ϰϤ���ơ������� section �ι�ʻ������֤���
+; prim1 と prim2 から 1 個ずつエレメントを取った組合せの全てに対して、
+; 制約に抵触する範囲を求めて、それらの section の合併集合を返す。
 ;
 (defun general-section1 (prim1 prim2 param)
-  (let* ((points1 (car prim1)) ; �����Ȥ⡢����� 0vector ���ղ�
+  (let* ((points1 (car prim1)) ; 各点とも、後ろに 0vector を付加
 	 (lines1 (cadr prim1))
-	 (points2 (car prim2)) ; �����Ȥ⡢����� conv �ˤ���Ѵ���̤��ղ�
+	 (points2 (car prim2)) ; 各点とも、後ろに conv による変換結果を付加
 	 (lines2 (cadr prim2))
 	 (critical)
 	 )
@@ -873,43 +873,43 @@
 		    (cons (addvector (car prim2) conv) (cdr prim2))
 		    param))
 ;
-;#  s �η�
-;#  1.0, t (s > 0 �Τɤ�� s �Ǥ�褤), nil (�ɤ�� s �Ǥ�����)
-;; tate, yoko �ξ�硢�ºݤˤϿ��ͤ��ͤ��֤��ʤ��Ⱥ���
+;#  s の形
+;#  1.0, t (s > 0 のどんな s でもよい), nil (どんな s でも駄目)
+;; tate, yoko の場合、実際には数値で値を返さないと困る
 ;
-; (��ʻ�����Ѥߤ�) ��� section ����������񿨤��� s ���ϰϤ��ݻ����Ƥ��롣
-; ���������­���� s �κ����� (section ���佸��Τ�����0 ��ޤ��֤ξ��)
-; ���֤���
-; ��0 ��ޤ�פȤ��Ƥ���Τϡ����ʤ����֤��������Ǥ������郎���������
-; ���뤳�Ȥ�Ť˲��ꤷ�Ƥ��ꡢs ��Ϣ³Ū�����ä����ƾ���ǽ���ˤ�����õ����
-; ���뤫�顣
+; (合併処理済みの) 区間 section は制約条件に抵触する s の範囲を保持している。
+; 制約条件を満足する s の最大値 (section の補集合のうち、0 を含む区間の上限)
+; を返す。
+; 「0 を含む」としているのは、部品を仮配置した時点では制約条件が満たされて
+; いることを暗に仮定しており、s を連続的に増加させて条件を最初に破る点を探して
+; いるから。
 ;
 (defun section2s (section)
   (cond (section
 	 (do ((l section (cdr l)))
 	     ((atom l) t)
-	   (cond ((eq (cdar l) 't)	     ; ��ü = +��ζ�֤����ä���
-		  (return (rm-eq (caar l)))) ; ���ζ�֤β�ü���֤�
+	   (cond ((eq (cdar l) 't)	     ; 上端 = +∞の区間があったら
+		  (return (rm-eq (caar l)))) ; その区間の下端を返す
 		 ((and (cdar l) (plusp (rm-eq (cdar l))))
 		  (return (rm-eq (caar l)))))))
-	(t))) ; section��nil�ʤ�t���֤�
+	(t))) ; sectionがnilならtを返す
 ;
-;#  prim1 �� prim2 * (I + t * conv) �Ȥ�������������褦�ʺ���� t �����
-;;                    I �� identity matrix
-;#  �����, ��̩�����ˤ�ä��Ѥ���Τ�����, param��Ϳ����
-;#  param �� '((yunit 0 . 400) (xunit 0 . 200))) �Τ褦�ʷ�
+;#  prim1 と prim2 * (I + t * conv) とが制約を満たすような最大の t を求める
+;;                    I は identity matrix
+;#  これは, 線密度等によって変わるものだから, paramを与える
+;#  param は '((yunit 0 . 400) (xunit 0 . 200))) のような形
 ;-----------------------------------------------------------------------------
-; general-limit: ��ǽ�ʺ����ѷ��̤���� 
+; general-limit: 可能な最大変形量を求める 
 ;
-; prim1 ����ꤷ�� prim2 �������֤����ѷ� (��ư�ʤ�) ���ƹԤä��Ȥ��ˡ�
-; ñ���Ѵ� conv �β��ܤޤ��Ѵ���ܤ��Ƥ褤��
+; prim1 を固定して prim2 を初期位置から変形 (移動など) して行ったときに、
+; 単位変換 conv の何倍まで変換を施してよいか
 ;-----------------------------------------------------------------------------
 (defun general-limit (prim1 prim2 conv param)
   (section2s (general-section prim1 prim2 conv param)))
 
-;#  affine �Ϥ��褦. ����+ʿ�԰�ư (������濴 + X,Y����Ψ + ʿ�԰�ưX,Y)
+;#  affine はやめよう. 拡大+平行移動 (拡大の中心 + X,Y拡大率 + 平行移動X,Y)
 ;
-;# ����ޤǤ���ˡ�Ǥ�, ���٤Ƥ��������δط������ǤȤ館�Ƥ����Τ�, 
-;# ������䤦��Τ��������
+;# これまでの方法では, すべてを点対線の関係だけでとらえていたので, 
+;# それを補うものも定義する
 ;#
-;# Ϳ����ѥ�᡼���� pointarray �� 2 �Ĥ� vectorarray
+;# 与えるパラメータは pointarray を 2 つと vectorarray
